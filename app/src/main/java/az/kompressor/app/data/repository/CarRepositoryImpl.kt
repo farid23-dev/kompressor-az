@@ -32,11 +32,17 @@ class CarRepositoryImpl @Inject constructor(
     override fun getCars(): Flow<Resource<List<Car>>> = flow {
         emit(Resource.Loading)
         try {
+            val now = System.currentTimeMillis()
+            val thirtyDays = 30L * 24 * 60 * 60 * 1000
             val snapshot = carsCollection
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .get().await()
             val cars = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(CarDto::class.java)?.copy(id = doc.id)?.toDomain()
+            }.filter { car ->
+                // If expiresAt is set, hide expired listings. If legacy (0), use createdAt + 30d.
+                val expiry = if (car.expiresAt > 0) car.expiresAt else (car.createdAt + thirtyDays)
+                expiry > now
             }
             emit(Resource.Success(cars))
         } catch (e: Exception) {
@@ -174,18 +180,34 @@ class CarRepositoryImpl @Inject constructor(
         try {
             // Compress each image before uploading (≤1280px / 82% JPEG → ~200KB avg)
             val imageUrls = imageUris.map { uri -> uploadUri(uri, car.sellerUid) }
+            val now = System.currentTimeMillis()
             val carDto = CarDto(
                 title = car.title, brand = car.brand, model = car.model,
                 year = car.year, price = car.price, mileage = car.mileage,
                 fuelType = car.fuelType, transmission = car.transmission,
                 city = car.city, description = car.description, phone = car.phone,
                 imageUrls = imageUrls, sellerUid = car.sellerUid,
-                createdAt = System.currentTimeMillis()
+                createdAt = now,
+                expiresAt = now + 30L * 24 * 60 * 60 * 1000   // auto-expire after 30 days
             )
             carsCollection.add(carDto).await()
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "Failed to post car"))
+        }
+    }
+
+    override suspend fun bumpCar(carId: String) {
+        try {
+            val now = System.currentTimeMillis()
+            carsCollection.document(carId).update(
+                mapOf(
+                    "createdAt" to now,
+                    "expiresAt" to now + 30L * 24 * 60 * 60 * 1000
+                )
+            ).await()
+        } catch (_: Exception) {
+            // Silent — bump failure is non-critical
         }
     }
 

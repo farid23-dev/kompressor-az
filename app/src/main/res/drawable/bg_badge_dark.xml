@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- 72% opaque black — readable on any car photo -->
+    <solid android:color="#B8000000" />
+    <corners android:radius="20dp" />
+</shape>

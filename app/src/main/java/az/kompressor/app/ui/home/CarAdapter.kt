@@ -1,11 +1,14 @@
 package az.kompressor.app.ui.home
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import az.kompressor.app.R
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.databinding.ItemCarBinding
 import az.kompressor.app.util.TimeAgo
@@ -39,7 +42,21 @@ class CarAdapter(
             binding.tvDetails.text = "${car.year} · ${car.mileage.formatMileage()} · ${car.fuelType}"
             binding.tvCity.text = "📍 ${car.city}"
             binding.tvTransmission.text = car.transmission
+
+            // Age overlay badge on image (top-right)
             binding.tvAge.text = TimeAgo.format(car.createdAt)
+
+            // Remaining days chip (bottom row)
+            val days = TimeAgo.daysLeft(car.createdAt, car.expiresAt)
+            binding.tvDaysLeft.text = when {
+                days <= 0 -> "Last day"
+                days == 1 -> "1 day left"
+                else      -> "$days days left"
+            }
+            // Warn visually when ≤ 5 days remain
+            val warningColor = if (days <= 5) Color.parseColor("#D32F2F")
+                else ContextCompat.getColor(binding.tvDaysLeft.context, R.color.text_secondary)
+            binding.tvDaysLeft.setTextColor(warningColor)
 
             Glide.with(binding.ivCarImage.context)
                 .load(car.imageUrls.firstOrNull())

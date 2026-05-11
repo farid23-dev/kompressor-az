@@ -2,6 +2,18 @@ package az.kompressor.app.util
 
 object TimeAgo {
 
+    private const val THIRTY_DAYS_MS = 30L * 24 * 60 * 60 * 1000
+
+    /**
+     * Returns days remaining until the listing expires.
+     * If expiresAt is 0 (legacy), falls back to createdAt + 30 days.
+     */
+    fun daysLeft(createdAt: Long, expiresAt: Long): Int {
+        val expiry = if (expiresAt > 0) expiresAt else (createdAt + THIRTY_DAYS_MS)
+        val diff = expiry - System.currentTimeMillis()
+        return (diff / (24 * 60 * 60 * 1000)).coerceAtLeast(0).toInt()
+    }
+
     fun format(timestamp: Long): String {
         if (timestamp <= 0L) return ""
         val diff = System.currentTimeMillis() - timestamp

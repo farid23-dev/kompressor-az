@@ -65,6 +65,10 @@ class ProfileFragment : Fragment() {
                     .setPositiveButton("Delete") { _, _ -> viewModel.deleteCar(car.id) }
                     .setNegativeButton("Cancel", null)
                     .show()
+            },
+            onBump = { car ->
+                viewModel.bumpCar(car.id)
+                binding.root.showSnackbar("\"${car.title}\" bumped to top for 30 days ✅")
             }
         )
         binding.rvMyListings.apply {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.domain.repository.AuthRepository
+import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.usecase.DeleteCarUseCase
 import az.kompressor.app.domain.usecase.GetCarsByUserUseCase
 import az.kompressor.app.util.Resource
@@ -12,13 +13,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val getCarsByUserUseCase: GetCarsByUserUseCase,
-    private val deleteCarUseCase: DeleteCarUseCase
+    private val deleteCarUseCase: DeleteCarUseCase,
+    private val carRepository: CarRepository
 ) : ViewModel() {
 
     private val _isSignedOut = MutableStateFlow(false)
@@ -52,6 +55,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun resetDeleteState() { _deleteState.value = null }
+
+    fun bumpCar(carId: String) {
+        viewModelScope.launch {
+            carRepository.bumpCar(carId)
+            // Refresh list so the bumped listing jumps to top
+            loadMyListings()
+        }
+    }
 
     fun signOut() {
         authRepository.signOut()

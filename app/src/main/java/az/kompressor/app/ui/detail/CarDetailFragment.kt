@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentCarDetailBinding
 import az.kompressor.app.util.Resource
+import az.kompressor.app.util.TimeAgo
 import az.kompressor.app.util.formatMileage
 import az.kompressor.app.util.formatPrice
 import az.kompressor.app.util.showSnackbar
@@ -95,6 +96,8 @@ class CarDetailFragment : Fragment() {
                         }
 
                         binding.tvTitle.text = car.title
+                        // Age — e.g. "3 hours ago", shown right-aligned next to title
+                        binding.tvAge.text = TimeAgo.format(car.createdAt)
                         binding.tvPrice.text = car.price.formatPrice()
 
                         // View count — hidden until at least 1 view recorded

@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
+        <!-- Thumbnail -->
         <ImageView
             android:id="@+id/ivCarThumb"
             android:layout_width="80dp"
@@ -23,8 +24,9 @@
             android:contentDescription="Car thumbnail"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/btnBump" />
 
+        <!-- Title -->
         <TextView
             android:id="@+id/tvCarTitle"
             android:layout_width="0dp"
@@ -40,12 +42,13 @@
             app:layout_constraintStart_toEndOf="@id/ivCarThumb"
             app:layout_constraintEnd_toStartOf="@id/btnEdit" />
 
+        <!-- Price -->
         <TextView
             android:id="@+id/tvCarPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="3dp"
             android:textColor="@color/primary"
             android:textSize="13sp"
             android:textStyle="bold"
@@ -53,14 +56,18 @@
             app:layout_constraintStart_toEndOf="@id/ivCarThumb"
             app:layout_constraintEnd_toStartOf="@id/btnEdit" />
 
+        <!--
+            Analytics row: "👁 42 views · 28 days left"
+            This is Task 5 — seller sees engagement + urgency at a glance.
+        -->
         <TextView
-            android:id="@+id/tvCarCity"
+            android:id="@+id/tvStats"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:textColor="@color/text_secondary"
-            android:textSize="12sp"
+            android:textSize="11sp"
             app:layout_constraintTop_toBottomOf="@id/tvCarPrice"
             app:layout_constraintStart_toEndOf="@id/ivCarThumb"
             app:layout_constraintEnd_toStartOf="@id/btnEdit" />
@@ -75,7 +82,7 @@
             android:contentDescription="Edit listing"
             android:padding="4dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnBump"
             app:layout_constraintEnd_toStartOf="@id/btnDelete" />
 
         <!-- Delete button -->
@@ -88,8 +95,28 @@
             android:contentDescription="Delete listing"
             android:padding="4dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnBump"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <!--
+            Bump button — full-width at the bottom of the card.
+            Resets createdAt + expiresAt → listing jumps to top of feed for another 30 days.
+        -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBump"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="10dp"
+            android:text="🔝 Bump to top"
+            android:textSize="12sp"
+            android:textColor="@color/primary"
+            app:strokeColor="@color/primary"
+            app:cornerRadius="8dp"
+            app:layout_constraintTop_toBottomOf="@id/ivCarThumb"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -34,12 +34,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- FAB floats centered ABOVE the bottom nav — no overlap, no z-order issues -->
+    <!-- FAB floats bottom-right, above the bottom nav -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/ic_nav_post"
         android:contentDescription="Post a car"
         android:elevation="12dp"
@@ -47,7 +48,6 @@
         app:tint="@color/white"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
