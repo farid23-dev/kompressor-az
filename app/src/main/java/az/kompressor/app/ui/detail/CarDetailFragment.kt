@@ -6,16 +6,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentCarDetailBinding
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
-import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,10 +38,8 @@ class CarDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
         binding.btnFavorite.setOnClickListener { viewModel.toggleFavorite() }
-
         viewModel.loadCar(args.carId)
         observeCarState()
         observeFavoriteState()
@@ -59,10 +58,19 @@ class CarDetailFragment : Fragment() {
                         binding.scrollView.isVisible = true
                         val car = state.data
 
-                        Glide.with(this@CarDetailFragment)
-                            .load(car.imageUrls.firstOrNull())
-                            .centerCrop()
-                            .into(binding.ivCarImage)
+                        // Image gallery
+                        if (car.imageUrls.isNotEmpty()) {
+                            binding.viewPagerImages.adapter =
+                                CarImageAdapter(car.imageUrls)
+                            setupDots(car.imageUrls.size)
+                            binding.viewPagerImages.registerOnPageChangeCallback(
+                                object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+                                    override fun onPageSelected(position: Int) {
+                                        updateDots(position, car.imageUrls.size)
+                                    }
+                                }
+                            )
+                        }
 
                         binding.tvTitle.text = car.title
                         binding.tvPrice.text = "${car.price} AZN"
@@ -72,11 +80,24 @@ class CarDetailFragment : Fragment() {
                         binding.tvTransmission.text = car.transmission
                         binding.tvCity.text = car.city
 
+                        // Description (hide if empty)
+                        if (car.description.isNotBlank()) {
+                            binding.tvDescriptionLabel.isVisible = true
+                            binding.tvDescription.isVisible = true
+                            binding.tvDescription.text = car.description
+                        }
+
+                        // Real seller phone
+                        val phoneNumber = car.phone.ifBlank { null }
                         binding.btnContact.setOnClickListener {
                             val intent = Intent(Intent.ACTION_DIAL).apply {
-                                data = Uri.parse("tel:+994501234567")
+                                data = Uri.parse("tel:${phoneNumber ?: ""}")
                             }
-                            startActivity(intent)
+                            if (phoneNumber != null) {
+                                startActivity(intent)
+                            } else {
+                                binding.root.showSnackbar("No phone number available")
+                            }
                         }
                     }
                     is Resource.Error -> {
@@ -85,6 +106,32 @@ class CarDetailFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun setupDots(count: Int) {
+        binding.dotsLayout.removeAllViews()
+        if (count <= 1) return
+        repeat(count) { i ->
+            val dot = ImageView(requireContext()).apply {
+                setImageResource(
+                    if (i == 0) R.drawable.dot_active else R.drawable.dot_inactive
+                )
+                val size = resources.getDimensionPixelSize(android.R.dimen.notification_large_icon_width) / 8
+                layoutParams = ViewGroup.MarginLayoutParams(size, size).apply {
+                    marginStart = 6; marginEnd = 6
+                }
+            }
+            binding.dotsLayout.addView(dot)
+        }
+    }
+
+    private fun updateDots(selected: Int, count: Int) {
+        if (count <= 1) return
+        for (i in 0 until binding.dotsLayout.childCount) {
+            (binding.dotsLayout.getChildAt(i) as? ImageView)?.setImageResource(
+                if (i == selected) R.drawable.dot_active else R.drawable.dot_inactive
+            )
         }
     }
 

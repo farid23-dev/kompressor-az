@@ -67,29 +67,46 @@ class CarRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getCarsByUser(uid: String): Flow<Resource<List<Car>>> = flow {
+        emit(Resource.Loading)
+        try {
+            val snapshot = carsCollection
+                .whereEqualTo("sellerUid", uid)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get().await()
+            val cars = snapshot.documents.mapNotNull { doc ->
+                doc.toObject(CarDto::class.java)?.copy(id = doc.id)?.toDomain()
+            }
+            emit(Resource.Success(cars))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Failed to load your listings"))
+        }
+    }
+
+    override fun deleteCarById(carId: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading)
+        try {
+            carsCollection.document(carId).delete().await()
+            emit(Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Failed to delete car"))
+        }
+    }
+
     override fun postCar(car: Car, imageUris: List<Uri>): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
         try {
-            // 1. Upload images to Firebase Storage
             val imageUrls = imageUris.map { uri ->
                 val ref = storage.reference.child("cars/${UUID.randomUUID()}.jpg")
                 ref.putFile(uri).await()
                 ref.downloadUrl.await().toString()
             }
-
-            // 2. Save car document to Firestore
             val carDto = CarDto(
-                title = car.title,
-                brand = car.brand,
-                model = car.model,
-                year = car.year,
-                price = car.price,
-                mileage = car.mileage,
-                fuelType = car.fuelType,
-                transmission = car.transmission,
-                city = car.city,
-                imageUrls = imageUrls,
-                sellerUid = car.sellerUid,
+                title = car.title, brand = car.brand, model = car.model,
+                year = car.year, price = car.price, mileage = car.mileage,
+                fuelType = car.fuelType, transmission = car.transmission,
+                city = car.city, description = car.description, phone = car.phone,
+                imageUrls = imageUrls, sellerUid = car.sellerUid,
                 createdAt = System.currentTimeMillis()
             )
             carsCollection.add(carDto).await()
@@ -102,14 +119,13 @@ class CarRepositoryImpl @Inject constructor(
     override suspend fun seedDummyData() {
         val snapshot = carsCollection.limit(1).get().await()
         if (!snapshot.isEmpty) return
-
         val dummyCars = listOf(
-            CarDto(title = "BMW 5 Series", brand = "BMW", model = "5 Series", year = 2021, price = 45000, mileage = 32000, fuelType = "Petrol", transmission = "Automatic", city = "Baku", imageUrls = listOf("https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis()),
-            CarDto(title = "Mercedes E-Class", brand = "Mercedes", model = "E-Class", year = 2020, price = 52000, mileage = 45000, fuelType = "Diesel", transmission = "Automatic", city = "Baku", imageUrls = listOf("https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 1000),
-            CarDto(title = "Toyota Camry", brand = "Toyota", model = "Camry", year = 2022, price = 38000, mileage = 18000, fuelType = "Hybrid", transmission = "Automatic", city = "Ganja", imageUrls = listOf("https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 2000),
-            CarDto(title = "Volkswagen Passat", brand = "Volkswagen", model = "Passat", year = 2019, price = 28000, mileage = 67000, fuelType = "Petrol", transmission = "Manual", city = "Sumqayit", imageUrls = listOf("https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 3000),
-            CarDto(title = "Audi A6", brand = "Audi", model = "A6", year = 2020, price = 49000, mileage = 41000, fuelType = "Petrol", transmission = "Automatic", city = "Baku", imageUrls = listOf("https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 4000),
-            CarDto(title = "Hyundai Tucson", brand = "Hyundai", model = "Tucson", year = 2023, price = 35000, mileage = 8000, fuelType = "Petrol", transmission = "Automatic", city = "Baku", imageUrls = listOf("https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 5000)
+            CarDto(title = "BMW 5 Series", brand = "BMW", model = "5 Series", year = 2021, price = 45000, mileage = 32000, fuelType = "Petrol", transmission = "Automatic", city = "Baku", phone = "+994501234567", description = "Well maintained, full service history.", imageUrls = listOf("https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis()),
+            CarDto(title = "Mercedes E-Class", brand = "Mercedes", model = "E-Class", year = 2020, price = 52000, mileage = 45000, fuelType = "Diesel", transmission = "Automatic", city = "Baku", phone = "+994502345678", description = "Excellent condition, panoramic roof.", imageUrls = listOf("https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 1000),
+            CarDto(title = "Toyota Camry", brand = "Toyota", model = "Camry", year = 2022, price = 38000, mileage = 18000, fuelType = "Hybrid", transmission = "Automatic", city = "Ganja", phone = "+994503456789", description = "Hybrid, low fuel costs, like new.", imageUrls = listOf("https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 2000),
+            CarDto(title = "Volkswagen Passat", brand = "Volkswagen", model = "Passat", year = 2019, price = 28000, mileage = 67000, fuelType = "Petrol", transmission = "Manual", city = "Sumqayit", phone = "+994504567890", description = "Clean interior, no accidents.", imageUrls = listOf("https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 3000),
+            CarDto(title = "Audi A6", brand = "Audi", model = "A6", year = 2020, price = 49000, mileage = 41000, fuelType = "Petrol", transmission = "Automatic", city = "Baku", phone = "+994505678901", description = "Quattro AWD, leather seats.", imageUrls = listOf("https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 4000),
+            CarDto(title = "Hyundai Tucson", brand = "Hyundai", model = "Tucson", year = 2023, price = 35000, mileage = 8000, fuelType = "Petrol", transmission = "Automatic", city = "Baku", phone = "+994506789012", description = "Brand new condition, still under warranty.", imageUrls = listOf("https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=800"), sellerUid = "demo", createdAt = System.currentTimeMillis() - 5000)
         )
         dummyCars.forEach { car -> carsCollection.add(car).await() }
     }

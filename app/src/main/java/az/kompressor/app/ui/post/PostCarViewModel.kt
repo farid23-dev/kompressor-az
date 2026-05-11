@@ -38,13 +38,15 @@ class PostCarViewModel @Inject constructor(
     fun postCar(
         title: String, brand: String, model: String,
         year: Int, price: Long, mileage: Int,
-        fuelType: String, transmission: String, city: String
+        fuelType: String, transmission: String,
+        city: String, phone: String, description: String
     ) {
         val car = Car(
             title = title, brand = brand, model = model,
             year = year, price = price, mileage = mileage,
             fuelType = fuelType, transmission = transmission,
-            city = city, sellerUid = authRepository.getCurrentUser()?.uid ?: ""
+            city = city, phone = phone, description = description,
+            sellerUid = authRepository.getCurrentUser()?.uid ?: ""
         )
         postCarUseCase(car, _selectedImages.value)
             .onEach { _postState.value = it }

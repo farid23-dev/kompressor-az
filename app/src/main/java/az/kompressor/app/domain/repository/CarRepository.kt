@@ -10,5 +10,7 @@ interface CarRepository {
     fun searchCars(query: String): Flow<Resource<List<Car>>>
     fun getCarById(carId: String): Flow<Resource<Car>>
     fun postCar(car: Car, imageUris: List<Uri>): Flow<Resource<Unit>>
+    fun getCarsByUser(uid: String): Flow<Resource<List<Car>>>
+    fun deleteCarById(carId: String): Flow<Resource<Unit>>
     suspend fun seedDummyData()
 }

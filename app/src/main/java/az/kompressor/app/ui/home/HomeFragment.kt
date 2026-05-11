@@ -36,9 +36,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupRecyclerView()
         setupSearch()
+        setupSwipeRefresh()
+        setupFilterButton()
+        setupFilterChip()
         observeCars()
+        observeFilter()
+
         binding.btnProfile.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
@@ -62,15 +68,47 @@ class HomeFragment : Fragment() {
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrBlank()) viewModel.loadCars()
+                viewModel.search(newText ?: "")
                 return true
             }
         })
     }
 
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.loadCars()
+        }
+    }
+
+    private fun setupFilterButton() {
+        binding.btnFilter.setOnClickListener {
+            FilterBottomSheet().show(childFragmentManager, FilterBottomSheet.TAG)
+        }
+    }
+
+    private fun setupFilterChip() {
+        binding.chipActiveFilter.setOnCloseIconClickListener {
+            viewModel.clearFilter()
+        }
+    }
+
+    private fun observeFilter() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.filterState.collectLatest { filter ->
+                binding.chipActiveFilter.isVisible = filter.isActive
+                if (filter.isActive) {
+                    binding.chipActiveFilter.text = filter.label()
+                }
+            }
+        }
+    }
+
     private fun observeCars() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.carsState.collectLatest { state ->
+                // Stop swipe refresh spinner regardless of result
+                binding.swipeRefresh.isRefreshing = false
+
                 when (state) {
                     is Resource.Loading -> {
                         binding.progressBar.isVisible = true

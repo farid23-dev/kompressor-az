@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doOnTextChanged
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,12 +34,8 @@ class PostCarFragment : Fragment() {
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.clipData?.let { clipData ->
-                for (i in 0 until clipData.itemCount) {
-                    viewModel.addImage(clipData.getItemAt(i).uri)
-                }
-            } ?: result.data?.data?.let { uri ->
-                viewModel.addImage(uri)
-            }
+                for (i in 0 until clipData.itemCount) viewModel.addImage(clipData.getItemAt(i).uri)
+            } ?: result.data?.data?.let { uri -> viewModel.addImage(uri) }
         }
     }
 
@@ -50,6 +47,7 @@ class PostCarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupImageRecyclerView()
+        setupValidationClearers()
         setupClickListeners()
         observeState()
     }
@@ -60,13 +58,23 @@ class PostCarFragment : Fragment() {
             adapter = imageAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.selectedImages.collectLatest { uris ->
                 imageAdapter.submitList(uris)
                 binding.tvImageCount.text = "${uris.size} photo(s) selected"
             }
         }
+    }
+
+    // Clear inline errors as user types
+    private fun setupValidationClearers() {
+        binding.etBrand.doOnTextChanged { _, _, _, _ -> binding.tilBrand.error = null }
+        binding.etModel.doOnTextChanged { _, _, _, _ -> binding.tilModel.error = null }
+        binding.etYear.doOnTextChanged { _, _, _, _ -> binding.tilYear.error = null }
+        binding.etPrice.doOnTextChanged { _, _, _, _ -> binding.tilPrice.error = null }
+        binding.etMileage.doOnTextChanged { _, _, _, _ -> binding.tilMileage.error = null }
+        binding.etPhone.doOnTextChanged { _, _, _, _ -> binding.tilPhone.error = null }
+        binding.etCity.doOnTextChanged { _, _, _, _ -> binding.tilCity.error = null }
     }
 
     private fun setupClickListeners() {
@@ -81,6 +89,8 @@ class PostCarFragment : Fragment() {
         }
 
         binding.btnPost.setOnClickListener {
+            if (!validateForm()) return@setOnClickListener
+
             val year = binding.etYear.text.toString().toIntOrNull() ?: 0
             val price = binding.etPrice.text.toString().toLongOrNull() ?: 0
             val mileage = binding.etMileage.text.toString().toIntOrNull() ?: 0
@@ -94,9 +104,40 @@ class PostCarFragment : Fragment() {
                 mileage = mileage,
                 fuelType = binding.spinnerFuel.selectedItem.toString(),
                 transmission = binding.spinnerTransmission.selectedItem.toString(),
-                city = binding.etCity.text.toString()
+                city = binding.etCity.text.toString(),
+                phone = binding.etPhone.text.toString(),
+                description = binding.etDescription.text.toString()
             )
         }
+    }
+
+    private fun validateForm(): Boolean {
+        var valid = true
+        if (binding.etBrand.text.isNullOrBlank()) {
+            binding.tilBrand.error = "Brand is required"; valid = false
+        }
+        if (binding.etModel.text.isNullOrBlank()) {
+            binding.tilModel.error = "Model is required"; valid = false
+        }
+        val year = binding.etYear.text.toString().toIntOrNull()
+        if (year == null || year < 1900 || year > 2100) {
+            binding.tilYear.error = "Enter a valid year"; valid = false
+        }
+        val price = binding.etPrice.text.toString().toLongOrNull()
+        if (price == null || price <= 0) {
+            binding.tilPrice.error = "Enter a valid price"; valid = false
+        }
+        val mileage = binding.etMileage.text.toString().toIntOrNull()
+        if (mileage == null || mileage < 0) {
+            binding.tilMileage.error = "Enter valid mileage"; valid = false
+        }
+        if (binding.etPhone.text.isNullOrBlank()) {
+            binding.tilPhone.error = "Phone number is required"; valid = false
+        }
+        if (binding.etCity.text.isNullOrBlank()) {
+            binding.tilCity.error = "City is required"; valid = false
+        }
+        return valid
     }
 
     private fun observeState() {

@@ -12,11 +12,13 @@ class PostCarUseCase @Inject constructor(
     private val carRepository: CarRepository
 ) {
     operator fun invoke(car: Car, imageUris: List<Uri>): Flow<Resource<Unit>> {
-        if (car.title.isBlank()) return flow { emit(Resource.Error("Title cannot be empty")) }
-        if (car.brand.isBlank()) return flow { emit(Resource.Error("Brand cannot be empty")) }
-        if (car.model.isBlank()) return flow { emit(Resource.Error("Model cannot be empty")) }
+        if (car.brand.isBlank()) return flow { emit(Resource.Error("Brand is required")) }
+        if (car.model.isBlank()) return flow { emit(Resource.Error("Model is required")) }
+        if (car.year < 1900 || car.year > 2100) return flow { emit(Resource.Error("Enter a valid year")) }
         if (car.price <= 0) return flow { emit(Resource.Error("Price must be greater than 0")) }
-        if (car.year < 1900) return flow { emit(Resource.Error("Invalid year")) }
+        if (car.mileage < 0) return flow { emit(Resource.Error("Enter a valid mileage")) }
+        if (car.phone.isBlank()) return flow { emit(Resource.Error("Phone number is required")) }
+        if (car.city.isBlank()) return flow { emit(Resource.Error("City is required")) }
         return carRepository.postCar(car, imageUris)
     }
 }

@@ -11,6 +11,8 @@ data class Car(
     val fuelType: String = "",
     val transmission: String = "",
     val city: String = "",
+    val description: String = "",
+    val phone: String = "",
     val imageUrls: List<String> = emptyList(),
     val sellerUid: String = "",
     val createdAt: Long = 0L
