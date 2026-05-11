@@ -36,6 +36,20 @@
         android:id="@+id/homeFragment"
         android:name="az.kompressor.app.ui.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_carDetailFragment"
+            app:destination="@id/carDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/carDetailFragment"
+        android:name="az.kompressor.app.ui.detail.CarDetailFragment"
+        android:label="Car Detail"
+        tools:layout="@layout/fragment_car_detail">
+        <argument
+            android:name="carId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>
