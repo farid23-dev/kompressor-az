@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kompressor.az</string>
+
+    <!-- Auth -->
+    <string name="sign_in_title">Добро пожаловать</string>
+    <string name="sign_in_subtitle">Войдите в свой аккаунт</string>
+    <string name="btn_sign_in">Войти</string>
+    <string name="go_to_sign_up">Нет аккаунта? Зарегистрироваться</string>
+    <string name="sign_up_title">Создать аккаунт</string>
+    <string name="sign_up_subtitle">Присоединяйтесь к Kompressor.az сегодня</string>
+    <string name="btn_sign_up">Создать аккаунт</string>
+    <string name="go_to_sign_in">Уже есть аккаунт? Войти</string>
+    <string name="hint_email">Адрес эл. почты</string>
+    <string name="hint_password">Пароль</string>
+    <string name="hint_confirm_password">Подтвердите пароль</string>
+    <string name="hint_full_name">Имя и фамилия</string>
+
+    <!-- Home -->
+    <string name="search_hint">Поиск по марке, модели, городу…</string>
+    <string name="no_cars_found">Автомобили не найдены</string>
+    <string name="no_cars_subtitle">Попробуйте изменить поиск\nили сбросить фильтр</string>
+
+    <!-- Detail -->
+    <string name="btn_call">📞 Позвонить</string>
+    <string name="btn_whatsapp">💬 WhatsApp</string>
+    <string name="btn_share">↑</string>
+    <string name="label_year">Год</string>
+    <string name="label_mileage">Пробег</string>
+    <string name="label_fuel">Тип топлива</string>
+    <string name="label_transmission">Коробка передач</string>
+    <string name="label_city">Город</string>
+    <string name="label_description">Описание</string>
+
+    <!-- Post -->
+    <string name="post_title">Разместить объявление</string>
+    <string name="edit_title">Редактировать объявление</string>
+    <string name="btn_post">Разместить объявление</string>
+    <string name="btn_save_changes">Сохранить изменения</string>
+    <string name="btn_add_photo">Добавить фото</string>
+    <string name="hint_brand">Марка (напр. BMW)</string>
+    <string name="hint_model">Модель (напр. 5 Series)</string>
+    <string name="hint_year">Год выпуска</string>
+    <string name="hint_price">Цена (AZN)</string>
+    <string name="hint_mileage">Пробег (км)</string>
+    <string name="hint_phone">Номер телефона</string>
+    <string name="hint_city">Город</string>
+    <string name="hint_description">Дополнительная информация (необязательно)</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Профиль</string>
+    <string name="btn_sign_out">Выйти</string>
+    <string name="my_listings">Мои объявления</string>
+    <string name="no_listings">Объявлений пока нет</string>
+    <string name="no_listings_subtitle">Нажмите + чтобы разместить первый автомобиль</string>
+
+    <!-- Favorites -->
+    <string name="saved_cars">Избранное</string>
+    <string name="no_favorites">Сохранённых автомобилей нет</string>
+    <string name="no_favorites_subtitle">Нажмите ★ на любом объявлении\nчтобы сохранить его здесь</string>
+
+    <!-- Filter -->
+    <string name="filter_title">Фильтр и сортировка</string>
+    <string name="filter_fuel">Тип топлива</string>
+    <string name="filter_transmission">Коробка передач</string>
+    <string name="filter_city">Город</string>
+    <string name="filter_sort">Сортировка</string>
+    <string name="sort_newest">Сначала новые</string>
+    <string name="sort_price_asc">Цена: по возрастанию</string>
+    <string name="sort_price_desc">Цена: по убыванию</string>
+    <string name="btn_apply">Применить</string>
+    <string name="btn_clear">Очистить</string>
+
+    <!-- General -->
+    <string name="btn_back">Назад</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete_listing_title">Удалить объявление</string>
+    <string name="just_now">Только что</string>
+</resources>

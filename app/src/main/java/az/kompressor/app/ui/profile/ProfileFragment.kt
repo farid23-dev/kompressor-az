@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentProfileBinding
+import az.kompressor.app.ui.profile.ProfileFragmentDirections
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,14 +52,21 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupMyListings() {
-        myCarAdapter = MyCarAdapter { car ->
-            AlertDialog.Builder(requireContext())
-                .setTitle("Delete listing")
-                .setMessage("Remove \"${car.title}\" from your listings?")
-                .setPositiveButton("Delete") { _, _ -> viewModel.deleteCar(car.id) }
-                .setNegativeButton("Cancel", null)
-                .show()
-        }
+        myCarAdapter = MyCarAdapter(
+            onEdit = { car ->
+                val action = ProfileFragmentDirections
+                    .actionProfileFragmentToPostCarFragment(editCarId = car.id)
+                findNavController().navigate(action)
+            },
+            onDelete = { car ->
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete listing")
+                    .setMessage("Remove \"${car.title}\" from your listings?")
+                    .setPositiveButton("Delete") { _, _ -> viewModel.deleteCar(car.id) }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+        )
         binding.rvMyListings.apply {
             adapter = myCarAdapter
             layoutManager = LinearLayoutManager(requireContext())

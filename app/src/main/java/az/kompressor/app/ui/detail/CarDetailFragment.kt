@@ -3,6 +3,7 @@ package az.kompressor.app.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,15 @@ class CarDetailFragment : Fragment() {
     private val viewModel: CarDetailViewModel by viewModels()
     private val args: CarDetailFragmentArgs by navArgs()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Shared element enter transition
+        sharedElementEnterTransition = TransitionInflater.from(requireContext())
+            .inflateTransition(android.R.transition.move)
+        // Delay until image loads so the transition has content to animate
+        postponeEnterTransition()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -38,6 +48,10 @@ class CarDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Match the transitionName set on ivCarImage in the adapter
+        binding.viewPagerImages.transitionName = "car_image_${args.carId}"
+
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
         binding.btnFavorite.setOnClickListener { viewModel.toggleFavorite() }
         viewModel.loadCar(args.carId)
@@ -58,10 +72,13 @@ class CarDetailFragment : Fragment() {
                         binding.scrollView.isVisible = true
                         val car = state.data
 
-                        // Image gallery
+                        // Image gallery — start postponed transition after first image loads
                         if (car.imageUrls.isNotEmpty()) {
-                            binding.viewPagerImages.adapter =
-                                CarImageAdapter(car.imageUrls)
+                            val adapter = CarImageAdapter(car.imageUrls) {
+                                // Called back when first image is ready
+                                startPostponedEnterTransition()
+                            }
+                            binding.viewPagerImages.adapter = adapter
                             setupDots(car.imageUrls.size)
                             binding.viewPagerImages.registerOnPageChangeCallback(
                                 object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
@@ -70,6 +87,9 @@ class CarDetailFragment : Fragment() {
                                     }
                                 }
                             )
+                        } else {
+                            // No images — start immediately
+                            startPostponedEnterTransition()
                         }
 
                         binding.tvTitle.text = car.title
@@ -80,29 +100,63 @@ class CarDetailFragment : Fragment() {
                         binding.tvTransmission.text = car.transmission
                         binding.tvCity.text = car.city
 
-                        // Description (hide if empty)
                         if (car.description.isNotBlank()) {
                             binding.tvDescriptionLabel.isVisible = true
                             binding.tvDescription.isVisible = true
                             binding.tvDescription.text = car.description
                         }
 
-                        // Real seller phone
                         val phoneNumber = car.phone.ifBlank { null }
+
+                        // Call
                         binding.btnContact.setOnClickListener {
-                            val intent = Intent(Intent.ACTION_DIAL).apply {
-                                data = Uri.parse("tel:${phoneNumber ?: ""}")
-                            }
                             if (phoneNumber != null) {
-                                startActivity(intent)
+                                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber")))
                             } else {
                                 binding.root.showSnackbar("No phone number available")
                             }
+                        }
+
+                        // WhatsApp deep link
+                        binding.btnWhatsApp.setOnClickListener {
+                            if (phoneNumber != null) {
+                                // Strip non-digits, ensure international format
+                                val digits = phoneNumber.replace(Regex("[^\\d]"), "")
+                                val url = "https://wa.me/$digits"
+                                try {
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                } catch (e: Exception) {
+                                    binding.root.showSnackbar("WhatsApp not installed")
+                                }
+                            } else {
+                                binding.root.showSnackbar("No phone number available")
+                            }
+                        }
+
+                        // Share
+                        binding.btnShare.setOnClickListener {
+                            val text = buildString {
+                                append("🚗 ${car.title}\n")
+                                append("💰 ${car.price} AZN\n")
+                                append("📍 ${car.city} · ${car.year} · ${car.mileage} km\n")
+                                append("⛽ ${car.fuelType} · ${car.transmission}\n")
+                                if (phoneNumber != null) append("📞 $phoneNumber\n")
+                                append("\nFound on Kompressor.az")
+                            }
+                            startActivity(
+                                Intent.createChooser(
+                                    Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_TEXT, text)
+                                    }, "Share listing"
+                                )
+                            )
                         }
                     }
                     is Resource.Error -> {
                         binding.progressBar.isVisible = false
                         binding.root.showSnackbar(state.message)
+                        startPostponedEnterTransition()
                     }
                 }
             }
@@ -114,11 +168,10 @@ class CarDetailFragment : Fragment() {
         if (count <= 1) return
         repeat(count) { i ->
             val dot = ImageView(requireContext()).apply {
-                setImageResource(
-                    if (i == 0) R.drawable.dot_active else R.drawable.dot_inactive
-                )
-                val size = resources.getDimensionPixelSize(android.R.dimen.notification_large_icon_width) / 8
-                layoutParams = ViewGroup.MarginLayoutParams(size, size).apply {
+                setImageResource(if (i == 0) R.drawable.dot_active else R.drawable.dot_inactive)
+                val size = 20 // dp → px
+                val px = (size * resources.displayMetrics.density).toInt()
+                layoutParams = ViewGroup.MarginLayoutParams(px, px).apply {
                     marginStart = 6; marginEnd = 6
                 }
             }

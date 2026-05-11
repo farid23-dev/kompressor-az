@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Empty favorites: outlined heart with dotted border -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Circle background -->
+    <path android:fillColor="#FFF1F2"
+        android:pathData="M60,60 m-52,0 a52,52 0 1,0 104,0 a52,52 0 1,0 -104,0"/>
+
+    <!-- Heart outline -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FDA4AF"
+        android:strokeWidth="4"
+        android:pathData="M60,82 C60,82 32,64 32,46 C32,37 39,30 48,30 C53,30 58,33 60,37 C62,33 67,30 72,30 C81,30 88,37 88,46 C88,64 60,82 60,82 Z"/>
+
+    <!-- Small broken heart line -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FDA4AF"
+        android:strokeWidth="3"
+        android:pathData="M 57,44 L 61,52 L 58,52 L 62,62"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+</vector>

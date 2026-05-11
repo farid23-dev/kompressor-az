@@ -1,16 +1,19 @@
 package az.kompressor.app.ui.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.databinding.ItemCarBinding
+import az.kompressor.app.util.TimeAgo
 import com.bumptech.glide.Glide
 
 class CarAdapter(
-    private val onItemClick: (Car) -> Unit
+    // Exposes the shared ImageView for the scene transition animation
+    private val onItemClick: (Car, View) -> Unit
 ) : ListAdapter<Car, CarAdapter.CarViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarViewHolder {
@@ -26,11 +29,15 @@ class CarAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(car: Car) {
+            // Unique transitionName per item so the system knows which view to animate
+            binding.ivCarImage.transitionName = "car_image_${car.id}"
+
             binding.tvTitle.text = car.title
             binding.tvPrice.text = "${car.price} AZN"
-            binding.tvDetails.text = "${car.year} • ${car.mileage} km • ${car.fuelType}"
-            binding.tvCity.text = car.city
+            binding.tvDetails.text = "${car.year} · ${car.mileage} km · ${car.fuelType}"
+            binding.tvCity.text = "📍 ${car.city}"
             binding.tvTransmission.text = car.transmission
+            binding.tvAge.text = TimeAgo.format(car.createdAt)
 
             Glide.with(binding.ivCarImage.context)
                 .load(car.imageUrls.firstOrNull())
@@ -38,7 +45,7 @@ class CarAdapter(
                 .centerCrop()
                 .into(binding.ivCarImage)
 
-            binding.root.setOnClickListener { onItemClick(car) }
+            binding.root.setOnClickListener { onItemClick(car, binding.ivCarImage) }
         }
     }
 

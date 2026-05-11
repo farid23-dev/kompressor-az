@@ -65,7 +65,13 @@
         android:id="@+id/postCarFragment"
         android:name="az.kompressor.app.ui.post.PostCarFragment"
         android:label="Post a Car"
-        tools:layout="@layout/fragment_post_car" />
+        tools:layout="@layout/fragment_post_car">
+        <!-- Empty string = new listing; non-empty = edit mode -->
+        <argument
+            android:name="editCarId"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
 
     <fragment
         android:id="@+id/favoritesFragment"
@@ -87,6 +93,9 @@
             app:destination="@id/signInFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_postCarFragment"
+            app:destination="@id/postCarFragment" />
     </fragment>
 
 </navigation>

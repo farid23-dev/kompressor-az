@@ -21,6 +21,7 @@
             android:layout_height="180dp"
             android:scaleType="centerCrop"
             android:contentDescription="Car image"
+            android:transitionName="car_image_placeholder"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -77,6 +78,18 @@
             app:layout_constraintTop_toBottomOf="@id/tvDetails"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Age badge: "2h ago", "3 days ago" etc. -->
+        <TextView
+            android:id="@+id/tvAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvTransmission" />
 
         <TextView
             android:id="@+id/tvTransmission"

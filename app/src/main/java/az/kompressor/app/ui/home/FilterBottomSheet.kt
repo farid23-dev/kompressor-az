@@ -5,22 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import az.kompressor.app.R
 import az.kompressor.app.databinding.BottomSheetFilterBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
  * Filter + Sort bottom sheet.
- * Uses activityViewModels so it shares the same HomeViewModel instance as HomeFragment.
+ * Scoped to the parent (HomeFragment) so it shares the exact same ViewModel instance.
+ * activityViewModels() would create a separate instance — don't use it here.
  */
 class FilterBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetFilterBinding? = null
     private val binding get() = _binding!!
 
-    // Share the same ViewModel instance that owns the car list
-    private val viewModel: HomeViewModel by activityViewModels()
+    // requireParentFragment() = HomeFragment → same VM instance as HomeFragment's viewModels()
+    private val viewModel: HomeViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

@@ -10,6 +10,7 @@ import az.kompressor.app.domain.model.Car
 import com.bumptech.glide.Glide
 
 class MyCarAdapter(
+    private val onEdit: (Car) -> Unit,
     private val onDelete: (Car) -> Unit
 ) : ListAdapter<Car, MyCarAdapter.MyCarViewHolder>(DiffCallback()) {
 
@@ -34,6 +35,7 @@ class MyCarAdapter(
                 .centerCrop()
                 .placeholder(android.R.color.darker_gray)
                 .into(binding.ivCarThumb)
+            binding.btnEdit.setOnClickListener { onEdit(car) }
             binding.btnDelete.setOnClickListener { onDelete(car) }
         }
     }

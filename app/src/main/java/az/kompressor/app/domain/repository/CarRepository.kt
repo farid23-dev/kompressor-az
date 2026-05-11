@@ -12,5 +12,6 @@ interface CarRepository {
     fun postCar(car: Car, imageUris: List<Uri>): Flow<Resource<Unit>>
     fun getCarsByUser(uid: String): Flow<Resource<List<Car>>>
     fun deleteCarById(carId: String): Flow<Resource<Unit>>
+    fun updateCar(car: Car, newImageUris: List<Uri>, existingImageUrls: List<String>): Flow<Resource<Unit>>
     suspend fun seedDummyData()
 }

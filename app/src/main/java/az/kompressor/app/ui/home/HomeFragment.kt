@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -51,9 +52,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        carAdapter = CarAdapter { car ->
+        carAdapter = CarAdapter { car, sharedImageView ->
             val action = HomeFragmentDirections.actionHomeFragmentToCarDetailFragment(car.id)
-            findNavController().navigate(action)
+            val extras = FragmentNavigatorExtras(
+                sharedImageView to "car_image_${car.id}"
+            )
+            findNavController().navigate(action, extras)
         }
         binding.rvCars.apply {
             adapter = carAdapter

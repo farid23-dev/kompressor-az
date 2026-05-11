@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Empty listings: clipboard with a plus sign -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Circle background -->
+    <path android:fillColor="#F0FDF4"
+        android:pathData="M60,60 m-52,0 a52,52 0 1,0 104,0 a52,52 0 1,0 -104,0"/>
+
+    <!-- Clipboard body -->
+    <path android:fillColor="#BBF7D0"
+        android:pathData="M 38,36 Q 38,30 44,30 L 76,30 Q 82,30 82,36 L 82,90 Q 82,96 76,96 L 44,96 Q 38,96 38,90 Z"/>
+
+    <!-- Clipboard top clip -->
+    <path android:fillColor="#4ADE80"
+        android:pathData="M 52,26 Q 52,22 60,22 Q 68,22 68,26 L 68,34 L 52,34 Z"/>
+
+    <!-- Plus icon -->
+    <path android:fillColor="#16A34A" android:strokeWidth="0"
+        android:pathData="M 58,54 L 58,46 L 62,46 L 62,54 L 70,54 L 70,58 L 62,58 L 62,66 L 58,66 L 58,58 L 50,58 L 50,54 Z"/>
+</vector>

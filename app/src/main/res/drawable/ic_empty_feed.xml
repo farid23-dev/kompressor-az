@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Empty feed: magnifying glass over a car silhouette -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Circle background -->
+    <path android:fillColor="#EEF2FF"
+        android:pathData="M60,60 m-52,0 a52,52 0 1,0 104,0 a52,52 0 1,0 -104,0"/>
+
+    <!-- Car body -->
+    <path android:fillColor="#C7D2FE"
+        android:pathData="M 28,68 L 30,58 Q 35,46 46,44 L 50,44 Q 54,36 62,34 L 72,34 Q 80,34 85,41 L 89,46 L 92,58 L 92,68 Z"/>
+
+    <!-- Cabin -->
+    <path android:fillColor="#818CF8"
+        android:pathData="M 50,44 Q 54,37 62,35 L 72,35 Q 79,35 84,42 L 88,46 Z"/>
+
+    <!-- Front wheel -->
+    <path android:fillColor="#4338CA" android:pathData="M 78,68 A 9,9 0 1 1 77.99,68 Z"/>
+    <path android:fillColor="#EEF2FF" android:pathData="M 78,68 A 4.5,4.5 0 1 1 77.99,68 Z"/>
+
+    <!-- Rear wheel -->
+    <path android:fillColor="#4338CA" android:pathData="M 40,68 A 9,9 0 1 1 39.99,68 Z"/>
+    <path android:fillColor="#EEF2FF" android:pathData="M 40,68 A 4.5,4.5 0 1 1 39.99,68 Z"/>
+
+    <!-- Magnifying glass handle -->
+    <path android:fillColor="#6366F1" android:strokeColor="#6366F1" android:strokeWidth="3"
+        android:pathData="M 88,82 L 98,94" android:strokeLineCap="round"/>
+
+    <!-- Magnifying glass circle -->
+    <path android:fillColor="#00000000" android:strokeColor="#6366F1" android:strokeWidth="4"
+        android:pathData="M 80,74 A 12,12 0 1 1 79.99,74 Z"/>
+</vector>

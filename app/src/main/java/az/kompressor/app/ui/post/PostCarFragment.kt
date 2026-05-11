@@ -6,14 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentPostCarBinding
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
@@ -27,10 +29,11 @@ class PostCarFragment : Fragment() {
     private var _binding: FragmentPostCarBinding? = null
     private val binding get() = _binding!!
     private val viewModel: PostCarViewModel by viewModels()
+    private val args: PostCarFragmentArgs by navArgs()
     private lateinit var imageAdapter: SelectedImageAdapter
 
     private val imagePickerLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.clipData?.let { clipData ->
@@ -46,10 +49,28 @@ class PostCarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupSpinners()
         setupImageRecyclerView()
         setupValidationClearers()
         setupClickListeners()
         observeState()
+
+        // Edit mode: load existing car if carId was passed
+        val editCarId = args.editCarId
+        if (editCarId.isNotBlank()) {
+            viewModel.loadCarForEdit(editCarId)
+            observeEditCar()
+        }
+    }
+
+    private fun setupSpinners() {
+        val fuels = resources.getStringArray(R.array.fuel_types)
+        val transmissions = resources.getStringArray(R.array.transmission_types)
+        binding.spinnerFuel.adapter = ArrayAdapter(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, fuels)
+        binding.spinnerTransmission.adapter = ArrayAdapter(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, transmissions)
     }
 
     private fun setupImageRecyclerView() {
@@ -61,12 +82,14 @@ class PostCarFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.selectedImages.collectLatest { uris ->
                 imageAdapter.submitList(uris)
-                binding.tvImageCount.text = "${uris.size} photo(s) selected"
+                val existingCount = viewModel.existingImageUrls.value.size
+                val total = existingCount + uris.size
+                binding.tvImageCount.text = if (total == 0) "No photos selected"
+                    else "$total photo(s) selected${if (existingCount > 0) " ($existingCount existing)" else ""}"
             }
         }
     }
 
-    // Clear inline errors as user types
     private fun setupValidationClearers() {
         binding.etBrand.doOnTextChanged { _, _, _, _ -> binding.tilBrand.error = null }
         binding.etModel.doOnTextChanged { _, _, _, _ -> binding.tilModel.error = null }
@@ -94,20 +117,55 @@ class PostCarFragment : Fragment() {
             val year = binding.etYear.text.toString().toIntOrNull() ?: 0
             val price = binding.etPrice.text.toString().toLongOrNull() ?: 0
             val mileage = binding.etMileage.text.toString().toIntOrNull() ?: 0
+            val brand = binding.etBrand.text.toString()
+            val model = binding.etModel.text.toString()
+            val fuelType = binding.spinnerFuel.selectedItem.toString()
+            val transmission = binding.spinnerTransmission.selectedItem.toString()
+            val city = binding.etCity.text.toString()
+            val phone = binding.etPhone.text.toString()
+            val description = binding.etDescription.text.toString()
 
-            viewModel.postCar(
-                title = "${binding.etBrand.text} ${binding.etModel.text}".trim(),
-                brand = binding.etBrand.text.toString(),
-                model = binding.etModel.text.toString(),
-                year = year,
-                price = price,
-                mileage = mileage,
-                fuelType = binding.spinnerFuel.selectedItem.toString(),
-                transmission = binding.spinnerTransmission.selectedItem.toString(),
-                city = binding.etCity.text.toString(),
-                phone = binding.etPhone.text.toString(),
-                description = binding.etDescription.text.toString()
-            )
+            if (args.editCarId.isNotBlank()) {
+                viewModel.updateCar(brand, model, year, price, mileage,
+                    fuelType, transmission, city, phone, description)
+            } else {
+                viewModel.postCar("$brand $model".trim(), brand, model, year, price, mileage,
+                    fuelType, transmission, city, phone, description)
+            }
+        }
+    }
+
+    /** Pre-fill all fields when in edit mode */
+    private fun observeEditCar() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.editCar.collectLatest { car ->
+                car ?: return@collectLatest
+                binding.tvPostTitle.text = "Edit Listing"
+                binding.btnPost.text = "Save Changes"
+
+                binding.etBrand.setText(car.brand)
+                binding.etModel.setText(car.model)
+                binding.etYear.setText(car.year.toString())
+                binding.etPrice.setText(car.price.toString())
+                binding.etMileage.setText(car.mileage.toString())
+                binding.etPhone.setText(car.phone)
+                binding.etCity.setText(car.city)
+                binding.etDescription.setText(car.description)
+
+                // Select correct spinner values
+                val fuels = resources.getStringArray(R.array.fuel_types)
+                val fuelIdx = fuels.indexOfFirst { it.equals(car.fuelType, ignoreCase = true) }
+                if (fuelIdx >= 0) binding.spinnerFuel.setSelection(fuelIdx)
+
+                val trans = resources.getStringArray(R.array.transmission_types)
+                val transIdx = trans.indexOfFirst { it.equals(car.transmission, ignoreCase = true) }
+                if (transIdx >= 0) binding.spinnerTransmission.setSelection(transIdx)
+
+                val existingCount = car.imageUrls.size
+                if (existingCount > 0) {
+                    binding.tvImageCount.text = "$existingCount existing photo(s)"
+                }
+            }
         }
     }
 
@@ -151,7 +209,8 @@ class PostCarFragment : Fragment() {
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
                         binding.btnPost.isEnabled = true
-                        binding.root.showSnackbar("Car posted successfully!")
+                        val msg = if (args.editCarId.isNotBlank()) "Listing updated!" else "Car posted successfully!"
+                        binding.root.showSnackbar(msg)
                         viewModel.resetState()
                         findNavController().navigateUp()
                     }

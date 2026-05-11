@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kompressor.az</string>
+
+    <!-- Auth -->
+    <string name="sign_in_title">Xoş gəldiniz</string>
+    <string name="sign_in_subtitle">Hesabınıza daxil olun</string>
+    <string name="btn_sign_in">Daxil ol</string>
+    <string name="go_to_sign_up">Hesabınız yoxdur? Qeydiyyat</string>
+    <string name="sign_up_title">Hesab yarat</string>
+    <string name="sign_up_subtitle">Bu gün Kompressor.az-a qoşulun</string>
+    <string name="btn_sign_up">Hesab yarat</string>
+    <string name="go_to_sign_in">Artıq hesabınız var? Daxil olun</string>
+    <string name="hint_email">E-poçt ünvanı</string>
+    <string name="hint_password">Şifrə</string>
+    <string name="hint_confirm_password">Şifrəni təsdiqləyin</string>
+    <string name="hint_full_name">Ad Soyad</string>
+
+    <!-- Home -->
+    <string name="search_hint">Marka, model, şəhər axtar…</string>
+    <string name="no_cars_found">Avtomobil tapılmadı</string>
+    <string name="no_cars_subtitle">Axtarışı dəyişdirin\nvə ya filteri silin</string>
+
+    <!-- Detail -->
+    <string name="btn_call">📞 Zəng et</string>
+    <string name="btn_whatsapp">💬 WhatsApp</string>
+    <string name="btn_share">↑</string>
+    <string name="label_year">İl</string>
+    <string name="label_mileage">Yürüş</string>
+    <string name="label_fuel">Yanacaq növü</string>
+    <string name="label_transmission">Sürətlər qutusu</string>
+    <string name="label_city">Şəhər</string>
+    <string name="label_description">Təsvir</string>
+
+    <!-- Post -->
+    <string name="post_title">Elan yerlə</string>
+    <string name="edit_title">Elanı redaktə et</string>
+    <string name="btn_post">Elan yerləşdir</string>
+    <string name="btn_save_changes">Dəyişiklikləri yadda saxla</string>
+    <string name="btn_add_photo">Foto əlavə et</string>
+    <string name="hint_brand">Marka (məs. BMW)</string>
+    <string name="hint_model">Model (məs. 5 Series)</string>
+    <string name="hint_year">İl</string>
+    <string name="hint_price">Qiymət (AZN)</string>
+    <string name="hint_mileage">Yürüş (km)</string>
+    <string name="hint_phone">Telefon nömrəsi</string>
+    <string name="hint_city">Şəhər</string>
+    <string name="hint_description">Əlavə məlumat (isteğe bağlı)</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profil</string>
+    <string name="btn_sign_out">Çıxış</string>
+    <string name="my_listings">Mənim elanlarım</string>
+    <string name="no_listings">Hələ elan yoxdur</string>
+    <string name="no_listings_subtitle">Birinci avtomobilinizi yerləşdirmək üçün + düyməsini basın</string>
+
+    <!-- Favorites -->
+    <string name="saved_cars">Yadda saxlananlar</string>
+    <string name="no_favorites">Yadda saxlanmış avtomobil yoxdur</string>
+    <string name="no_favorites_subtitle">Hər hansı elanda ★ düyməsini basın\nonu buraya əlavə edin</string>
+
+    <!-- Filter -->
+    <string name="filter_title">Filtr və Sıralama</string>
+    <string name="filter_fuel">Yanacaq növü</string>
+    <string name="filter_transmission">Sürətlər qutusu</string>
+    <string name="filter_city">Şəhər</string>
+    <string name="filter_sort">Sıralama</string>
+    <string name="sort_newest">Ən yeni</string>
+    <string name="sort_price_asc">Qiymət: Aşağıdan yuxarı</string>
+    <string name="sort_price_desc">Qiymət: Yuxarıdan aşağı</string>
+    <string name="btn_apply">Tətbiq et</string>
+    <string name="btn_clear">Sil</string>
+
+    <!-- General -->
+    <string name="btn_back">Geri</string>
+    <string name="delete">Sil</string>
+    <string name="cancel">Ləğv et</string>
+    <string name="delete_listing_title">Elanı sil</string>
+    <string name="just_now">İndicə</string>
+</resources>
