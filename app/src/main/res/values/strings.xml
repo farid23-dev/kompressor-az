@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Kompressor.az</string>
+    <string name="sign_in_title">Welcome Back</string>
+    <string name="sign_in_subtitle">Sign in to your account</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="go_to_sign_up">Don\'t have an account? Sign Up</string>
+    <string name="sign_up_title">Create Account</string>
+    <string name="sign_up_subtitle">Join Kompressor.az today</string>
+    <string name="btn_sign_up">Create Account</string>
+    <string name="go_to_sign_in">Already have an account? Sign In</string>
+    <string name="hint_email">Email Address</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_full_name">Full Name</string>
 </resources>
