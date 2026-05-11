@@ -40,6 +40,15 @@
         <action
             android:id="@+id/action_homeFragment_to_carDetailFragment"
             app:destination="@id/carDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_postCarFragment"
+            app:destination="@id/postCarFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <fragment
@@ -50,6 +59,34 @@
         <argument
             android:name="carId"
             app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/postCarFragment"
+        android:name="az.kompressor.app.ui.post.PostCarFragment"
+        android:label="Post a Car"
+        tools:layout="@layout/fragment_post_car" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="az.kompressor.app.ui.favorites.FavoritesFragment"
+        android:label="Saved Cars"
+        tools:layout="@layout/fragment_favorites">
+        <action
+            android:id="@+id/action_favoritesFragment_to_carDetailFragment"
+            app:destination="@id/carDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="az.kompressor.app.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

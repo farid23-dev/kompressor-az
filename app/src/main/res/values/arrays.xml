@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fuel_types">
+        <item>Petrol</item>
+        <item>Diesel</item>
+        <item>Hybrid</item>
+        <item>Electric</item>
+        <item>LPG</item>
+    </string-array>
+
+    <string-array name="transmission_types">
+        <item>Automatic</item>
+        <item>Manual</item>
+        <item>Semi-Automatic</item>
+    </string-array>
+</resources>

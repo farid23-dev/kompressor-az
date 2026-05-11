@@ -1,0 +1,68 @@
+package az.kompressor.app.ui.favorites
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import az.kompressor.app.R
+import az.kompressor.app.databinding.FragmentFavoritesBinding
+import az.kompressor.app.ui.home.CarAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint
+class FavoritesFragment : Fragment() {
+
+    private var _binding: FragmentFavoritesBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: FavoritesViewModel by viewModels()
+    private lateinit var carAdapter: CarAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        observeFavorites()
+        binding.btnBack.setOnClickListener { findNavController().navigateUp() }
+    }
+
+    private fun setupRecyclerView() {
+        carAdapter = CarAdapter { car ->
+            val action = FavoritesFragmentDirections
+                .actionFavoritesFragmentToCarDetailFragment(car.id)
+            findNavController().navigate(action)
+        }
+        binding.rvFavorites.apply {
+            adapter = carAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    private fun observeFavorites() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.favorites.collectLatest { cars ->
+                carAdapter.submitList(cars)
+                binding.tvEmpty.isVisible = cars.isEmpty()
+                binding.rvFavorites.isVisible = cars.isNotEmpty()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

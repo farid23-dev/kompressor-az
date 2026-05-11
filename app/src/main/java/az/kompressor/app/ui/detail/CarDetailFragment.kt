@@ -28,7 +28,9 @@ class CarDetailFragment : Fragment() {
     private val viewModel: CarDetailViewModel by viewModels()
     private val args: CarDetailFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentCarDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,9 +39,14 @@ class CarDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
+        binding.btnFavorite.setOnClickListener { viewModel.toggleFavorite() }
 
         viewModel.loadCar(args.carId)
+        observeCarState()
+        observeFavoriteState()
+    }
 
+    private fun observeCarState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.carState.collectLatest { state ->
                 when (state) {
@@ -77,6 +84,17 @@ class CarDetailFragment : Fragment() {
                         binding.root.showSnackbar(state.message)
                     }
                 }
+            }
+        }
+    }
+
+    private fun observeFavoriteState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isFavorite.collectLatest { isFav ->
+                binding.btnFavorite.setImageResource(
+                    if (isFav) android.R.drawable.btn_star_big_on
+                    else android.R.drawable.btn_star_big_off
+                )
             }
         }
     }
