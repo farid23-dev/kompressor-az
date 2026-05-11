@@ -17,7 +17,8 @@ data class CarDto(
     val phone: String = "",
     val imageUrls: List<String> = emptyList(),
     val sellerUid: String = "",
-    val createdAt: Long = 0L
+    val createdAt: Long = 0L,
+    val viewCount: Long = 0L
 )
 
 fun CarDto.toDomain() = Car(
@@ -25,5 +26,6 @@ fun CarDto.toDomain() = Car(
     year = year, price = price, mileage = mileage,
     fuelType = fuelType, transmission = transmission,
     city = city, description = description, phone = phone,
-    imageUrls = imageUrls, sellerUid = sellerUid, createdAt = createdAt
+    imageUrls = imageUrls, sellerUid = sellerUid, createdAt = createdAt,
+    viewCount = viewCount
 )

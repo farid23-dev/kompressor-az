@@ -3,6 +3,7 @@ package az.kompressor.app.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import az.kompressor.app.domain.model.Car
+import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.usecase.GetCarByIdUseCase
 import az.kompressor.app.domain.usecase.ToggleFavoriteUseCase
 import az.kompressor.app.util.Resource
@@ -21,11 +22,15 @@ import javax.inject.Inject
 @HiltViewModel
 class CarDetailViewModel @Inject constructor(
     private val getCarByIdUseCase: GetCarByIdUseCase,
-    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val carRepository: CarRepository
 ) : ViewModel() {
 
     private val _carState = MutableStateFlow<Resource<Car>>(Resource.Loading)
     val carState: StateFlow<Resource<Car>> = _carState
+
+    // Guard: only fire incrementViewCount once per ViewModel lifetime
+    private var viewCountIncremented = false
 
     // Reactively tracks favorite state for the currently loaded car
     val isFavorite: StateFlow<Boolean> = _carState
@@ -40,7 +45,16 @@ class CarDetailViewModel @Inject constructor(
 
     fun loadCar(carId: String) {
         getCarByIdUseCase(carId)
-            .onEach { _carState.value = it }
+            .onEach { resource ->
+                _carState.value = resource
+                // Fire-and-forget: increment counter exactly once per screen open
+                if (resource is Resource.Success && !viewCountIncremented) {
+                    viewCountIncremented = true
+                    viewModelScope.launch {
+                        carRepository.incrementViewCount(carId)
+                    }
+                }
+            }
             .launchIn(viewModelScope)
     }
 

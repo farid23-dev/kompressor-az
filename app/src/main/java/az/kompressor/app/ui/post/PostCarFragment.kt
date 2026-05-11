@@ -140,7 +140,7 @@ class PostCarFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.editCar.collectLatest { car ->
                 car ?: return@collectLatest
-                binding.tvPostTitle.text = "Edit Listing"
+                binding.tvHeader.text = "Edit Listing"
                 binding.btnPost.text = "Save Changes"
 
                 binding.etBrand.setText(car.brand)

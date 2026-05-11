@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.databinding.ItemCarBinding
 import az.kompressor.app.util.TimeAgo
+import az.kompressor.app.util.formatMileage
+import az.kompressor.app.util.formatPrice
 import com.bumptech.glide.Glide
 
 class CarAdapter(
@@ -33,8 +35,8 @@ class CarAdapter(
             binding.ivCarImage.transitionName = "car_image_${car.id}"
 
             binding.tvTitle.text = car.title
-            binding.tvPrice.text = "${car.price} AZN"
-            binding.tvDetails.text = "${car.year} · ${car.mileage} km · ${car.fuelType}"
+            binding.tvPrice.text = car.price.formatPrice()
+            binding.tvDetails.text = "${car.year} · ${car.mileage.formatMileage()} · ${car.fuelType}"
             binding.tvCity.text = "📍 ${car.city}"
             binding.tvTransmission.text = car.transmission
             binding.tvAge.text = TimeAgo.format(car.createdAt)

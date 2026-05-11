@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import az.kompressor.app.databinding.ItemMyCarBinding
 import az.kompressor.app.domain.model.Car
+import az.kompressor.app.util.formatPrice
 import com.bumptech.glide.Glide
 
 class MyCarAdapter(
@@ -28,7 +29,7 @@ class MyCarAdapter(
 
         fun bind(car: Car) {
             binding.tvCarTitle.text = car.title
-            binding.tvCarPrice.text = "${car.price} AZN"
+            binding.tvCarPrice.text = car.price.formatPrice()
             binding.tvCarCity.text = car.city
             Glide.with(binding.ivCarThumb.context)
                 .load(car.imageUrls.firstOrNull())

@@ -1,7 +1,10 @@
 package az.kompressor.app
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -62,6 +65,41 @@ class MainActivity : AppCompatActivity() {
                 NavOptions.Builder()
                     .setPopUpTo(R.id.signInFragment, inclusive = true)
                     .build()
+            )
+        }
+
+        // Handle deep link from cold start
+        handleDeepLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // Handle deep link when app is already running
+        handleDeepLink(intent)
+    }
+
+    /**
+     * Parses incoming deep links and navigates to the correct screen.
+     * Supported formats:
+     *   https://kompressor.az/car/{carId}
+     *   kompressor://car/{carId}
+     */
+    private fun handleDeepLink(intent: Intent?) {
+        val data: Uri = intent?.data ?: return
+        val carId: String? = when {
+            // https://kompressor.az/car/abc123 → pathSegments = ["car", "abc123"]
+            data.scheme == "https" && data.host == "kompressor.az" ->
+                data.pathSegments.getOrNull(1)
+            // kompressor://car/abc123 → scheme=kompressor, host=car, path=/abc123
+            data.scheme == "kompressor" && data.host == "car" ->
+                data.pathSegments.firstOrNull()
+            else -> null
+        }
+        if (!carId.isNullOrBlank()) {
+            // Wait until the nav graph is ready then navigate
+            navController.navigate(
+                R.id.carDetailFragment,
+                bundleOf("carId" to carId)
             )
         }
     }

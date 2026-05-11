@@ -40,10 +40,13 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        carAdapter = CarAdapter { car ->
+        carAdapter = CarAdapter { car, sharedImageView ->
             val action = FavoritesFragmentDirections
                 .actionFavoritesFragmentToCarDetailFragment(car.id)
-            findNavController().navigate(action)
+            val extras = androidx.navigation.fragment.FragmentNavigatorExtras(
+                sharedImageView to "car_image_${car.id}"
+            )
+            findNavController().navigate(action, extras)
         }
         binding.rvFavorites.apply {
             adapter = carAdapter

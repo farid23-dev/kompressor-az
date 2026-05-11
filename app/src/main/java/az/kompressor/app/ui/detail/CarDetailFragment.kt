@@ -17,6 +17,8 @@ import androidx.navigation.fragment.navArgs
 import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentCarDetailBinding
 import az.kompressor.app.util.Resource
+import az.kompressor.app.util.formatMileage
+import az.kompressor.app.util.formatPrice
 import az.kompressor.app.util.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -93,9 +95,16 @@ class CarDetailFragment : Fragment() {
                         }
 
                         binding.tvTitle.text = car.title
-                        binding.tvPrice.text = "${car.price} AZN"
+                        binding.tvPrice.text = car.price.formatPrice()
+
+                        // View count — hidden until at least 1 view recorded
+                        if (car.viewCount > 0) {
+                            binding.tvViewCount.isVisible = true
+                            binding.tvViewCount.text = "👁 ${car.viewCount} views"
+                        }
+
                         binding.tvYear.text = car.year.toString()
-                        binding.tvMileage.text = "${car.mileage} km"
+                        binding.tvMileage.text = car.mileage.formatMileage()
                         binding.tvFuelType.text = car.fuelType
                         binding.tvTransmission.text = car.transmission
                         binding.tvCity.text = car.city
@@ -135,13 +144,14 @@ class CarDetailFragment : Fragment() {
 
                         // Share
                         binding.btnShare.setOnClickListener {
+                            val deepLink = "https://kompressor.az/car/${car.id}"
                             val text = buildString {
                                 append("🚗 ${car.title}\n")
-                                append("💰 ${car.price} AZN\n")
-                                append("📍 ${car.city} · ${car.year} · ${car.mileage} km\n")
+                                append("💰 ${car.price.formatPrice()}\n")
+                                append("📍 ${car.city} · ${car.year} · ${car.mileage.formatMileage()}\n")
                                 append("⛽ ${car.fuelType} · ${car.transmission}\n")
                                 if (phoneNumber != null) append("📞 $phoneNumber\n")
-                                append("\nFound on Kompressor.az")
+                                append("\n$deepLink")
                             }
                             startActivity(
                                 Intent.createChooser(

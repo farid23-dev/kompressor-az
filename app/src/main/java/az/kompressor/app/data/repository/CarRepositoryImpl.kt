@@ -1,6 +1,12 @@
 package az.kompressor.app.data.repository
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
+import java.io.FileOutputStream
 import az.kompressor.app.data.remote.dto.CarDto
 import az.kompressor.app.data.remote.dto.toDomain
 import az.kompressor.app.domain.model.Car
@@ -16,6 +22,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class CarRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val firestore: FirebaseFirestore,
     private val storage: FirebaseStorage
 ) : CarRepository {
@@ -84,6 +91,43 @@ class CarRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Compress a content URI to ≤1280px / 82% JPEG and return a file:// URI.
+     * Falls back to original URI on any error (better to upload large than fail).
+     */
+    private fun compressUri(uri: Uri): Uri {
+        return try {
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return uri
+            val original = BitmapFactory.decodeStream(inputStream)
+            inputStream.close()
+
+            val maxDim = 1280
+            val scaled = if (original.width > maxDim || original.height > maxDim) {
+                val scale = maxDim.toFloat() / maxOf(original.width, original.height)
+                Bitmap.createScaledBitmap(
+                    original,
+                    (original.width * scale).toInt(),
+                    (original.height * scale).toInt(),
+                    true
+                ).also { original.recycle() }
+            } else original
+
+            val tmp = File(context.cacheDir, "upload_${System.currentTimeMillis()}.jpg")
+            FileOutputStream(tmp).use { out -> scaled.compress(Bitmap.CompressFormat.JPEG, 82, out) }
+            scaled.recycle()
+            Uri.fromFile(tmp)
+        } catch (e: Exception) {
+            uri // fallback: upload original if compression fails
+        }
+    }
+
+    private suspend fun uploadUri(uri: Uri, sellerUid: String): String {
+        val compressed = compressUri(uri)
+        val ref = storage.reference.child("car_images/$sellerUid/${UUID.randomUUID()}.jpg")
+        ref.putFile(compressed).await()
+        return ref.downloadUrl.await().toString()
+    }
+
     override fun updateCar(
         car: Car,
         newImageUris: List<Uri>,
@@ -91,13 +135,7 @@ class CarRepositoryImpl @Inject constructor(
     ): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
         try {
-            // Upload any newly added images
-            val newUrls = newImageUris.map { uri ->
-                val ref = storage.reference
-                    .child("car_images/${car.sellerUid}/${UUID.randomUUID()}.jpg")
-                ref.putFile(uri).await()
-                ref.downloadUrl.await().toString()
-            }
+            val newUrls = newImageUris.map { uri -> uploadUri(uri, car.sellerUid) }
             val finalImageUrls = existingImageUrls + newUrls
 
             val updates = mapOf(
@@ -134,13 +172,8 @@ class CarRepositoryImpl @Inject constructor(
     override fun postCar(car: Car, imageUris: List<Uri>): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
         try {
-            val imageUrls = imageUris.map { uri ->
-                // Path matches storage.rules: car_images/{uid}/{uuid}
-                val ref = storage.reference
-                    .child("car_images/${car.sellerUid}/${UUID.randomUUID()}.jpg")
-                ref.putFile(uri).await()
-                ref.downloadUrl.await().toString()
-            }
+            // Compress each image before uploading (≤1280px / 82% JPEG → ~200KB avg)
+            val imageUrls = imageUris.map { uri -> uploadUri(uri, car.sellerUid) }
             val carDto = CarDto(
                 title = car.title, brand = car.brand, model = car.model,
                 year = car.year, price = car.price, mileage = car.mileage,
@@ -153,6 +186,16 @@ class CarRepositoryImpl @Inject constructor(
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "Failed to post car"))
+        }
+    }
+
+    override suspend fun incrementViewCount(carId: String) {
+        try {
+            carsCollection.document(carId)
+                .update("viewCount", com.google.firebase.firestore.FieldValue.increment(1))
+                .await()
+        } catch (_: Exception) {
+            // Silent — never block the UI for a view count write
         }
     }
 

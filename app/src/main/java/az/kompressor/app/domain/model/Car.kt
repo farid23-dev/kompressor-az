@@ -15,5 +15,6 @@ data class Car(
     val phone: String = "",
     val imageUrls: List<String> = emptyList(),
     val sellerUid: String = "",
-    val createdAt: Long = 0L
+    val createdAt: Long = 0L,
+    val viewCount: Long = 0L
 )
