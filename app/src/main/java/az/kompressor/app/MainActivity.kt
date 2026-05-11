@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import az.kompressor.app.databinding.ActivityMainBinding
@@ -53,9 +54,15 @@ class MainActivity : AppCompatActivity() {
             binding.fabPost.isVisible = visible
         }
 
-        // Skip auth if already logged in
+        // Skip auth if already logged in — pop signInFragment so it's never on the back stack
         if (authRepository.isUserLoggedIn()) {
-            navController.navigate(R.id.homeFragment)
+            navController.navigate(
+                R.id.homeFragment,
+                null,
+                NavOptions.Builder()
+                    .setPopUpTo(R.id.signInFragment, inclusive = true)
+                    .build()
+            )
         }
     }
 }
