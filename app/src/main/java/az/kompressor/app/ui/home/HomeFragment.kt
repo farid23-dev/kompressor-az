@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentHomeBinding
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
@@ -38,6 +39,9 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         setupSearch()
         observeCars()
+        binding.btnProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+        }
     }
 
     private fun setupRecyclerView() {

@@ -7,18 +7,8 @@
         android:title="Home" />
 
     <item
-        android:id="@id/postCarFragment"
-        android:icon="@drawable/ic_nav_post"
-        android:title="Post" />
-
-    <item
         android:id="@id/favoritesFragment"
         android:icon="@drawable/ic_nav_favorites"
         android:title="Saved" />
-
-    <item
-        android:id="@id/profileFragment"
-        android:icon="@drawable/ic_nav_profile"
-        android:title="Profile" />
 
 </menu>

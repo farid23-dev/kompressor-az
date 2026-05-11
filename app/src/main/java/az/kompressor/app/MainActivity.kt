@@ -20,10 +20,13 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var authRepository: AuthRepository
 
-    // Destinations where bottom nav should be HIDDEN
-    private val authDestinations = setOf(
+    // Destinations where bottom bar should be hidden
+    private val hiddenDestinations = setOf(
         R.id.signInFragment,
-        R.id.signUpFragment
+        R.id.signUpFragment,
+        R.id.carDetailFragment,
+        R.id.postCarFragment,
+        R.id.profileFragment
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +38,19 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Wire BottomNavigationView with NavController
+        // Wire bottom nav (Home + Saved tabs only)
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        // Show/hide bottom nav based on destination
+        // FAB navigates to Post screen
+        binding.fabPost.setOnClickListener {
+            navController.navigate(R.id.postCarFragment)
+        }
+
+        // Show/hide bottom bar + FAB based on destination
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.bottomNavigationView.isVisible = destination.id !in authDestinations
+            val visible = destination.id !in hiddenDestinations
+            binding.bottomNavigationView.isVisible = visible
+            binding.fabPost.isVisible = visible
         }
 
         // Skip auth if already logged in
