@@ -7,7 +7,9 @@ import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.usecase.GetCarsUseCase
 import az.kompressor.app.domain.usecase.SearchCarsUseCase
 import az.kompressor.app.util.Resource
+import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -40,6 +42,7 @@ data class FilterState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getCarsUseCase: GetCarsUseCase,
     private val searchCarsUseCase: SearchCarsUseCase,
     private val carRepository: CarRepository
@@ -64,7 +67,13 @@ class HomeViewModel @Inject constructor(
 
     private fun seedAndLoad() {
         viewModelScope.launch {
-            carRepository.seedDummyData()
+            // Only seed once per install — SharedPrefs flag prevents wiping
+            // favourited car IDs on every restart.
+            val prefs = context.getSharedPreferences("kompressor_prefs", Context.MODE_PRIVATE)
+            if (!prefs.getBoolean("dummy_seeded", false)) {
+                carRepository.seedDummyData()
+                prefs.edit().putBoolean("dummy_seeded", true).apply()
+            }
             loadCars()
         }
     }

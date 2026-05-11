@@ -4,10 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,12 +34,13 @@ class CarDetailFragment : Fragment() {
     private val viewModel: CarDetailViewModel by viewModels()
     private val args: CarDetailFragmentArgs by navArgs()
 
+    // Guard: only call startPostponedEnterTransition once
+    private var transitionStarted = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Shared element enter transition
         sharedElementEnterTransition = TransitionInflater.from(requireContext())
             .inflateTransition(android.R.transition.move)
-        // Delay until image loads so the transition has content to animate
         postponeEnterTransition()
     }
 
@@ -52,14 +54,25 @@ class CarDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Match the transitionName set on ivCarImage in the adapter
         binding.viewPagerImages.transitionName = "car_image_${args.carId}"
-
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
         binding.btnFavorite.setOnClickListener { viewModel.toggleFavorite() }
         viewModel.loadCar(args.carId)
         observeCarState()
         observeFavoriteState()
+    }
+
+    /** Safety net — if transition was never started by onStart, force-start it here. */
+    override fun onStart() {
+        super.onStart()
+        safeStartTransition()
+    }
+
+    private fun safeStartTransition() {
+        if (!transitionStarted && isAdded) {
+            transitionStarted = true
+            startPostponedEnterTransition()
+        }
     }
 
     private fun observeCarState() {
@@ -69,19 +82,20 @@ class CarDetailFragment : Fragment() {
                     is Resource.Loading -> {
                         binding.progressBar.isVisible = true
                         binding.scrollView.isVisible = false
+                        // Don't wait forever — start transition immediately on loading
+                        safeStartTransition()
                     }
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
                         binding.scrollView.isVisible = true
                         val car = state.data
 
-                        // Image gallery — start postponed transition after first image loads
+                        // Image gallery
                         if (car.imageUrls.isNotEmpty()) {
                             val adapter = CarImageAdapter(
                                 urls = car.imageUrls,
-                                onFirstImageReady = { startPostponedEnterTransition() },
+                                onFirstImageReady = { safeStartTransition() },
                                 onImageClick = { position ->
-                                    // Open full-screen viewer at the tapped image
                                     FullScreenImageDialogFragment
                                         .newInstance(car.imageUrls, position)
                                         .show(parentFragmentManager, "fullscreen_image")
@@ -97,119 +111,44 @@ class CarDetailFragment : Fragment() {
                                 }
                             )
                         } else {
-                            // No images — start immediately
-                            startPostponedEnterTransition()
+                            safeStartTransition()
                         }
 
+                        // Text fields
                         binding.tvTitle.text = car.title
-                        // Age — e.g. "3 hours ago", shown right-aligned next to title
-                        binding.tvAge.text = TimeAgo.format(car.createdAt)
                         binding.tvPrice.text = car.price.formatPrice()
-
-                        // View count — hidden until at least 1 view recorded
-                        if (car.viewCount > 0) {
-                            binding.tvViewCount.isVisible = true
-                            binding.tvViewCount.text = "👁 ${car.viewCount} views"
-                        }
-
                         binding.tvYear.text = car.year.toString()
                         binding.tvMileage.text = car.mileage.formatMileage()
                         binding.tvFuelType.text = car.fuelType
                         binding.tvTransmission.text = car.transmission
                         binding.tvCity.text = car.city
+                        binding.tvAge.text = TimeAgo.format(car.createdAt)
 
+                        // Seller card
+                        if (car.sellerName.isNotBlank()) {
+                            binding.layoutSeller.isVisible = true
+                            binding.tvSellerName.text = car.sellerName
+                        } else {
+                            binding.layoutSeller.isVisible = false
+                        }
+
+                        // Description
                         if (car.description.isNotBlank()) {
                             binding.tvDescriptionLabel.isVisible = true
                             binding.tvDescription.isVisible = true
                             binding.tvDescription.text = car.description
                         }
 
-                        // Seller name — shown when available
-                        if (car.sellerName.isNotBlank()) {
-                            binding.tvSellerName.isVisible = true
-                            binding.tvSellerName.text = "Listed by: ${car.sellerName}"
-                        }
-
-                        val phoneNumber = car.phone.ifBlank { null }
-
-                        // Call
-                        binding.btnContact.setOnClickListener {
-                            if (phoneNumber != null) {
-                                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber")))
-                            } else {
-                                binding.root.showSnackbar("No phone number available")
-                            }
-                        }
-
-                        // WhatsApp deep link
-                        binding.btnWhatsApp.setOnClickListener {
-                            if (phoneNumber != null) {
-                                // Strip non-digits, ensure international format
-                                val digits = phoneNumber.replace(Regex("[^\\d]"), "")
-                                val url = "https://wa.me/$digits"
-                                try {
-                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                } catch (e: Exception) {
-                                    binding.root.showSnackbar("WhatsApp not installed")
-                                }
-                            } else {
-                                binding.root.showSnackbar("No phone number available")
-                            }
-                        }
-
-                        // Share
-                        binding.btnShare.setOnClickListener {
-                            val deepLink = "https://kompressor.az/car/${car.id}"
-                            val text = buildString {
-                                append("🚗 ${car.title}\n")
-                                append("💰 ${car.price.formatPrice()}\n")
-                                append("📍 ${car.city} · ${car.year} · ${car.mileage.formatMileage()}\n")
-                                append("⛽ ${car.fuelType} · ${car.transmission}\n")
-                                if (phoneNumber != null) append("📞 $phoneNumber\n")
-                                append("\n$deepLink")
-                            }
-                            startActivity(
-                                Intent.createChooser(
-                                    Intent(Intent.ACTION_SEND).apply {
-                                        type = "text/plain"
-                                        putExtra(Intent.EXTRA_TEXT, text)
-                                    }, "Share listing"
-                                )
-                            )
-                        }
+                        setupContactButtons(car.title, car.price)
                     }
                     is Resource.Error -> {
                         binding.progressBar.isVisible = false
+                        // CRITICAL: always unblock the transition even on error
+                        safeStartTransition()
                         binding.root.showSnackbar(state.message)
-                        startPostponedEnterTransition()
                     }
                 }
             }
-        }
-    }
-
-    private fun setupDots(count: Int) {
-        binding.dotsLayout.removeAllViews()
-        if (count <= 1) return
-        repeat(count) { i ->
-            val dot = ImageView(requireContext()).apply {
-                setImageResource(if (i == 0) R.drawable.dot_active else R.drawable.dot_inactive)
-                val size = 20 // dp → px
-                val px = (size * resources.displayMetrics.density).toInt()
-                layoutParams = ViewGroup.MarginLayoutParams(px, px).apply {
-                    marginStart = 6; marginEnd = 6
-                }
-            }
-            binding.dotsLayout.addView(dot)
-        }
-    }
-
-    private fun updateDots(selected: Int, count: Int) {
-        if (count <= 1) return
-        for (i in 0 until binding.dotsLayout.childCount) {
-            (binding.dotsLayout.getChildAt(i) as? ImageView)?.setImageResource(
-                if (i == selected) R.drawable.dot_active else R.drawable.dot_inactive
-            )
         }
     }
 
@@ -217,10 +156,57 @@ class CarDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isFavorite.collectLatest { isFav ->
                 binding.btnFavorite.setImageResource(
-                    if (isFav) R.drawable.ic_heart_filled
-                    else R.drawable.ic_heart_outline
+                    if (isFav) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline
                 )
             }
+        }
+    }
+
+    private fun setupContactButtons(title: String, price: Long) {
+        binding.btnWhatsapp.setOnClickListener {
+            val msg = "Hi, I'm interested in your listing: $title — ${price.formatPrice()}"
+            val uri = Uri.parse("https://wa.me/?text=${Uri.encode(msg)}")
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+        binding.btnShare.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "Check out this car on Kompressor.az: $title — ${price.formatPrice()}"
+                )
+            }
+            startActivity(Intent.createChooser(intent, "Share via"))
+        }
+    }
+
+    private fun dpToPx(dp: Int): Int = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics
+    ).toInt()
+
+    private fun setupDots(count: Int) {
+        binding.dotsLayout.removeAllViews()
+        if (count <= 1) return
+        val dotSize   = dpToPx(8)
+        val dotMargin = dpToPx(4)
+        repeat(count) {
+            val dot = View(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(dotSize, dotSize).apply {
+                    marginEnd = dotMargin
+                }
+                setBackgroundResource(R.drawable.dot_inactive)
+            }
+            binding.dotsLayout.addView(dot)
+        }
+        updateDots(0, count)
+    }
+
+    private fun updateDots(selected: Int, count: Int) {
+        for (i in 0 until count) {
+            val dot = binding.dotsLayout.getChildAt(i) ?: break
+            dot.setBackgroundResource(
+                if (i == selected) R.drawable.dot_active else R.drawable.dot_inactive
+            )
         }
     }
 
