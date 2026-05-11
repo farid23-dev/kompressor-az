@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+    <!-- Content area — stops at the top of the bottom nav -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -18,29 +19,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 2-item bottom nav: Home (left) and Saved (right) — gap in center for FAB -->
+    <!-- Bottom nav: Home (left) + Saved (right) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
-        android:layout_height="72dp"
+        android:layout_height="64dp"
         android:background="@color/surface"
+        android:elevation="8dp"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/bottom_nav_selector"
         app:itemTextColor="@color/bottom_nav_selector"
-        app:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Center FAB for Post — overlaps the middle of the bottom nav -->
+    <!-- FAB floats centered ABOVE the bottom nav — no overlap, no z-order issues -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
         android:src="@drawable/ic_nav_post"
         android:contentDescription="Post a car"
-        android:translationY="28dp"
         android:elevation="12dp"
         app:backgroundTint="@color/primary"
         app:tint="@color/white"
