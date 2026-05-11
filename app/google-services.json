@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "165436610024",
+    "project_id": "kompressor-az-4c63d",
+    "storage_bucket": "kompressor-az-4c63d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165436610024:android:e81c0ac41b4c97bee4c05d",
+        "android_client_info": {
+          "package_name": "az.kompressor.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl3rUByXhSXC_P8VC930iyu5nGuoqapS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
