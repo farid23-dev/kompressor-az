@@ -12,17 +12,19 @@ class SignUpUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     operator fun invoke(
-        fullName: String,
-        email: String,
-        password: String,
-        confirmPassword: String
+        name: String, surname: String, phone: String,
+        email: String, password: String, confirmPassword: String
     ): Flow<Resource<User>> {
-        if (fullName.isBlank()) return flow { emit(Resource.Error("Full name cannot be empty")) }
-        if (email.isBlank()) return flow { emit(Resource.Error("Email cannot be empty")) }
+        if (name.isBlank())    return flow { emit(Resource.Error("Name cannot be empty")) }
+        if (surname.isBlank()) return flow { emit(Resource.Error("Surname cannot be empty")) }
+        if (phone.isBlank())   return flow { emit(Resource.Error("Phone cannot be empty")) }
+        if (email.isBlank())   return flow { emit(Resource.Error("Email cannot be empty")) }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())
             return flow { emit(Resource.Error("Invalid email address")) }
-        if (password.length < 6) return flow { emit(Resource.Error("Password must be at least 6 characters")) }
-        if (password != confirmPassword) return flow { emit(Resource.Error("Passwords do not match")) }
-        return authRepository.signUp(email.trim(), password, fullName.trim())
+        if (password.length < 6)
+            return flow { emit(Resource.Error("Password must be at least 6 characters")) }
+        if (password != confirmPassword)
+            return flow { emit(Resource.Error("Passwords do not match")) }
+        return authRepository.signUp(email.trim(), password, name.trim(), surname.trim(), phone.trim())
     }
 }

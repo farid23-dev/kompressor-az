@@ -77,10 +77,16 @@ class CarDetailFragment : Fragment() {
 
                         // Image gallery — start postponed transition after first image loads
                         if (car.imageUrls.isNotEmpty()) {
-                            val adapter = CarImageAdapter(car.imageUrls) {
-                                // Called back when first image is ready
-                                startPostponedEnterTransition()
-                            }
+                            val adapter = CarImageAdapter(
+                                urls = car.imageUrls,
+                                onFirstImageReady = { startPostponedEnterTransition() },
+                                onImageClick = { position ->
+                                    // Open full-screen viewer at the tapped image
+                                    FullScreenImageDialogFragment
+                                        .newInstance(car.imageUrls, position)
+                                        .show(parentFragmentManager, "fullscreen_image")
+                                }
+                            )
                             binding.viewPagerImages.adapter = adapter
                             setupDots(car.imageUrls.size)
                             binding.viewPagerImages.registerOnPageChangeCallback(
@@ -116,6 +122,12 @@ class CarDetailFragment : Fragment() {
                             binding.tvDescriptionLabel.isVisible = true
                             binding.tvDescription.isVisible = true
                             binding.tvDescription.text = car.description
+                        }
+
+                        // Seller name — shown when available
+                        if (car.sellerName.isNotBlank()) {
+                            binding.tvSellerName.isVisible = true
+                            binding.tvSellerName.text = "Listed by: ${car.sellerName}"
                         }
 
                         val phoneNumber = car.phone.ifBlank { null }
@@ -205,8 +217,8 @@ class CarDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isFavorite.collectLatest { isFav ->
                 binding.btnFavorite.setImageResource(
-                    if (isFav) android.R.drawable.btn_star_big_on
-                    else android.R.drawable.btn_star_big_off
+                    if (isFav) R.drawable.ic_heart_filled
+                    else R.drawable.ic_heart_outline
                 )
             }
         }

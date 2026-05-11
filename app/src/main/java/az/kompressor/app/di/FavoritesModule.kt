@@ -6,7 +6,6 @@ import az.kompressor.app.data.local.KompressorDatabase
 import az.kompressor.app.data.local.dao.FavoriteCarDao
 import az.kompressor.app.data.repository.FavoritesRepositoryImpl
 import az.kompressor.app.domain.repository.FavoritesRepository
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

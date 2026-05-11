@@ -3,6 +3,7 @@ package az.kompressor.app.ui.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import az.kompressor.app.domain.model.Car
+import az.kompressor.app.domain.model.User
 import az.kompressor.app.domain.repository.AuthRepository
 import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.usecase.DeleteCarUseCase
@@ -33,12 +34,24 @@ class ProfileViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<Resource<Unit>?>(null)
     val deleteState: StateFlow<Resource<Unit>?> = _deleteState
 
+    private val _userProfile = MutableStateFlow<Resource<User>>(Resource.Loading)
+    val userProfile: StateFlow<Resource<User>> = _userProfile
+
     init {
         loadMyListings()
+        loadUserProfile()
     }
 
-    fun getCurrentUserEmail(): String = authRepository.getCurrentUser()?.email ?: "Unknown"
+    fun getCurrentUserEmail(): String = authRepository.getCurrentUser()?.email ?: ""
     fun getCurrentUserUid(): String = authRepository.getCurrentUser()?.uid ?: ""
+
+    fun loadUserProfile() {
+        val uid = getCurrentUserUid()
+        if (uid.isEmpty()) return
+        authRepository.getUserProfile(uid)
+            .onEach { _userProfile.value = it }
+            .launchIn(viewModelScope)
+    }
 
     fun loadMyListings() {
         val uid = getCurrentUserUid()
@@ -59,7 +72,6 @@ class ProfileViewModel @Inject constructor(
     fun bumpCar(carId: String) {
         viewModelScope.launch {
             carRepository.bumpCar(carId)
-            // Refresh list so the bumped listing jumps to top
             loadMyListings()
         }
     }

@@ -24,7 +24,9 @@ class SignUpFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: AuthViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -34,16 +36,16 @@ class SignUpFragment : Fragment() {
 
         binding.btnSignUp.setOnClickListener {
             viewModel.signUp(
-                binding.etFullName.text.toString(),
-                binding.etEmail.text.toString(),
-                binding.etPassword.text.toString(),
-                binding.etConfirmPassword.text.toString()
+                name            = binding.etName.text.toString().trim(),
+                surname         = binding.etSurname.text.toString().trim(),
+                phone           = binding.etPhone.text.toString().trim(),
+                email           = binding.etEmail.text.toString().trim(),
+                password        = binding.etPassword.text.toString(),
+                confirmPassword = binding.etConfirmPassword.text.toString()
             )
         }
 
-        binding.tvGoToSignIn.setOnClickListener {
-            findNavController().navigateUp()
-        }
+        binding.tvGoToSignIn.setOnClickListener { findNavController().navigateUp() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.authState.collectLatest { state ->

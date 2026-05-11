@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Splash screen yellow car illustration.
+    REPLACE: Use your actual yellow car PNG as splash_car.png in res/drawable
+    and change activity_splash.xml ivSplashCar src to @drawable/splash_car.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="280dp"
+    android:height="160dp"
+    android:viewportWidth="560"
+    android:viewportHeight="320">
+
+    <!-- Glow shadow under car -->
+    <path android:fillColor="#33FFD700"
+        android:pathData="M80,270 Q280,300 480,270 Q480,290 280,295 Q80,290 80,270 Z"/>
+
+    <!-- Main body -->
+    <path android:fillColor="#FFD700"
+        android:pathData="M60,200 L60,165 Q62,148 80,140 L150,118
+                          Q175,108 210,105 L310,105 Q355,105 385,120
+                          L450,158 Q468,165 472,180 L490,200 Z"/>
+    <!-- Roof -->
+    <path android:fillColor="#FFC200"
+        android:pathData="M160,105 L182,62 Q188,52 200,48 L320,48 Q334,52 340,64 L360,105 Z"/>
+    <!-- Windshield -->
+    <path android:fillColor="#B3E0FF"
+        android:pathData="M168,105 L188,68 Q192,60 200,56 L316,56 Q324,60 328,68 L348,105 Z"/>
+    <!-- Black hood stripe -->
+    <path android:fillColor="#1A1A1A"
+        android:pathData="M350,105 L430,148 L490,148 L450,105 Z"/>
+    <!-- Grill -->
+    <path android:fillColor="#1A1A1A"
+        android:pathData="M60,170 L60,200 L110,200 L110,165 Q95,165 80,170 Z"/>
+    <!-- Headlights -->
+    <path android:fillColor="#FFFF99"
+        android:pathData="M68,155 Q58,165 58,175 L78,172 Q80,160 74,155 Z"/>
+    <!-- Front wheel arch -->
+    <path android:fillColor="#CC9900"
+        android:pathData="M100,200 Q100,165 135,160 Q170,155 170,200 Z"/>
+    <!-- Rear wheel arch -->
+    <path android:fillColor="#CC9900"
+        android:pathData="M360,200 Q360,162 395,158 Q430,154 430,200 Z"/>
+
+    <!-- Front wheel outer (circle cx=135 cy=212 r=38 → arc path) -->
+    <path android:fillColor="#1A1A1A"
+        android:pathData="M97,212 A38,38 0 1 0 173,212 A38,38 0 1 0 97,212 Z"/>
+    <!-- Front wheel rim (circle cx=135 cy=212 r=22) -->
+    <path android:fillColor="#888888"
+        android:pathData="M113,212 A22,22 0 1 0 157,212 A22,22 0 1 0 113,212 Z"/>
+    <!-- Front wheel hub (circle cx=135 cy=212 r=10) -->
+    <path android:fillColor="#CCCCCC"
+        android:pathData="M125,212 A10,10 0 1 0 145,212 A10,10 0 1 0 125,212 Z"/>
+
+    <!-- Rear wheel outer (circle cx=395 cy=212 r=38) -->
+    <path android:fillColor="#1A1A1A"
+        android:pathData="M357,212 A38,38 0 1 0 433,212 A38,38 0 1 0 357,212 Z"/>
+    <!-- Rear wheel rim (circle cx=395 cy=212 r=22) -->
+    <path android:fillColor="#888888"
+        android:pathData="M373,212 A22,22 0 1 0 417,212 A22,22 0 1 0 373,212 Z"/>
+    <!-- Rear wheel hub (circle cx=395 cy=212 r=10) -->
+    <path android:fillColor="#CCCCCC"
+        android:pathData="M385,212 A10,10 0 1 0 405,212 A10,10 0 1 0 385,212 Z"/>
+
+    <!-- Door handle detail -->
+    <path android:fillColor="#CC9900"
+        android:pathData="M240,150 L280,150 Q284,150 284,154 L284,160 Q284,164 280,164 L240,164 Q236,164 236,160 L236,154 Q236,150 240,150 Z"/>
+    <!-- Tail lights -->
+    <path android:fillColor="#FF4444"
+        android:pathData="M490,170 L510,175 L510,198 L490,200 Z"/>
+</vector>

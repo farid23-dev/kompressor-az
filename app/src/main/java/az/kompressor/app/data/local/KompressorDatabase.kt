@@ -7,7 +7,7 @@ import az.kompressor.app.data.local.entity.FavoriteCarEntity
 
 @Database(
     entities = [FavoriteCarEntity::class],
-    version = 1,
+    version = 2,                    // bumped: added expiresAt + sellerName columns
     exportSchema = false
 )
 abstract class KompressorDatabase : RoomDatabase() {

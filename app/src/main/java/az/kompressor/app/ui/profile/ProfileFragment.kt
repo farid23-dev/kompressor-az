@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentProfileBinding
-import az.kompressor.app.ui.profile.ProfileFragmentDirections
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,17 +37,18 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvEmail.text = viewModel.getCurrentUserEmail()
-        binding.tvUid.text = "UID: ${viewModel.getCurrentUserUid()}"
-
         setupMyListings()
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
-        binding.btnSignOut.setOnClickListener { viewModel.signOut() }
 
-        observeSignOut()
+        binding.btnSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_settingsFragment)
+        }
+
+        observeUserProfile()
         observeMyListings()
         observeDeleteState()
+        observeSignOut()
     }
 
     private fun setupMyListings() {
@@ -75,6 +75,32 @@ class ProfileFragment : Fragment() {
             adapter = myCarAdapter
             layoutManager = LinearLayoutManager(requireContext())
             isNestedScrollingEnabled = false
+        }
+    }
+
+    private fun observeUserProfile() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userProfile.collectLatest { state ->
+                when (state) {
+                    is Resource.Success -> {
+                        val user = state.data
+                        val fullName = "${user.name} ${user.surname}".trim()
+                        binding.tvName.text = fullName.ifEmpty { user.email }
+                        binding.tvEmail.text = user.email
+
+                        if (user.phone.isNotBlank()) {
+                            binding.tvPhone.isVisible = true
+                            binding.tvPhone.text = user.phone
+                        }
+                    }
+                    is Resource.Error -> {
+                        // Fallback: show email from Firebase Auth
+                        binding.tvName.text = viewModel.getCurrentUserEmail()
+                        binding.tvEmail.text = ""
+                    }
+                    is Resource.Loading -> { /* wait */ }
+                }
+            }
         }
     }
 

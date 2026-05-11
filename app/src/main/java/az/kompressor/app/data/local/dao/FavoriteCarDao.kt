@@ -18,4 +18,8 @@ interface FavoriteCarDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_cars WHERE carId = :carId)")
     fun isFavorite(carId: String): Flow<Boolean>
+
+    /** Wipe all favorites — called on sign-out so a new user starts with a clean slate. */
+    @Query("DELETE FROM favorite_cars")
+    suspend fun deleteAll()
 }

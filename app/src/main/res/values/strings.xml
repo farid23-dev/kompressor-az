@@ -1,5 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kompressor.az</string>
+
+    <!-- Auth -->
     <string name="sign_in_title">Welcome Back</string>
     <string name="sign_in_subtitle">Sign in to your account</string>
     <string name="btn_sign_in">Sign In</string>
@@ -12,4 +15,71 @@
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="hint_full_name">Full Name</string>
+    <string name="hint_name">First Name</string>
+    <string name="hint_surname">Last Name</string>
+    <string name="hint_phone">Phone Number</string>
+
+    <!-- Home -->
+    <string name="filter_button_label">Filter the cars</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_empty">No notifications yet</string>
+    <string name="notifications_empty_sub">Go browse some cars! 🚗</string>
+    <string name="search_hint">Search by brand, model, city…</string>
+    <string name="no_cars_found">No cars found</string>
+    <string name="no_cars_subtitle">Try adjusting your search\nor clear the filter</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="settings_title">Settings</string>
+    <string name="my_listings">My Listings</string>
+    <string name="no_listings">No listings yet</string>
+    <string name="no_listings_subtitle">Tap + to post your first car</string>
+    <string name="btn_sign_out">Sign Out</string>
+
+    <!-- Favorites -->
+    <string name="saved_cars">Saved Cars</string>
+    <string name="no_favorites">No saved cars</string>
+    <string name="no_favorites_subtitle">Tap ★ on any listing\nto save it here</string>
+
+    <!-- Settings -->
+    <string name="settings_language">Language</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_account">Account</string>
+    <string name="settings_sign_out">Sign Out</string>
+    <string name="settings_mode_light">Light</string>
+    <string name="settings_mode_dark">Dark</string>
+    <string name="settings_mode_system">System</string>
+    <string name="settings_light">Light</string>
+    <string name="settings_dark">Dark</string>
+    <string name="settings_system">System</string>
+    <string name="lang_en">English</string>
+    <string name="lang_az">Azərbaycan</string>
+    <string name="sign_out_confirm_title">Sign Out</string>
+    <string name="sign_out_confirm_msg">Are you sure you want to sign out?</string>
+
+    <!-- Detail -->
+    <string name="seller_label">Listed by</string>
+    <string name="btn_call">Call</string>
+    <string name="btn_whatsapp">WhatsApp</string>
+
+    <!-- Filter -->
+    <string name="filter_title">Filter &amp; Sort</string>
+    <string name="filter_fuel">Fuel Type</string>
+    <string name="filter_transmission">Transmission</string>
+    <string name="filter_city">City</string>
+    <string name="filter_sort">Sort By</string>
+    <string name="filter_hint_city">e.g. Baku</string>
+    <string name="filter_any">Any</string>
+    <string name="sort_newest">Newest first</string>
+    <string name="sort_price_asc">Price: Low → High</string>
+    <string name="sort_price_desc">Price: High → Low</string>
+    <string name="btn_apply">Apply Filter</string>
+    <string name="btn_clear">Clear</string>
+
+    <!-- General -->
+    <string name="btn_back">Back</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_listing_title">Delete listing</string>
+    <string name="just_now">Just now</string>
 </resources>

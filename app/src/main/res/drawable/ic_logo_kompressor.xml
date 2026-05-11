@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Kompressor.az topbar logo — purple car silhouette.
+    REPLACE: Drop your actual logo PNG as logo_kompressor.png in res/drawable
+    and switch the HomeFragment ImageView src to @drawable/logo_kompressor.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="40dp"
+    android:viewportWidth="400"
+    android:viewportHeight="100">
+
+    <!-- Car body fill -->
+    <path
+        android:fillColor="#7B2FBE"
+        android:pathData="
+          M30,70 L30,55 Q30,48 38,44 L70,35 Q90,28 108,28 L170,28
+          Q188,28 200,35 L240,55 Q248,58 252,64 L262,70 Z"/>
+    <!-- Roof / cabin -->
+    <path
+        android:fillColor="#9C4DCC"
+        android:pathData="M80,28 L100,10 Q108,4 118,4 L162,4 Q172,4 178,10 L196,28 Z"/>
+    <!-- Windshield -->
+    <path
+        android:fillColor="#CE93D8"
+        android:pathData="M84,28 L102,12 Q108,7 116,7 L158,7 Q166,7 172,12 L188,28 Z"/>
+
+    <!-- Front wheel outer (circle cx=68 cy=70 r=14 → arc path) -->
+    <path android:fillColor="#2D2D2D"
+        android:pathData="M54,70 A14,14 0 1 0 82,70 A14,14 0 1 0 54,70 Z"/>
+    <!-- Front wheel hub (circle cx=68 cy=70 r=6) -->
+    <path android:fillColor="#BDBDBD"
+        android:pathData="M62,70 A6,6 0 1 0 74,70 A6,6 0 1 0 62,70 Z"/>
+
+    <!-- Rear wheel outer (circle cx=214 cy=70 r=14) -->
+    <path android:fillColor="#2D2D2D"
+        android:pathData="M200,70 A14,14 0 1 0 228,70 A14,14 0 1 0 200,70 Z"/>
+    <!-- Rear wheel hub (circle cx=214 cy=70 r=6) -->
+    <path android:fillColor="#BDBDBD"
+        android:pathData="M208,70 A6,6 0 1 0 220,70 A6,6 0 1 0 208,70 Z"/>
+
+    <!-- Headlight -->
+    <path android:fillColor="#FFF176" android:pathData="M30,58 L20,65 L30,65 Z"/>
+    <!-- Tail light -->
+    <path android:fillColor="#EF9A9A" android:pathData="M262,60 L272,67 L262,67 Z"/>
+
+    <!-- "KOMPRESSOR" text — bold purple -->
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M290,22 L300,22 L300,68 L290,68 Z
+                          M302,22 L312,22 L322,45 L332,22 L342,22 L342,68 L332,68 L332,44 L322,60 L312,44 L312,68 L302,68 Z"/>
+    <!-- ".AZ" suffix hint - simplified as accent stripe -->
+    <path android:fillColor="#CE93D8"
+        android:pathData="M288,75 L395,75 L395,80 L288,80 Z"/>
+    <path android:fillColor="#7B2FBE"
+        android:pathData="M345,22 L395,22 L380,45 L395,68 L345,68 L360,45 Z"/>
+</vector>

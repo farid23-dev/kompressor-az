@@ -15,8 +15,15 @@
     <string name="hint_password">Şifrə</string>
     <string name="hint_confirm_password">Şifrəni təsdiqləyin</string>
     <string name="hint_full_name">Ad Soyad</string>
+    <string name="hint_name">Ad</string>
+    <string name="hint_surname">Soyad</string>
+    <string name="hint_phone">Telefon nömrəsi</string>
 
     <!-- Home -->
+    <string name="filter_button_label">Avtomobilləri filtrələ</string>
+    <string name="notifications_title">Bildirişlər</string>
+    <string name="notifications_empty">Hələ bildiriş yoxdur</string>
+    <string name="notifications_empty_sub">Avtomobillərə baxın! 🚗</string>
     <string name="search_hint">Marka, model, şəhər axtar…</string>
     <string name="no_cars_found">Avtomobil tapılmadı</string>
     <string name="no_cars_subtitle">Axtarışı dəyişdirin\nvə ya filteri silin</string>
@@ -31,6 +38,7 @@
     <string name="label_transmission">Sürətlər qutusu</string>
     <string name="label_city">Şəhər</string>
     <string name="label_description">Təsvir</string>
+    <string name="seller_label">Elan sahibi</string>
 
     <!-- Post -->
     <string name="post_title">Elan yerlə</string>
@@ -43,21 +51,37 @@
     <string name="hint_year">İl</string>
     <string name="hint_price">Qiymət (AZN)</string>
     <string name="hint_mileage">Yürüş (km)</string>
-    <string name="hint_phone">Telefon nömrəsi</string>
     <string name="hint_city">Şəhər</string>
     <string name="hint_description">Əlavə məlumat (isteğe bağlı)</string>
 
     <!-- Profile -->
     <string name="profile_title">Profil</string>
+    <string name="settings_title">Parametrlər</string>
     <string name="btn_sign_out">Çıxış</string>
     <string name="my_listings">Mənim elanlarım</string>
     <string name="no_listings">Hələ elan yoxdur</string>
-    <string name="no_listings_subtitle">Birinci avtomobilinizi yerləşdirmək üçün + düyməsini basın</string>
+    <string name="no_listings_subtitle">İlk avtomobilinizi əlavə etmək üçün + basın</string>
 
     <!-- Favorites -->
     <string name="saved_cars">Yadda saxlananlar</string>
     <string name="no_favorites">Yadda saxlanmış avtomobil yoxdur</string>
     <string name="no_favorites_subtitle">Hər hansı elanda ★ düyməsini basın\nonu buraya əlavə edin</string>
+
+    <!-- Settings -->
+    <string name="settings_language">Dil</string>
+    <string name="settings_appearance">Görünüş</string>
+    <string name="settings_account">Hesab</string>
+    <string name="settings_sign_out">Çıxış</string>
+    <string name="settings_light">İşıqlı</string>
+    <string name="settings_dark">Qaranlıq</string>
+    <string name="settings_system">Sistem</string>
+    <string name="settings_mode_light">İşıqlı</string>
+    <string name="settings_mode_dark">Qaranlıq</string>
+    <string name="settings_mode_system">Sistem</string>
+    <string name="lang_en">English</string>
+    <string name="lang_az">Azərbaycan</string>
+    <string name="sign_out_confirm_title">Çıxış</string>
+    <string name="sign_out_confirm_msg">Çıxmaq istədiyinizə əminsiniz?</string>
 
     <!-- Filter -->
     <string name="filter_title">Filtr və Sıralama</string>
@@ -65,6 +89,8 @@
     <string name="filter_transmission">Sürətlər qutusu</string>
     <string name="filter_city">Şəhər</string>
     <string name="filter_sort">Sıralama</string>
+    <string name="filter_hint_city">məs. Bakı</string>
+    <string name="filter_any">Hamısı</string>
     <string name="sort_newest">Ən yeni</string>
     <string name="sort_price_asc">Qiymət: Aşağıdan yuxarı</string>
     <string name="sort_price_desc">Qiymət: Yuxarıdan aşağı</string>

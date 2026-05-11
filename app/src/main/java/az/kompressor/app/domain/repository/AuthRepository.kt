@@ -6,8 +6,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     fun signIn(email: String, password: String): Flow<Resource<User>>
-    fun signUp(email: String, password: String, fullName: String): Flow<Resource<User>>
+    fun signUp(
+        email: String, password: String,
+        name: String, surname: String, phone: String
+    ): Flow<Resource<User>>
     fun signOut()
     fun getCurrentUser(): User?
     fun isUserLoggedIn(): Boolean
+    fun getUserProfile(uid: String): Flow<Resource<User>>
+    suspend fun saveUserProfile(uid: String, name: String, surname: String, phone: String, email: String)
 }

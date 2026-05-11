@@ -6,20 +6,35 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Header row -->
-    <TextView
-        android:id="@+id/tvAppTitle"
+    <!--
+        HEADER ROW
+        Logo (start) | Notification bell | Profile avatar (end)
+    -->
+    <ImageView
+        android:id="@+id/ivLogo"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="8dp"
-        android:text="Kompressor.az"
-        android:textColor="@color/primary"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/logo_kompressor"
+        android:scaleType="fitStart"
+        android:contentDescription="Kompressor.az"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnNotification" />
+
+    <ImageButton
+        android:id="@+id/btnNotification"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_circle_white"
+        android:src="@drawable/ic_notification"
+        android:contentDescription="Notifications"
+        android:padding="8dp"
+        android:elevation="2dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnProfile" />
 
     <ImageButton
@@ -36,49 +51,46 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Search bar + Filter button -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_search"
-        app:iconifiedByDefault="false"
-        app:queryHint="Search brand, model, city..."
-        app:layout_constraintTop_toBottomOf="@id/tvAppTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnFilter" />
-
-    <ImageButton
+    <!--
+        EXTENDED FILTER BUTTON — full-width outlined button
+    -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFilter"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_circle_white"
-        android:src="@android:drawable/ic_menu_sort_by_size"
-        android:contentDescription="Filter"
-        android:padding="10dp"
-        android:elevation="2dp"
-        app:layout_constraintTop_toTopOf="@id/searchView"
-        app:layout_constraintBottom_toBottomOf="@id/searchView"
+        android:layout_marginTop="12dp"
+        android:text="@string/filter_button_label"
+        android:textSize="15sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="start|center_vertical"
+        android:paddingStart="16dp"
+        app:icon="@android:drawable/ic_menu_sort_by_size"
+        app:iconTint="@color/primary"
+        app:iconGravity="start"
+        app:iconPadding="12dp"
+        app:strokeColor="@color/divider"
+        app:cornerRadius="14dp"
+        app:layout_constraintTop_toBottomOf="@id/ivLogo"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Active filter chip -->
+    <!-- Active filter chip — shown when a filter is applied -->
     <com.google.android.material.chip.Chip
         android:id="@+id/chipActiveFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone"
         android:text="Filter active"
         app:closeIconVisible="true"
         app:chipBackgroundColor="@color/primary"
         android:textColor="@color/white"
         app:closeIconTint="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintTop_toBottomOf="@id/btnFilter"
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- SwipeRefreshLayout wrapping RecyclerView -->
@@ -143,11 +155,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Try adjusting your search\nor clear the active filter"
+            android:text="Be the first to post a listing!"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.4" />
+            android:gravity="center" />
 
     </LinearLayout>
 

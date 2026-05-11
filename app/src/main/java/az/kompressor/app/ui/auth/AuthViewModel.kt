@@ -26,8 +26,13 @@ class AuthViewModel @Inject constructor(
         signInUseCase(email, password).onEach { _authState.value = it }.launchIn(viewModelScope)
     }
 
-    fun signUp(fullName: String, email: String, password: String, confirmPassword: String) {
-        signUpUseCase(fullName, email, password, confirmPassword).onEach { _authState.value = it }.launchIn(viewModelScope)
+    fun signUp(
+        name: String, surname: String, phone: String,
+        email: String, password: String, confirmPassword: String
+    ) {
+        signUpUseCase(name, surname, phone, email, password, confirmPassword)
+            .onEach { _authState.value = it }
+            .launchIn(viewModelScope)
     }
 
     fun resetState() { _authState.value = null }

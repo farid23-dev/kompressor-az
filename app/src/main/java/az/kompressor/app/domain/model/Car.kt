@@ -17,5 +17,6 @@ data class Car(
     val sellerUid: String = "",
     val createdAt: Long = 0L,
     val viewCount: Long = 0L,
-    val expiresAt: Long = 0L       // epoch ms; 0 = legacy listing (treat as createdAt + 30 days)
+    val expiresAt: Long = 0L,      // epoch ms; 0 = legacy listing (treat as createdAt + 30 days)
+    val sellerName: String = ""    // "Ali Mammadov" — embedded at post time
 )

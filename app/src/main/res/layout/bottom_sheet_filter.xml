@@ -14,14 +14,13 @@
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="@color/divider"
-        android:backgroundTint="@color/divider" />
+        android:background="@color/divider" />
 
     <!-- Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filter &amp; Sort"
+        android:text="@string/filter_title"
         android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -31,7 +30,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fuel Type"
+        android:text="@string/filter_fuel"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:layout_marginBottom="4dp" />
@@ -49,7 +48,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transmission"
+        android:text="@string/filter_transmission"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:layout_marginBottom="4dp" />
@@ -67,7 +66,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="City"
+        android:text="@string/filter_city"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:layout_marginBottom="4dp" />
@@ -89,17 +88,18 @@
             android:id="@+id/etCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="e.g. Baku"
+            android:hint="@string/filter_hint_city"
             android:inputType="textCapWords"
             android:textColor="@color/text_primary"
             android:textSize="15sp" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Sort By -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sort By"
+        android:text="@string/filter_sort"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:layout_marginBottom="8dp" />
@@ -115,7 +115,7 @@
             android:id="@+id/rbNewest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Newest first"
+            android:text="@string/sort_newest"
             android:textColor="@color/text_primary"
             android:checked="true" />
 
@@ -123,14 +123,14 @@
             android:id="@+id/rbPriceAsc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price: Low → High"
+            android:text="@string/sort_price_asc"
             android:textColor="@color/text_primary" />
 
         <RadioButton
             android:id="@+id/rbPriceDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price: High → Low"
+            android:text="@string/sort_price_desc"
             android:textColor="@color/text_primary" />
 
     </RadioGroup>
@@ -149,7 +149,7 @@
             android:layout_height="52dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="Clear"
+            android:text="@string/btn_clear"
             android:textColor="@color/text_primary"
             app:strokeColor="@color/divider"
             app:cornerRadius="12dp" />
@@ -159,7 +159,7 @@
             android:layout_width="0dp"
             android:layout_height="52dp"
             android:layout_weight="2"
-            android:text="Apply Filter"
+            android:text="@string/btn_apply"
             android:textColor="@color/white"
             app:backgroundTint="@color/primary"
             app:cornerRadius="12dp" />

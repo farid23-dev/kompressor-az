@@ -24,36 +24,44 @@ class FavoritesRepositoryImpl @Inject constructor(
     override suspend fun removeFavorite(carId: String) =
         dao.deleteFavorite(carId)
 
-    // --- Mappers ---
+    override suspend fun clearAll() =
+        dao.deleteAll()
+
+    // ── Mappers ──────────────────────────────────────────────────────────────
+
     private fun FavoriteCarEntity.toCar() = Car(
-        id = carId,
-        title = title,
-        brand = brand,
-        model = model,
-        year = year,
-        price = price,
-        mileage = mileage,
-        fuelType = fuelType,
+        id          = carId,
+        title       = title,
+        brand       = brand,
+        model       = model,
+        year        = year,
+        price       = price,
+        mileage     = mileage,
+        fuelType    = fuelType,
         transmission = transmission,
-        city = city,
-        imageUrls = if (imageUrl.isNotBlank()) listOf(imageUrl) else emptyList(),
-        sellerUid = sellerUid,
-        createdAt = createdAt
+        city        = city,
+        imageUrls   = if (imageUrl.isNotBlank()) listOf(imageUrl) else emptyList(),
+        sellerUid   = sellerUid,
+        sellerName  = sellerName,
+        createdAt   = createdAt,
+        expiresAt   = expiresAt   // 0 → TimeAgo falls back to createdAt + 30 days
     )
 
     private fun Car.toEntity() = FavoriteCarEntity(
-        carId = id,
-        title = title,
-        brand = brand,
-        model = model,
-        year = year,
-        price = price,
-        mileage = mileage,
-        fuelType = fuelType,
+        carId        = id,
+        title        = title,
+        brand        = brand,
+        model        = model,
+        year         = year,
+        price        = price,
+        mileage      = mileage,
+        fuelType     = fuelType,
         transmission = transmission,
-        city = city,
-        imageUrl = imageUrls.firstOrNull() ?: "",
-        sellerUid = sellerUid,
-        createdAt = createdAt
+        city         = city,
+        imageUrl     = imageUrls.firstOrNull() ?: "",
+        sellerUid    = sellerUid,
+        sellerName   = sellerName,
+        createdAt    = createdAt,
+        expiresAt    = expiresAt
     )
 }
