@@ -44,6 +44,10 @@ class AdminListingAdapter(
                     .centerCrop().into(b.ivThumbnail)
             }
 
+            // Hide the button that matches current status (no point approving approved / rejecting rejected)
+            b.btnApprove.visibility = if (car.status == "approved") android.view.View.GONE else android.view.View.VISIBLE
+            b.btnReject.visibility  = if (car.status == "rejected") android.view.View.GONE else android.view.View.VISIBLE
+
             b.btnApprove.setOnClickListener { onApprove(car) }
             b.btnReject.setOnClickListener  { onReject(car)  }
         }

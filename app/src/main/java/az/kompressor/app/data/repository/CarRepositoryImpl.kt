@@ -221,9 +221,37 @@ class CarRepositoryImpl @Inject constructor(
                 sellerName = car.sellerName,
                 createdAt = now,
                 expiresAt = now + 30L * 24 * 60 * 60 * 1000,  // auto-expire after 30 days
-                status = "pending"                              // awaits admin approval
+                status = run {
+                    // Admins skip the approval queue — post goes live immediately
+                    val uid = car.sellerUid.ifBlank { com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: "" }
+                    val isAdmin = try { firestore.collection("admins").document(uid).get().await().exists() } catch (_: Exception) { false }
+                    if (isAdmin) "approved" else "pending"
+                }
             )
-            carsCollection.add(carDto).await()
+            val docRef = carsCollection.add(carDto).await()
+
+            // Notify all admins about the new pending listing (skip if admin posted — auto-approved)
+            val postedStatus = carDto.status
+            if (postedStatus == "pending") {
+                try {
+                    val adminDocs = firestore.collection("admins").get().await()
+                    val notif = mapOf(
+                        "carId"      to docRef.id,
+                        "carTitle"   to car.title,
+                        "status"     to "new_listing",
+                        "message"    to "${car.sellerName} submitted a new listing: ${car.title}",
+                        "timestamp"  to System.currentTimeMillis(),
+                        "read"       to false
+                    )
+                    for (adminDoc in adminDocs.documents) {
+                        firestore.collection("notifications")
+                            .document(adminDoc.id)
+                            .collection("items")
+                            .add(notif).await()
+                    }
+                } catch (_: Exception) { /* non-critical */ }
+            }
+
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "Failed to post car"))
@@ -349,4 +377,32 @@ class CarRepositoryImpl @Inject constructor(
 
     override suspend fun updateCarStatus(carId: String, status: String, sellerUid: String, carTitle: String) {
         try {
-     
+            carsCollection.document(carId).update("status", status).await()
+            // Write in-app notification for the seller
+            val notif = mapOf(
+                "carId"     to carId,
+                "carTitle"  to carTitle,
+                "status"    to status,
+                "timestamp" to System.currentTimeMillis(),
+                "read"      to false
+            )
+            firestore.collection("notifications")
+                .document(sellerUid)
+                .collection("items")
+                .add(notif).await()
+        } catch (_: Exception) {}
+    }
+
+    override suspend fun isAdmin(uid: String): Boolean {
+        return try {
+            firestore.collection("admins").document(uid).get().await().exists()
+        } catch (_: Exception) { false }
+    }
+
+    override suspend fun deleteAllCars() {
+        try {
+            val all = carsCollection.get().await()
+            all.documents.forEach { it.reference.delete().await() }
+        } catch (_: Exception) {}
+    }
+}

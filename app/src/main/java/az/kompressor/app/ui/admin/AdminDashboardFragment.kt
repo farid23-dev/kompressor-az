@@ -15,9 +15,12 @@ import az.kompressor.app.domain.model.Car
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @AndroidEntryPoint
 class AdminDashboardFragment : Fragment() {
@@ -39,6 +42,21 @@ class AdminDashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
+
+        // Guard: only real admins can stay on this screen
+        viewLifecycleOwner.lifecycleScope.launch {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid == null) { findNavController().navigateUp(); return@launch }
+            val isAdmin = try {
+                FirebaseFirestore.getInstance()
+                    .collection("admins").document(uid).get().await().exists()
+            } catch (e: Exception) { false }
+            if (!isAdmin) {
+                binding.root.showSnackbar("Access denied")
+                findNavController().navigateUp()
+                return@launch
+            }
+        }
 
         adapter = AdminListingAdapter(
             onApprove = { car -> viewModel.approve(car) },

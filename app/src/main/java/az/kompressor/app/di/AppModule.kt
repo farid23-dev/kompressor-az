@@ -36,4 +36,6 @@ object AppModule {
         FirebaseStorage.getInstance("gs://kompressor-az-4c63d.firebasestorage.app")
 
     @Provides @Singleton
-    fun provide
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+}

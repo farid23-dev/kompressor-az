@@ -21,10 +21,14 @@ class NotificationAdapter : ListAdapter<AppNotification, NotificationAdapter.Vie
     inner class ViewHolder(private val b: ItemNotificationBinding) :
         RecyclerView.ViewHolder(b.root) {
         fun bind(n: AppNotification) {
-            val emoji = if (n.status == "approved") "✅" else "❌"
-            val action = if (n.status == "approved") "approved" else "rejected"
-            b.tvMessage.text = "$emoji Your listing \"${n.carTitle}\" was $action by admin."
-            b.tvTime.text    = TimeAgo.format(n.timestamp)
+            b.tvMessage.text = when (n.status) {
+                "approved"    -> "✅ Your listing \"${n.carTitle}\" was approved!"
+                "rejected"    -> "❌ Your listing \"${n.carTitle}\" was rejected."
+                "new_listing" -> if (n.message.isNotBlank()) "🆕 ${n.message}"
+                                 else "🆕 New listing submitted: \"${n.carTitle}\""
+                else          -> n.message.ifBlank { "Notification about \"${n.carTitle}\"" }
+            }
+            b.tvTime.text         = TimeAgo.format(n.timestamp)
             b.unreadDot.isVisible = !n.read
         }
     }

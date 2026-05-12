@@ -27,6 +27,7 @@ class NotificationRepositoryImpl @Inject constructor(
                     carId     = doc.getString("carId") ?: "",
                     carTitle  = doc.getString("carTitle") ?: "",
                     status    = doc.getString("status") ?: "",
+                    message   = doc.getString("message") ?: "",
                     timestamp = doc.getLong("timestamp") ?: 0L,
                     read      = doc.getBoolean("read") ?: false
                 )
