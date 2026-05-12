@@ -1,12 +1,8 @@
 package az.kompressor.app.data.repository
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.File
-import java.io.FileOutputStream
 import az.kompressor.app.data.remote.dto.CarDto
 import az.kompressor.app.data.remote.dto.toDomain
 import az.kompressor.app.domain.model.Car
@@ -40,9 +36,9 @@ class CarRepositoryImpl @Inject constructor(
             val cars = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(CarDto::class.java)?.copy(id = doc.id)?.toDomain()
             }.filter { car ->
-                // If expiresAt is set, hide expired listings. If legacy (0), use createdAt + 30d.
+                // Only show approved, non-expired listings in public feed
                 val expiry = if (car.expiresAt > 0) car.expiresAt else (car.createdAt + thirtyDays)
-                expiry > now
+                expiry > now && car.status == "approved"
             }
             emit(Resource.Success(cars))
         } catch (e: Exception) {
@@ -57,10 +53,12 @@ class CarRepositoryImpl @Inject constructor(
             val cars = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(CarDto::class.java)?.copy(id = doc.id)?.toDomain()
             }.filter { car ->
-                car.title.contains(query, ignoreCase = true) ||
-                car.brand.contains(query, ignoreCase = true) ||
-                car.model.contains(query, ignoreCase = true) ||
-                car.city.contains(query, ignoreCase = true)
+                car.status == "approved" && (
+                    car.title.contains(query, ignoreCase = true) ||
+                    car.brand.contains(query, ignoreCase = true) ||
+                    car.model.contains(query, ignoreCase = true) ||
+                    car.city.contains(query, ignoreCase = true)
+                )
             }
             emit(Resource.Success(cars))
         } catch (e: Exception) {
@@ -98,40 +96,73 @@ class CarRepositoryImpl @Inject constructor(
     }
 
     /**
-     * Compress a content URI to ≤1280px / 82% JPEG and return a file:// URI.
-     * Falls back to original URI on any error (better to upload large than fail).
+     * Upload one image URI → Firebase Storage → return download URL.
+     * Each step is isolated so error messages pinpoint the exact failure.
      */
-    private fun compressUri(uri: Uri): Uri {
-        return try {
-            val inputStream = context.contentResolver.openInputStream(uri) ?: return uri
-            val original = BitmapFactory.decodeStream(inputStream)
-            inputStream.close()
+    private suspend fun uploadUri(uri: Uri, sellerUid: String): String {
+        // 1. Resolve UID
+        val uid = sellerUid.ifBlank {
+            com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+                ?: throw Exception("UPLOAD_FAIL: not signed in")
+        }
 
-            val maxDim = 1280
-            val scaled = if (original.width > maxDim || original.height > maxDim) {
-                val scale = maxDim.toFloat() / maxOf(original.width, original.height)
-                Bitmap.createScaledBitmap(
-                    original,
-                    (original.width * scale).toInt(),
-                    (original.height * scale).toInt(),
-                    true
-                ).also { original.recycle() }
-            } else original
-
-            val tmp = File(context.cacheDir, "upload_${System.currentTimeMillis()}.jpg")
-            FileOutputStream(tmp).use { out -> scaled.compress(Bitmap.CompressFormat.JPEG, 82, out) }
-            scaled.recycle()
-            Uri.fromFile(tmp)
+        // 2. Read bytes synchronously via ContentResolver (scoped storage safe on API 29+)
+        val bytes = try {
+            context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                ?: throw Exception("UPLOAD_FAIL: ContentResolver returned null stream for $uri")
         } catch (e: Exception) {
-            uri // fallback: upload original if compression fails
+            throw Exception("UPLOAD_FAIL [read]: ${e.message}")
+        }
+        if (bytes.isEmpty()) throw Exception("UPLOAD_FAIL: image bytes are empty")
+
+        // 3. In-memory compression
+        val compressed = compressBytes(bytes)
+        android.util.Log.d("KompressorUpload", "Compressed ${bytes.size}B → ${compressed.size}B uid=$uid")
+
+        // 4. Upload bytes
+        val path = "car_images/$uid/${UUID.randomUUID()}.jpg"
+        val ref  = storage.reference.child(path)
+        val meta = com.google.firebase.storage.StorageMetadata.Builder()
+            .setContentType("image/jpeg").build()
+
+        try {
+            ref.putBytes(compressed, meta).await()
+            android.util.Log.d("KompressorUpload", "putBytes OK → $path")
+        } catch (e: com.google.firebase.storage.StorageException) {
+            throw Exception("UPLOAD_FAIL [putBytes] code=${e.errorCode} http=${e.httpResultCode}: ${e.message}")
+        } catch (e: Exception) {
+            throw Exception("UPLOAD_FAIL [putBytes]: ${e.message}")
+        }
+
+        // 5. Get download URL
+        return try {
+            val url = ref.downloadUrl.await().toString()
+            android.util.Log.d("KompressorUpload", "downloadUrl OK → $url")
+            url
+        } catch (e: com.google.firebase.storage.StorageException) {
+            throw Exception("UPLOAD_FAIL [downloadUrl] code=${e.errorCode} http=${e.httpResultCode}: ${e.message}")
+        } catch (e: Exception) {
+            throw Exception("UPLOAD_FAIL [downloadUrl]: ${e.message}")
         }
     }
 
-    private suspend fun uploadUri(uri: Uri, sellerUid: String): String {
-        val compressed = compressUri(uri)
-        val ref = storage.reference.child("car_images/$sellerUid/${UUID.randomUUID()}.jpg")
-        ref.putFile(compressed).await()
-        return ref.downloadUrl.await().toString()
+    private fun compressBytes(input: ByteArray): ByteArray {
+        val original = android.graphics.BitmapFactory.decodeByteArray(input, 0, input.size)
+            ?: return input
+        val maxDim = 1280
+        val scaled = if (original.width > maxDim || original.height > maxDim) {
+            val scale = maxDim.toFloat() / maxOf(original.width, original.height)
+            android.graphics.Bitmap.createScaledBitmap(
+                original,
+                (original.width * scale).toInt(),
+                (original.height * scale).toInt(),
+                true
+            ).also { original.recycle() }
+        } else original
+        val out = java.io.ByteArrayOutputStream()
+        scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 82, out)
+        scaled.recycle()
+        return out.toByteArray()
     }
 
     override fun updateCar(
@@ -189,7 +220,8 @@ class CarRepositoryImpl @Inject constructor(
                 imageUrls = imageUrls, sellerUid = car.sellerUid,
                 sellerName = car.sellerName,
                 createdAt = now,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000   // auto-expire after 30 days
+                expiresAt = now + 30L * 24 * 60 * 60 * 1000,  // auto-expire after 30 days
+                status = "pending"                              // awaits admin approval
             )
             carsCollection.add(carDto).await()
             emit(Resource.Success(Unit))
@@ -248,7 +280,8 @@ class CarRepositoryImpl @Inject constructor(
                 ),
                 sellerUid = "demo",
                 createdAt = now,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000
+                expiresAt = now + 30L * 24 * 60 * 60 * 1000,
+                status = "approved"
             ),
 
             // ── 2. Mercedes-Benz C300 AMG — Petrol / Automatic / Baku ────────
@@ -267,7 +300,8 @@ class CarRepositoryImpl @Inject constructor(
                 ),
                 sellerUid = "demo",
                 createdAt = now - 3_600_000,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000 - 3_600_000
+                expiresAt = now + 30L * 24 * 60 * 60 * 1000 - 3_600_000,
+                status = "approved"
             ),
 
             // ── 3. Tesla Model Y Long Range — Electric / Automatic / Baku ────
@@ -286,10 +320,33 @@ class CarRepositoryImpl @Inject constructor(
                 ),
                 sellerUid = "demo",
                 createdAt = now - 7_200_000,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000 - 7_200_000
+                expiresAt = now + 30L * 24 * 60 * 60 * 1000 - 7_200_000,
+                status = "approved"
             )
         )
 
         dummyCars.forEach { car -> carsCollection.add(car).await() }
     }
-}
+
+    override fun getAllCarsAdmin(): Flow<Resource<List<Car>>> = flow {
+        emit(Resource.Loading)
+        try {
+            val snapshot = carsCollection
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get().await()
+            val cars = snapshot.documents.mapNotNull { doc ->
+                doc.toObject(CarDto::class.java)?.copy(id = doc.id)?.toDomain()
+            }.sortedWith(compareBy(
+                // Pending first, then approved, then rejected
+                { when (it.status) { "pending" -> 0; "approved" -> 1; else -> 2 } },
+                { -it.createdAt }
+            ))
+            emit(Resource.Success(cars))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Failed to load all cars"))
+        }
+    }
+
+    override suspend fun updateCarStatus(carId: String, status: String, sellerUid: String, carTitle: String) {
+        try {
+     

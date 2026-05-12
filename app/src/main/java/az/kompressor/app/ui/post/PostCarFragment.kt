@@ -195,6 +195,13 @@ class PostCarFragment : Fragment() {
         if (binding.etCity.text.isNullOrBlank()) {
             binding.tilCity.error = "City is required"; valid = false
         }
+        // At least one image is required
+        val hasNewImages      = viewModel.selectedImages.value.isNotEmpty()
+        val hasExistingImages = viewModel.existingImageUrls.value.isNotEmpty()
+        if (!hasNewImages && !hasExistingImages) {
+            binding.root.showSnackbar("Please add at least one photo")
+            valid = false
+        }
         return valid
     }
 

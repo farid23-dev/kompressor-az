@@ -20,7 +20,8 @@ data class CarDto(
     val createdAt: Long = 0L,
     val viewCount: Long = 0L,
     val expiresAt: Long = 0L,
-    val sellerName: String = ""
+    val sellerName: String = "",
+    val status: String = "approved"  // "pending" | "approved" | "rejected"
 )
 
 fun CarDto.toDomain() = Car(
@@ -29,5 +30,6 @@ fun CarDto.toDomain() = Car(
     fuelType = fuelType, transmission = transmission,
     city = city, description = description, phone = phone,
     imageUrls = imageUrls, sellerUid = sellerUid, createdAt = createdAt,
-    viewCount = viewCount, expiresAt = expiresAt, sellerName = sellerName
+    viewCount = viewCount, expiresAt = expiresAt, sellerName = sellerName,
+    status = status
 )

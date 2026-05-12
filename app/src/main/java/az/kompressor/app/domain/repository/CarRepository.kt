@@ -16,4 +16,9 @@ interface CarRepository {
     suspend fun incrementViewCount(carId: String)
     suspend fun bumpCar(carId: String)         // reset createdAt + expiresAt → listing floats to top
     suspend fun seedDummyData()
+    // Admin
+    fun getAllCarsAdmin(): Flow<Resource<List<Car>>>
+    suspend fun updateCarStatus(carId: String, status: String, sellerUid: String, carTitle: String)
+    suspend fun isAdmin(uid: String): Boolean
+    suspend fun deleteAllCars()
 }

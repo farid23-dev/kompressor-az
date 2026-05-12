@@ -18,10 +18,13 @@ class KompressorApp : Application() {
         // Also wipe the local Room DB so stale favorites from the previous
         // account don't bleed into the new one.
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        if (prefs.getString("app_version", "") != "4.0") {
+        if (prefs.getString("app_version", "") != "5.0") {
             FirebaseAuth.getInstance().signOut()
             deleteDatabase("kompressor_db")
-            prefs.edit().putString("app_version", "4.0").apply()
+            // Reset seeding flag so clean dummy data can be re-seeded
+            val kompressorPrefs = getSharedPreferences("kompressor_prefs", MODE_PRIVATE)
+            kompressorPrefs.edit().remove("dummy_seeded").apply()
+            prefs.edit().putString("app_version", "5.0").apply()
         }
     }
 

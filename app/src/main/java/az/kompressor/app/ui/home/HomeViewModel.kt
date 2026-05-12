@@ -3,6 +3,7 @@ package az.kompressor.app.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import az.kompressor.app.domain.model.Car
+import az.kompressor.app.domain.repository.AuthRepository
 import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.usecase.GetCarsUseCase
 import az.kompressor.app.domain.usecase.SearchCarsUseCase
@@ -45,8 +46,15 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCarsUseCase: GetCarsUseCase,
     private val searchCarsUseCase: SearchCarsUseCase,
-    private val carRepository: CarRepository
+    private val carRepository: CarRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
+
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin: StateFlow<Boolean> = _isAdmin
+
+    private val _unreadNotifCount = MutableStateFlow(0)
+    val unreadNotifCount: StateFlow<Int> = _unreadNotifCount
 
     // Raw data from Firestore
     private var allCars: List<Car> = emptyList()
@@ -67,8 +75,12 @@ class HomeViewModel @Inject constructor(
 
     private fun seedAndLoad() {
         viewModelScope.launch {
-            // Only seed once per install — SharedPrefs flag prevents wiping
-            // favourited car IDs on every restart.
+            // Check admin role
+            val uid = authRepository.getCurrentUser()?.uid
+            if (uid != null) {
+                _isAdmin.value = carRepository.isAdmin(uid)
+            }
+            // Only seed once per install
             val prefs = context.getSharedPreferences("kompressor_prefs", Context.MODE_PRIVATE)
             if (!prefs.getBoolean("dummy_seeded", false)) {
                 carRepository.seedDummyData()

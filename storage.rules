@@ -2,11 +2,11 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // Car images: authenticated users can read, only the uploader can write/delete.
-    // Path convention: car_images/{uid}/{filename}
+    // Car images — any signed-in user can upload, anyone can read (for listing display)
     match /car_images/{uid}/{allPaths=**} {
-      allow read:  if request.auth != null;
-      allow write: if request.auth != null && request.auth.uid == uid;
+      allow read:  if true;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
     // Deny everything else

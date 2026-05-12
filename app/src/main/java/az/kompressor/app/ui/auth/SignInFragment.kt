@@ -13,7 +13,10 @@ import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentSignInBinding
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
+import az.kompressor.app.util.AdminSetup
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -53,6 +56,8 @@ class SignInFragment : Fragment() {
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
                         binding.btnSignIn.isEnabled = true
+                        // Self-register as admin if this is the admin email
+                        lifecycleScope.launch { AdminSetup.registerCurrentUserAsAdminIfNeeded() }
                         findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
                         viewModel.resetState()
                     }

@@ -55,13 +55,22 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
 
-        // Notifications bell
+        // Notifications bell → NotificationsFragment
         binding.btnNotification.setOnClickListener {
-            NotificationsBottomSheet().show(childFragmentManager, NotificationsBottomSheet.TAG)
+            findNavController().navigate(R.id.action_homeFragment_to_notificationsFragment)
+        }
+
+        // Profile icon: long-press → admin dashboard (only shown if admin)
+        binding.btnProfile.setOnLongClickListener {
+            if (viewModel.isAdmin.value) {
+                findNavController().navigate(R.id.action_homeFragment_to_adminDashboardFragment)
+                true
+            } else false
         }
 
         observeCars()
         observeFilter()
+        observeAdminState()
     }
 
     private fun setupRecyclerView() {
@@ -115,6 +124,15 @@ class HomeFragment : Fragment() {
                         binding.root.showSnackbar(state.message)
                     }
                 }
+            }
+        }
+    }
+
+    private fun observeAdminState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isAdmin.collectLatest { isAdmin ->
+                // Show subtle admin indicator on profile button
+                binding.btnProfile.alpha = if (isAdmin) 1f else 1f  // hook for future badge
             }
         }
     }

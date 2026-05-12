@@ -31,9 +31,9 @@ object AppModule {
     }
 
     @Provides @Singleton
-    fun provideStorage(): FirebaseStorage = FirebaseStorage.getInstance()
+    fun provideStorage(): FirebaseStorage =
+        // Explicit bucket URL avoids SDK resolution issues with new .firebasestorage.app domains
+        FirebaseStorage.getInstance("gs://kompressor-az-4c63d.firebasestorage.app")
 
     @Provides @Singleton
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
-        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-}
+    fun provide
