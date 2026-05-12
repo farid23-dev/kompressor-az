@@ -40,6 +40,13 @@ class SettingsFragment : Fragment() {
         setupThemeButtons()
         setupSignOut()
         observeSignOut()
+
+        binding.btnContactUs.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_contactFragment)
+        }
+        binding.btnAbout.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_aboutFragment)
+        }
     }
 
     // ── Language ──────────────────────────────────────────────────────────────

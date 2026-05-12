@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Default user avatar — person silhouette.
-    Uses ?attr/colorControlNormal so it renders correctly in both light and dark themes.
--->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp"
     android:height="48dp"
     android:viewportWidth="48"
     android:viewportHeight="48">
 
-    <!-- Head (circle via arc path: cx=24, cy=16, r=9) -->
+    <!-- Blue circle background -->
     <path
-        android:fillColor="?attr/colorControlNormal"
-        android:pathData="M15,16
-            A9,9 0 1 0 33,16
-            A9,9 0 1 0 15,16 Z"/>
+        android:fillColor="#1A73E8"
+        android:pathData="M24,0 A24,24 0 1 1 24,48 A24,24 0 1 1 24,0 Z"/>
 
-    <!-- Shoulders / body area -->
+    <!-- White head -->
     <path
-        android:fillColor="?attr/colorControlNormal"
-        android:pathData="M8,42 C8,32 14,27 24,27 C34,27 40,32 40,42 Z"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,10 A7,7 0 1 1 24,24 A7,7 0 1 1 24,10 Z"/>
+
+    <!-- White shoulders / body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M10,40 C10,31 16,27 24,27 C32,27 38,31 38,40 Z"/>
 
 </vector>
