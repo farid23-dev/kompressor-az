@@ -44,15 +44,17 @@ class CarImageAdapter(
             onImageClick?.invoke(position)
         }
 
+        holder.binding.pbImageLoading.visibility = android.view.View.VISIBLE
+
         Glide.with(holder.binding.ivCarImage.context)
             .load(urls[position])
             .centerCrop()
-            .placeholder(android.R.color.darker_gray)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?, model: Any?,
                     target: Target<Drawable>, isFirstResource: Boolean
                 ): Boolean {
+                    holder.binding.pbImageLoading.visibility = android.view.View.GONE
                     if (isFirst && !firstImageNotified) {
                         firstImageNotified = true
                         onFirstImageReady?.invoke()
@@ -65,6 +67,7 @@ class CarImageAdapter(
                     target: Target<Drawable>, dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
+                    holder.binding.pbImageLoading.visibility = android.view.View.GONE
                     if (isFirst && !firstImageNotified) {
                         firstImageNotified = true
                         onFirstImageReady?.invoke()

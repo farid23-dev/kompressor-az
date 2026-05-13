@@ -13,6 +13,8 @@ import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentSignUpBinding
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
+import az.kompressor.app.util.attachPhonePrefix
+import az.kompressor.app.util.cleanPhoneNumber
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -34,11 +36,13 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        attachPhonePrefix(binding.etPhone)
+
         binding.btnSignUp.setOnClickListener {
             viewModel.signUp(
                 name            = binding.etName.text.toString().trim(),
                 surname         = binding.etSurname.text.toString().trim(),
-                phone           = binding.etPhone.text.toString().trim(),
+                phone           = cleanPhoneNumber(binding.etPhone.text.toString().trim()),
                 email           = binding.etEmail.text.toString().trim(),
                 password        = binding.etPassword.text.toString(),
                 confirmPassword = binding.etConfirmPassword.text.toString()

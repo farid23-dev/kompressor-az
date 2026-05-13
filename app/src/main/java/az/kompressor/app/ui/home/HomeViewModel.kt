@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.domain.repository.AuthRepository
 import az.kompressor.app.domain.repository.CarRepository
+import az.kompressor.app.domain.repository.NotificationRepository
 import az.kompressor.app.domain.usecase.GetCarsUseCase
 import az.kompressor.app.domain.usecase.SearchCarsUseCase
 import az.kompressor.app.util.Resource
@@ -47,11 +48,15 @@ class HomeViewModel @Inject constructor(
     private val getCarsUseCase: GetCarsUseCase,
     private val searchCarsUseCase: SearchCarsUseCase,
     private val carRepository: CarRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
     private val _isAdmin = MutableStateFlow(false)
     val isAdmin: StateFlow<Boolean> = _isAdmin
+
+    private val _unreadCount = MutableStateFlow(0)
+    val unreadCount: StateFlow<Int> = _unreadCount
 
     private val _unreadNotifCount = MutableStateFlow(0)
     val unreadNotifCount: StateFlow<Int> = _unreadNotifCount
@@ -70,21 +75,13 @@ class HomeViewModel @Inject constructor(
     val filterState: StateFlow<FilterState> = _filterState
 
     init {
-        seedAndLoad()
-    }
-
-    private fun seedAndLoad() {
         viewModelScope.launch {
-            // Check admin role
             val uid = authRepository.getCurrentUser()?.uid
             if (uid != null) {
                 _isAdmin.value = carRepository.isAdmin(uid)
-            }
-            // Only seed once per install
-            val prefs = context.getSharedPreferences("kompressor_prefs", Context.MODE_PRIVATE)
-            if (!prefs.getBoolean("dummy_seeded", false)) {
-                carRepository.seedDummyData()
-                prefs.edit().putBoolean("dummy_seeded", true).apply()
+                notificationRepository.getNotifications(uid)
+                    .onEach { list -> _unreadCount.value = list.count { !it.read } }
+                    .launchIn(viewModelScope)
             }
             loadCars()
         }

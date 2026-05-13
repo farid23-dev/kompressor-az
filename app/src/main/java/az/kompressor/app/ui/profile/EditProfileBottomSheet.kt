@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import az.kompressor.app.databinding.BottomSheetEditProfileBinding
 import az.kompressor.app.util.Resource
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import az.kompressor.app.util.attachPhonePrefix
+import az.kompressor.app.util.cleanPhoneNumber
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -30,6 +32,7 @@ class EditProfileBottomSheet : BottomSheetDialogFragment() {
 
         // Pre-fill current values
         val profile = (viewModel.userProfile.value as? Resource.Success)?.data
+        attachPhonePrefix(binding.etPhone)
         binding.etFirstName.setText(profile?.name ?: "")
         binding.etSurname.setText(profile?.surname ?: "")
         binding.etPhone.setText(profile?.phone ?: "")
@@ -37,7 +40,7 @@ class EditProfileBottomSheet : BottomSheetDialogFragment() {
         binding.btnSave.setOnClickListener {
             val name    = binding.etFirstName.text?.toString()?.trim() ?: ""
             val surname = binding.etSurname.text?.toString()?.trim() ?: ""
-            val phone   = binding.etPhone.text?.toString()?.trim() ?: ""
+            val phone   = cleanPhoneNumber(binding.etPhone.text?.toString()?.trim() ?: "")
 
             if (name.isEmpty()) {
                 binding.tilFirstName.error = "Required"; return@setOnClickListener

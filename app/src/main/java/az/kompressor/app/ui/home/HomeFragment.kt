@@ -1,6 +1,10 @@
 package az.kompressor.app.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import androidx.activity.addCallback
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,6 +75,8 @@ class HomeFragment : Fragment() {
         observeCars()
         observeFilter()
         observeAdminState()
+        observeNotifBadge()
+        setupBackPress()
     }
 
     private fun setupRecyclerView() {
@@ -130,9 +136,32 @@ class HomeFragment : Fragment() {
 
     private fun observeAdminState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isAdmin.collectLatest { isAdmin ->
-                // Show subtle admin indicator on profile button
-                binding.btnProfile.alpha = if (isAdmin) 1f else 1f  // hook for future badge
+            viewModel.isAdmin.collectLatest { _ -> /* reserved */ }
+        }
+    }
+
+    private fun observeNotifBadge() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.unreadCount.collectLatest { count ->
+                if (count > 0) {
+                    binding.tvNotifBadge.visibility = android.view.View.VISIBLE
+                    binding.tvNotifBadge.text = if (count > 99) "99+" else count.toString()
+                } else {
+                    binding.tvNotifBadge.visibility = android.view.View.GONE
+                }
+            }
+        }
+    }
+
+    private fun setupBackPress() {
+        var backPressedOnce = false
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (backPressedOnce) {
+                requireActivity().finish()
+            } else {
+                backPressedOnce = true
+                Toast.makeText(requireContext(), "Press back again to exit", Toast.LENGTH_SHORT).show()
+                Handler(Looper.getMainLooper()).postDelayed({ backPressedOnce = false }, 2000)
             }
         }
     }

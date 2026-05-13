@@ -19,6 +19,8 @@ import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentPostCarBinding
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
+import az.kompressor.app.util.attachPhonePrefix
+import az.kompressor.app.util.cleanPhoneNumber
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -96,6 +98,7 @@ class PostCarFragment : Fragment() {
         binding.etYear.doOnTextChanged { _, _, _, _ -> binding.tilYear.error = null }
         binding.etPrice.doOnTextChanged { _, _, _, _ -> binding.tilPrice.error = null }
         binding.etMileage.doOnTextChanged { _, _, _, _ -> binding.tilMileage.error = null }
+        attachPhonePrefix(binding.etPhone)
         binding.etPhone.doOnTextChanged { _, _, _, _ -> binding.tilPhone.error = null }
         binding.etCity.doOnTextChanged { _, _, _, _ -> binding.tilCity.error = null }
     }
@@ -122,7 +125,7 @@ class PostCarFragment : Fragment() {
             val fuelType = binding.spinnerFuel.selectedItem.toString()
             val transmission = binding.spinnerTransmission.selectedItem.toString()
             val city = binding.etCity.text.toString()
-            val phone = binding.etPhone.text.toString()
+            val phone = cleanPhoneNumber(binding.etPhone.text.toString())
             val description = binding.etDescription.text.toString()
 
             if (args.editCarId.isNotBlank()) {
@@ -148,7 +151,7 @@ class PostCarFragment : Fragment() {
                 binding.etYear.setText(car.year.toString())
                 binding.etPrice.setText(car.price.toString())
                 binding.etMileage.setText(car.mileage.toString())
-                binding.etPhone.setText(car.phone)
+                binding.etPhone.setText(car.phone.ifBlank { "" })
                 binding.etCity.setText(car.city)
                 binding.etDescription.setText(car.description)
 
