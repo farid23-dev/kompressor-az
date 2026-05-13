@@ -282,80 +282,6 @@ class CarRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun seedDummyData() {
-        // Wipe ALL existing cars (demo + any leftovers from previous sessions)
-        try {
-            val all = carsCollection.get().await()
-            all.documents.forEach { it.reference.delete().await() }
-        } catch (_: Exception) { /* silently skip if rules deny */ }
-
-        val now = System.currentTimeMillis()
-        val dummyCars = listOf(
-
-            // ── 1. BMW 5 Series 520i — Petrol / Automatic / Baku ─────────────
-            CarDto(
-                title = "BMW 5 Series 520i M Sport",
-                brand = "BMW", model = "5 Series", year = 2022,
-                price = 87000, mileage = 18500,
-                fuelType = "Petrol", transmission = "Automatic",
-                city = "Baku", phone = "+994501112233",
-                sellerName = "Kompressor Demo",
-                description = "M Sport package with full aerodynamic kit. Black Sapphire Metallic exterior with cognac Merino leather interior. Features include: wireless Apple CarPlay & Android Auto, ambient lighting with 40 colours, Harman Kardon surround sound (16 speakers), adaptive LED headlights with laser high beam, 360° camera system, parking assistant plus, active cruise control with stop & go. One private owner from new. Full BMW dealer service history, last serviced at 15,000km. No accidents, non-smoker vehicle. Two keys. Test drives welcome in Baku.",
-                imageUrls = listOf(
-                    "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&q=85",
-                    "https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?w=1200&q=85",
-                    "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=1200&q=85"
-                ),
-                sellerUid = "demo",
-                createdAt = now,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000,
-                status = "approved"
-            ),
-
-            // ── 2. Mercedes-Benz C300 AMG — Petrol / Automatic / Baku ────────
-            CarDto(
-                title = "Mercedes-Benz C300 AMG Line",
-                brand = "Mercedes", model = "C300", year = 2023,
-                price = 96000, mileage = 7200,
-                fuelType = "Petrol", transmission = "Automatic",
-                city = "Baku", phone = "+994552223344",
-                sellerName = "Kompressor Demo",
-                description = "Practically brand new — only 7,200km from new. Polar White with AMG Line exterior and Night Package (black chrome trim). Interior: black ARTICO/DINAMICA with red stitching, 64-colour ambient lighting, Burmester 3D surround sound system. Tech package includes: MBUX with Hey Mercedes voice control, augmented reality navigation, digital rear-view mirror, Driving Assistance Package (active lane keeping, blind spot assist, automatic emergency braking). 9G-TRONIC automatic, 258hp, 0–100 in 6.2s. Under full Mercedes 2-year warranty. Official Azerbaijan purchase — full paperwork.",
-                imageUrls = listOf(
-                    "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&q=85",
-                    "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=1200&q=85",
-                    "https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=1200&q=85"
-                ),
-                sellerUid = "demo",
-                createdAt = now - 3_600_000,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000 - 3_600_000,
-                status = "approved"
-            ),
-
-            // ── 3. Tesla Model Y Long Range — Electric / Automatic / Baku ────
-            CarDto(
-                title = "Tesla Model Y Long Range AWD",
-                brand = "Tesla", model = "Model Y", year = 2023,
-                price = 79000, mileage = 14300,
-                fuelType = "Electric", transmission = "Automatic",
-                city = "Baku", phone = "+994703334455",
-                sellerName = "Kompressor Demo",
-                description = "Dual motor All-Wheel Drive with 533km WLTP range on a single charge. Pearl White Multi-Coat with all-black premium interior. Autopilot included (Traffic-Aware Cruise, Autosteer). Full Self-Driving capability (Basic) — all over-the-air updates applied. 15.4\" touchscreen, premium audio (14 speakers, 1 subwoofer, 2 amps), heated front & rear seats, panoramic glass roof. Charges at any Tesla Supercharger (0–80% in approx. 25 min at V3 Supercharger). Home charging cable included. One owner, garaged, never used in off-road conditions. Remaining Tesla 4-year/80,000km warranty transferable.",
-                imageUrls = listOf(
-                    "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=1200&q=85",
-                    "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1200&q=85",
-                    "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=1200&q=85"
-                ),
-                sellerUid = "demo",
-                createdAt = now - 7_200_000,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000 - 7_200_000,
-                status = "approved"
-            )
-        )
-
-        dummyCars.forEach { car -> carsCollection.add(car).await() }
-    }
-
     override fun getAllCarsAdmin(): Flow<Resource<List<Car>>> = flow {
         emit(Resource.Loading)
         try {
@@ -397,12 +323,5 @@ class CarRepositoryImpl @Inject constructor(
         return try {
             firestore.collection("admins").document(uid).get().await().exists()
         } catch (_: Exception) { false }
-    }
-
-    override suspend fun deleteAllCars() {
-        try {
-            val all = carsCollection.get().await()
-            all.documents.forEach { it.reference.delete().await() }
-        } catch (_: Exception) {}
     }
 }
