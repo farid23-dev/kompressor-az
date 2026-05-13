@@ -32,7 +32,7 @@ class NotificationsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
-        adapter = NotificationAdapter()
+        adapter = NotificationAdapter(onDelete = { notif -> viewModel.deleteNotification(notif.id) })
         binding.rvNotifications.adapter = adapter
         binding.rvNotifications.layoutManager = LinearLayoutManager(requireContext())
 

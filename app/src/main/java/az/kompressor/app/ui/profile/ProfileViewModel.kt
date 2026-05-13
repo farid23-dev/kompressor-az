@@ -69,6 +69,24 @@ class ProfileViewModel @Inject constructor(
 
     fun resetDeleteState() { _deleteState.value = null }
 
+    private val _updateProfileState = MutableStateFlow<Resource<Unit>?>(null)
+    val updateProfileState: StateFlow<Resource<Unit>?> = _updateProfileState
+
+    fun updateProfile(name: String, surname: String, phone: String) {
+        val uid = getCurrentUserUid()
+        if (uid.isEmpty()) return
+        viewModelScope.launch {
+            _updateProfileState.value = Resource.Loading
+            try {
+                authRepository.saveUserProfile(uid, name, surname, phone, getCurrentUserEmail())
+                _updateProfileState.value = Resource.Success(Unit)
+                loadUserProfile() // refresh displayed name
+            } catch (e: Exception) {
+                _updateProfileState.value = Resource.Error(e.message ?: "Update failed")
+            }
+        }
+    }
+
     fun bumpCar(carId: String) {
         viewModelScope.launch {
             carRepository.bumpCar(carId)

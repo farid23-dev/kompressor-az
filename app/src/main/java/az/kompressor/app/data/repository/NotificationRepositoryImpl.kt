@@ -45,4 +45,12 @@ class NotificationRepositoryImpl @Inject constructor(
             items.documents.forEach { it.reference.update("read", true).await() }
         } catch (_: Exception) {}
     }
+
+    override suspend fun deleteNotification(uid: String, notifId: String) {
+        try {
+            firestore.collection("notifications")
+                .document(uid).collection("items")
+                .document(notifId).delete().await()
+        } catch (_: Exception) {}
+    }
 }

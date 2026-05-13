@@ -36,6 +36,13 @@ class NotificationsViewModel @Inject constructor(
         }
     }
 
+    fun deleteNotification(notifId: String) {
+        val uid = authRepository.getCurrentUser()?.uid ?: return
+        viewModelScope.launch {
+            notificationRepository.deleteNotification(uid, notifId)
+        }
+    }
+
     fun markAllRead() {
         val uid = authRepository.getCurrentUser()?.uid ?: return
         viewModelScope.launch { notificationRepository.markAllRead(uid) }

@@ -1,79 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Adaptive icon foreground — side-profile car silhouette.
-    Safe zone: 66dp centred in the 108dp canvas (offset ~21dp each side).
+    Adaptive icon foreground — Camaro PNG scaled to fill the safe zone.
+    The PNG (splash_car.png) is placed as a centred bitmap.
 -->
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-
-    <!-- ── Car body shell ── -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="
-          M 18,67
-          L 20,55
-          Q 26,42 38,39
-          L 42,39
-          Q 46,28 56,26
-          L 68,26
-          Q 78,26 84,34
-          L 88,39
-          L 90,39
-          Q 96,41 96,48
-          L 96,60
-          Q 96,67 90,68
-          L 18,68
-          Z" />
-
-    <!-- ── Cabin tint (windscreen + rear glass) ── -->
-    <path
-        android:fillColor="#90CAF9"
-        android:pathData="
-          M 42,39
-          Q 46,29 56,27
-          L 68,27
-          Q 77,27 83,35
-          L 88,39
-          Z" />
-
-    <!-- ── Divider pillar (B-pillar) ── -->
-    <path
-        android:fillColor="#1565C0"
-        android:pathData="M 64,27 L 64,39 L 61,39 L 61,27 Z" />
-
-    <!-- ── Front wheel (dark tyre + white hub) ── -->
-    <path
-        android:fillColor="#37474F"
-        android:pathData="M 77,68 A 11,11 0 1 1 76.99,68 Z" />
-    <path
-        android:fillColor="#ECEFF1"
-        android:pathData="M 77,68 A 5.5,5.5 0 1 1 76.99,68 Z" />
-    <path
-        android:fillColor="#37474F"
-        android:pathData="M 77,68 A 2,2 0 1 1 76.99,68 Z" />
-
-    <!-- ── Rear wheel (dark tyre + white hub) ── -->
-    <path
-        android:fillColor="#37474F"
-        android:pathData="M 33,68 A 11,11 0 1 1 32.99,68 Z" />
-    <path
-        android:fillColor="#ECEFF1"
-        android:pathData="M 33,68 A 5.5,5.5 0 1 1 32.99,68 Z" />
-    <path
-        android:fillColor="#37474F"
-        android:pathData="M 33,68 A 2,2 0 1 1 32.99,68 Z" />
-
-    <!-- ── Headlight ── -->
-    <path
-        android:fillColor="#FFF176"
-        android:pathData="M 91,44 Q 96,44 97,48 L 96,48 Q 95,45 91,45 Z" />
-
-    <!-- ── Tail light ── -->
-    <path
-        android:fillColor="#EF9A9A"
-        android:pathData="M 18,50 L 18,58 L 20,58 L 20,50 Z" />
-
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap
+            android:src="@drawable/splash_car"
+            android:gravity="fill" />
+    </item>
+</layer-list>

@@ -37,7 +37,6 @@ class SettingsFragment : Fragment() {
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
-        setupLanguageButtons()
         setupThemeButtons()
         setupSignOut()
         observeSignOut()
@@ -62,33 +61,6 @@ class SettingsFragment : Fragment() {
                 binding.btnAdminDashboard.isVisible = isAdmin
             }
         }
-    }
-
-    // ── Language ──────────────────────────────────────────────────────────────
-
-    private fun setupLanguageButtons() {
-        highlightActiveLangButton(viewModel.getCurrentLanguage())
-
-        binding.btnLangEn.setOnClickListener {
-            applyLanguage("en")
-        }
-        binding.btnLangAz.setOnClickListener {
-            applyLanguage("az")
-        }
-    }
-
-    private fun applyLanguage(code: String) {
-        if (viewModel.getCurrentLanguage() == code) return
-        viewModel.setLanguage(code)
-        // Recreate activity so locale takes effect (attachBaseContext will pick up the new pref)
-        requireActivity().recreate()
-    }
-
-    private fun highlightActiveLangButton(lang: String) {
-        val activeBtnAlpha = 1.0f
-        val inactiveBtnAlpha = 0.45f
-        binding.btnLangEn.alpha = if (lang == "en") activeBtnAlpha else inactiveBtnAlpha
-        binding.btnLangAz.alpha = if (lang == "az") activeBtnAlpha else inactiveBtnAlpha
     }
 
     // ── Theme ─────────────────────────────────────────────────────────────────

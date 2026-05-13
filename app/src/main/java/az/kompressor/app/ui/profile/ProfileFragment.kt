@@ -41,6 +41,10 @@ class ProfileFragment : Fragment() {
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
+        binding.btnEditProfile.setOnClickListener {
+            EditProfileBottomSheet().show(childFragmentManager, EditProfileBottomSheet.TAG)
+        }
+
         binding.btnSettings.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_settingsFragment)
         }

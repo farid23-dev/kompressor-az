@@ -10,7 +10,9 @@ import az.kompressor.app.databinding.ItemNotificationBinding
 import az.kompressor.app.domain.model.AppNotification
 import az.kompressor.app.util.TimeAgo
 
-class NotificationAdapter : ListAdapter<AppNotification, NotificationAdapter.ViewHolder>(Diff()) {
+class NotificationAdapter(
+    private val onDelete: (AppNotification) -> Unit
+) : ListAdapter<AppNotification, NotificationAdapter.ViewHolder>(Diff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(ItemNotificationBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -30,6 +32,7 @@ class NotificationAdapter : ListAdapter<AppNotification, NotificationAdapter.Vie
             }
             b.tvTime.text         = TimeAgo.format(n.timestamp)
             b.unreadDot.isVisible = !n.read
+            b.btnDelete.setOnClickListener { onDelete(n) }
         }
     }
 

@@ -139,7 +139,7 @@ class CarDetailFragment : Fragment() {
                             binding.tvDescription.text = car.description
                         }
 
-                        setupContactButtons(car.title, car.price)
+                        setupContactButtons(car.title, car.price, car.phone)
                     }
                     is Resource.Error -> {
                         binding.progressBar.isVisible = false
@@ -162,19 +162,30 @@ class CarDetailFragment : Fragment() {
         }
     }
 
-    private fun setupContactButtons(title: String, price: Long) {
+    private fun setupContactButtons(title: String, price: Long, phone: String) {
+        // WhatsApp — green button
         binding.btnWhatsapp.setOnClickListener {
-            val msg = "Hi, I'm interested in your listing: $title — ${price.formatPrice()}"
-            val uri = Uri.parse("https://wa.me/?text=${Uri.encode(msg)}")
+            val clean = phone.filter { it.isDigit() || it == '+' }
+            val msg = Uri.encode("Hi, I'm interested in your listing: $title — ${price.formatPrice()}")
+            val uri = if (clean.isNotEmpty())
+                Uri.parse("https://wa.me/$clean?text=$msg")
+            else
+                Uri.parse("https://wa.me/?text=$msg")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
+        // Call — blue button
+        binding.btnCall.setOnClickListener {
+            val clean = phone.filter { it.isDigit() || it == '+' }
+            if (clean.isNotEmpty()) {
+                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$clean")))
+            }
+        }
+        // Share — floating icon button (top-right)
         binding.btnShare.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    "Check out this car on Kompressor.az: $title — ${price.formatPrice()}"
-                )
+                putExtra(Intent.EXTRA_TEXT,
+                    "Check out this car on Kompressor.az: $title — ${price.formatPrice()}")
             }
             startActivity(Intent.createChooser(intent, "Share via"))
         }

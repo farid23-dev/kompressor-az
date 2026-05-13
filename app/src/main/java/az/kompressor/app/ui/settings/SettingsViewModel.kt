@@ -36,12 +36,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentLanguage(): String = LocaleHelper.getLanguage(context)
     fun getCurrentTheme(): Int = LocaleHelper.getDarkMode(context)
-
-    fun setLanguage(langCode: String) {
-        LocaleHelper.saveLanguage(context, langCode)
-    }
 
     fun setTheme(mode: Int) {
         LocaleHelper.saveDarkMode(context, mode)
