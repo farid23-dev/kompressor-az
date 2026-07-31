@@ -20,15 +20,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class FilterState(
-    val fuelType: String = "",       // "" = any
-    val transmission: String = "",   // "" = any
-    val city: String = "",           // "" = any
-    val sortBy: String = "newest"    // "newest" | "price_asc" | "price_desc"
+    val fuelType: String = "",
+    val transmission: String = "",
+    val city: String = "",
+    val sortBy: String = "newest"
 ) {
     val isActive: Boolean
         get() = fuelType.isNotBlank() || transmission.isNotBlank() || city.isNotBlank() || sortBy != "newest"
 
-    /** Human-readable summary for the chip label */
     fun label(): String {
         val parts = mutableListOf<String>()
         if (fuelType.isNotBlank()) parts.add(fuelType)
@@ -46,7 +45,6 @@ data class FilterState(
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCarsUseCase: GetCarsUseCase,
-    private val searchCarsUseCase: SearchCarsUseCase,
     private val carRepository: CarRepository,
     private val authRepository: AuthRepository,
     private val notificationRepository: NotificationRepository
@@ -61,13 +59,10 @@ class HomeViewModel @Inject constructor(
     private val _unreadNotifCount = MutableStateFlow(0)
     val unreadNotifCount: StateFlow<Int> = _unreadNotifCount
 
-    // Raw data from Firestore
     private var allCars: List<Car> = emptyList()
 
-    // Current search query
     private var currentQuery: String = ""
 
-    // Exposed state
     private val _carsState = MutableStateFlow<Resource<List<Car>>>(Resource.Loading)
     val carsState: StateFlow<Resource<List<Car>>> = _carsState
 
@@ -99,33 +94,17 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun search(query: String) {
-        currentQuery = query
-        if (query.isBlank()) {
-            _carsState.value = Resource.Success(applyFilter(allCars))
-            return
-        }
-        val q = query.lowercase()
-        val filtered = allCars.filter { car ->
-            car.brand.lowercase().contains(q) ||
-            car.model.lowercase().contains(q) ||
-            car.city.lowercase().contains(q) ||
-            car.title.lowercase().contains(q)
-        }
-        _carsState.value = Resource.Success(applyFilter(filtered))
-    }
-
     fun applyFilter(filter: FilterState) {
         _filterState.value = filter
-        reapply()
+        reApply()
     }
 
     fun clearFilter() {
         _filterState.value = FilterState()
-        reapply()
+        reApply()
     }
 
-    private fun reapply() {
+    private fun reApply() {
         val base = if (currentQuery.isBlank()) allCars else {
             val q = currentQuery.lowercase()
             allCars.filter { car ->
@@ -138,7 +117,6 @@ class HomeViewModel @Inject constructor(
         _carsState.value = Resource.Success(applyFilter(base))
     }
 
-    /** Apply current FilterState to a list and return the result */
     private fun applyFilter(cars: List<Car>): List<Car> {
         val f = _filterState.value
         var result = cars
@@ -156,7 +134,7 @@ class HomeViewModel @Inject constructor(
         result = when (f.sortBy) {
             "price_asc"  -> result.sortedBy { it.price }
             "price_desc" -> result.sortedByDescending { it.price }
-            else         -> result.sortedByDescending { it.createdAt } // newest
+            else         -> result.sortedByDescending { it.createdAt }
         }
 
         return result

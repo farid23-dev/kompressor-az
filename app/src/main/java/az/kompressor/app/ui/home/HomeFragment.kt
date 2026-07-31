@@ -5,9 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.activity.addCallback
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,47 +22,35 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var carAdapter: CarAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentHomeBinding.bind(view)
 
         setupRecyclerView()
         setupSwipeRefresh()
 
-        // Extended filter button — opens FilterBottomSheet
         binding.btnFilter.setOnClickListener {
             FilterBottomSheet().show(childFragmentManager, FilterBottomSheet.TAG)
         }
 
-        // Close active filter chip
         binding.chipActiveFilter.setOnCloseIconClickListener {
             viewModel.clearFilter()
         }
 
-        // Profile
         binding.btnProfile.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
 
-        // Notifications bell → NotificationsFragment
         binding.btnNotification.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_notificationsFragment)
         }
 
-        // Profile icon: long-press → admin dashboard (only shown if admin)
         binding.btnProfile.setOnLongClickListener {
             if (viewModel.isAdmin.value) {
                 findNavController().navigate(R.id.action_homeFragment_to_adminDashboardFragment)
@@ -136,7 +122,7 @@ class HomeFragment : Fragment() {
 
     private fun observeAdminState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isAdmin.collectLatest { _ -> /* reserved */ }
+            viewModel.isAdmin.collectLatest { _ -> }
         }
     }
 
@@ -144,10 +130,10 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.unreadCount.collectLatest { count ->
                 if (count > 0) {
-                    binding.tvNotifBadge.visibility = android.view.View.VISIBLE
+                    binding.tvNotifBadge.isVisible = true
                     binding.tvNotifBadge.text = if (count > 99) "99+" else count.toString()
                 } else {
-                    binding.tvNotifBadge.visibility = android.view.View.GONE
+                    binding.tvNotifBadge.isVisible = false
                 }
             }
         }
@@ -164,10 +150,5 @@ class HomeFragment : Fragment() {
                 Handler(Looper.getMainLooper()).postDelayed({ backPressedOnce = false }, 2000)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

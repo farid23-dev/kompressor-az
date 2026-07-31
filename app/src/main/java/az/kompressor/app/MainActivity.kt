@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var authRepository: AuthRepository
 
-    // Destinations where bottom bar + FAB should be hidden
     private val hiddenDestinations = setOf(
         R.id.signInFragment,
         R.id.signUpFragment,

@@ -3,6 +3,7 @@ package az.kompressor.app.ui.detail
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import az.kompressor.app.databinding.ItemCarImageBinding
 import com.bumptech.glide.Glide
@@ -11,15 +12,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
-/**
- * ViewPager2 adapter for the image gallery on the car detail screen.
- *
- * @param urls              List of remote image URLs to display.
- * @param onFirstImageReady Called once when the first image finishes loading
- *                          (used to start the shared-element enter transition).
- * @param onImageClick      Called with the tapped position — used to open the
- *                          full-screen viewer.
- */
 class CarImageAdapter(
     private val urls: List<String>,
     private val onFirstImageReady: (() -> Unit)? = null,
@@ -39,12 +31,11 @@ class CarImageAdapter(
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val isFirst = position == 0
 
-        // Tap → open full-screen viewer at the same position
         holder.binding.ivCarImage.setOnClickListener {
             onImageClick?.invoke(position)
         }
 
-        holder.binding.pbImageLoading.visibility = android.view.View.VISIBLE
+        holder.binding.pbImageLoading.isVisible = true
 
         Glide.with(holder.binding.ivCarImage.context)
             .load(urls[position])
@@ -54,7 +45,7 @@ class CarImageAdapter(
                     e: GlideException?, model: Any?,
                     target: Target<Drawable>, isFirstResource: Boolean
                 ): Boolean {
-                    holder.binding.pbImageLoading.visibility = android.view.View.GONE
+                    holder.binding.pbImageLoading.isVisible = false
                     if (isFirst && !firstImageNotified) {
                         firstImageNotified = true
                         onFirstImageReady?.invoke()
@@ -67,7 +58,7 @@ class CarImageAdapter(
                     target: Target<Drawable>, dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
-                    holder.binding.pbImageLoading.visibility = android.view.View.GONE
+                    holder.binding.pbImageLoading.isVisible = false
                     if (isFirst && !firstImageNotified) {
                         firstImageNotified = true
                         onFirstImageReady?.invoke()

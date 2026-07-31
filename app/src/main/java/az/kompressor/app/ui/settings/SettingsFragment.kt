@@ -1,9 +1,7 @@
 package az.kompressor.app.ui.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
@@ -18,21 +16,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-    private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentSettingsBinding
     private val viewModel: SettingsViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentSettingsBinding.bind(view)
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
@@ -62,8 +53,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    // ── Theme ─────────────────────────────────────────────────────────────────
-
     private fun setupThemeButtons() {
         highlightActiveThemeButton(viewModel.getCurrentTheme())
 
@@ -89,8 +78,6 @@ class SettingsFragment : Fragment() {
         binding.btnThemeSystem.alpha = if (mode == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) active else inactive
     }
 
-    // ── Sign Out ──────────────────────────────────────────────────────────────
-
     private fun setupSignOut() {
         binding.btnSignOut.setOnClickListener {
             AlertDialog.Builder(requireContext())
@@ -114,6 +101,5 @@ class SettingsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 }

@@ -5,9 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -27,14 +25,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CarDetailFragment : Fragment() {
+class CarDetailFragment : Fragment(R.layout.fragment_car_detail) {
 
-    private var _binding: FragmentCarDetailBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentCarDetailBinding
     private val viewModel: CarDetailViewModel by viewModels()
     private val args: CarDetailFragmentArgs by navArgs()
 
-    // Guard: only call startPostponedEnterTransition once
     private var transitionStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,15 +40,9 @@ class CarDetailFragment : Fragment() {
         postponeEnterTransition()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCarDetailBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentCarDetailBinding.bind(view)
 
         binding.viewPagerImages.transitionName = "car_image_${args.carId}"
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
@@ -62,7 +52,6 @@ class CarDetailFragment : Fragment() {
         observeFavoriteState()
     }
 
-    /** Safety net — if transition was never started by onStart, force-start it here. */
     override fun onStart() {
         super.onStart()
         safeStartTransition()
@@ -82,7 +71,6 @@ class CarDetailFragment : Fragment() {
                     is Resource.Loading -> {
                         binding.progressBar.isVisible = true
                         binding.scrollView.isVisible = false
-                        // Don't wait forever — start transition immediately on loading
                         safeStartTransition()
                     }
                     is Resource.Success -> {
@@ -90,7 +78,6 @@ class CarDetailFragment : Fragment() {
                         binding.scrollView.isVisible = true
                         val car = state.data
 
-                        // Image gallery
                         if (car.imageUrls.isNotEmpty()) {
                             val adapter = CarImageAdapter(
                                 urls = car.imageUrls,
@@ -114,7 +101,6 @@ class CarDetailFragment : Fragment() {
                             safeStartTransition()
                         }
 
-                        // Text fields
                         binding.tvTitle.text = car.title
                         binding.tvPrice.text = car.price.formatPrice()
                         binding.tvYear.text = car.year.toString()
@@ -124,7 +110,6 @@ class CarDetailFragment : Fragment() {
                         binding.tvCity.text = car.city
                         binding.tvAge.text = TimeAgo.format(car.createdAt)
 
-                        // Seller card
                         if (car.sellerName.isNotBlank()) {
                             binding.layoutSeller.isVisible = true
                             binding.tvSellerName.text = car.sellerName
@@ -132,7 +117,6 @@ class CarDetailFragment : Fragment() {
                             binding.layoutSeller.isVisible = false
                         }
 
-                        // Description
                         if (car.description.isNotBlank()) {
                             binding.tvDescriptionLabel.isVisible = true
                             binding.tvDescription.isVisible = true
@@ -143,7 +127,6 @@ class CarDetailFragment : Fragment() {
                     }
                     is Resource.Error -> {
                         binding.progressBar.isVisible = false
-                        // CRITICAL: always unblock the transition even on error
                         safeStartTransition()
                         binding.root.showSnackbar(state.message)
                     }
@@ -163,7 +146,6 @@ class CarDetailFragment : Fragment() {
     }
 
     private fun setupContactButtons(title: String, price: Long, phone: String) {
-        // WhatsApp — green button
         binding.btnWhatsapp.setOnClickListener {
             val clean = phone.filter { it.isDigit() || it == '+' }
             val msg = Uri.encode("Hi, I'm interested in your listing: $title — ${price.formatPrice()}")
@@ -173,14 +155,12 @@ class CarDetailFragment : Fragment() {
                 Uri.parse("https://wa.me/?text=$msg")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
-        // Call — blue button
         binding.btnCall.setOnClickListener {
             val clean = phone.filter { it.isDigit() || it == '+' }
             if (clean.isNotEmpty()) {
                 startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$clean")))
             }
         }
-        // Share — floating icon button (top-right)
         binding.btnShare.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
@@ -219,10 +199,5 @@ class CarDetailFragment : Fragment() {
                 if (i == selected) R.drawable.dot_active else R.drawable.dot_inactive
             )
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

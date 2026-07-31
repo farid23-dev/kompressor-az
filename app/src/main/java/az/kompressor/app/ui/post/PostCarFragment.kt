@@ -1,11 +1,10 @@
 package az.kompressor.app.ui.post
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.core.view.isVisible
@@ -26,10 +25,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PostCarFragment : Fragment() {
+class PostCarFragment : Fragment(R.layout.fragment_post_car) {
 
-    private var _binding: FragmentPostCarBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentPostCarBinding
     private val viewModel: PostCarViewModel by viewModels()
     private val args: PostCarFragmentArgs by navArgs()
     private lateinit var imageAdapter: SelectedImageAdapter
@@ -44,13 +42,9 @@ class PostCarFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentPostCarBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentPostCarBinding.bind(view)
 
         setupSpinners()
         setupImageRecyclerView()
@@ -58,7 +52,6 @@ class PostCarFragment : Fragment() {
         setupClickListeners()
         observeState()
 
-        // Edit mode: load existing car if carId was passed
         val editCarId = args.editCarId
         if (editCarId.isNotBlank()) {
             viewModel.loadCarForEdit(editCarId)
@@ -138,7 +131,7 @@ class PostCarFragment : Fragment() {
         }
     }
 
-    /** Pre-fill all fields when in edit mode */
+    @SuppressLint("SetTextI18n")
     private fun observeEditCar() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.editCar.collectLatest { car ->
@@ -155,7 +148,6 @@ class PostCarFragment : Fragment() {
                 binding.etCity.setText(car.city)
                 binding.etDescription.setText(car.description)
 
-                // Select correct spinner values
                 val fuels = resources.getStringArray(R.array.fuel_types)
                 val fuelIdx = fuels.indexOfFirst { it.equals(car.fuelType, ignoreCase = true) }
                 if (fuelIdx >= 0) binding.spinnerFuel.setSelection(fuelIdx)
@@ -198,7 +190,6 @@ class PostCarFragment : Fragment() {
         if (binding.etCity.text.isNullOrBlank()) {
             binding.tilCity.error = "City is required"; valid = false
         }
-        // At least one image is required
         val hasNewImages      = viewModel.selectedImages.value.isNotEmpty()
         val hasExistingImages = viewModel.existingImageUrls.value.isNotEmpty()
         if (!hasNewImages && !hasExistingImages) {
@@ -237,10 +228,5 @@ class PostCarFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

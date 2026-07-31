@@ -22,8 +22,6 @@ object AppModule {
 
     @Provides @Singleton
     fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance().also { db ->
-        // Enable disk persistence: cached listings load instantly offline
-        // and sync automatically when connectivity is restored
         db.firestoreSettings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
             .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
@@ -32,7 +30,6 @@ object AppModule {
 
     @Provides @Singleton
     fun provideStorage(): FirebaseStorage =
-        // Explicit bucket URL avoids SDK resolution issues with new .firebasestorage.app domains
         FirebaseStorage.getInstance("gs://kompressor-az-4c63d.firebasestorage.app")
 
     @Provides @Singleton

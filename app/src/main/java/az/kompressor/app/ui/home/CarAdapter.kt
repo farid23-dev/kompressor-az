@@ -1,5 +1,6 @@
 package az.kompressor.app.ui.home
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +16,9 @@ import az.kompressor.app.util.TimeAgo
 import az.kompressor.app.util.formatMileage
 import az.kompressor.app.util.formatPrice
 import com.bumptech.glide.Glide
+import androidx.core.graphics.toColorInt
 
 class CarAdapter(
-    // Exposes the shared ImageView for the scene transition animation
     private val onItemClick: (Car, View) -> Unit
 ) : ListAdapter<Car, CarAdapter.CarViewHolder>(DiffCallback()) {
 
@@ -33,8 +34,8 @@ class CarAdapter(
     inner class CarViewHolder(private val binding: ItemCarBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("SetTextI18n")
         fun bind(car: Car) {
-            // Unique transitionName per item so the system knows which view to animate
             binding.ivCarImage.transitionName = "car_image_${car.id}"
 
             binding.tvTitle.text = car.title
@@ -43,18 +44,15 @@ class CarAdapter(
             binding.tvCity.text = "📍 ${car.city}"
             binding.tvTransmission.text = car.transmission
 
-            // Age overlay badge on image (top-right)
             binding.tvAge.text = TimeAgo.format(car.createdAt)
 
-            // Remaining days chip (bottom row)
             val days = TimeAgo.daysLeft(car.createdAt, car.expiresAt)
             binding.tvDaysLeft.text = when {
                 days <= 0 -> "Last day"
                 days == 1 -> "1 day left"
                 else      -> "$days days left"
             }
-            // Warn visually when ≤ 5 days remain
-            val warningColor = if (days <= 5) Color.parseColor("#D32F2F")
+            val warningColor = if (days <= 5) "#D32F2F".toColorInt()
                 else ContextCompat.getColor(binding.tvDaysLeft.context, R.color.text_secondary)
             binding.tvDaysLeft.setTextColor(warningColor)
 

@@ -4,10 +4,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-/**
- * Run once after the admin account signs in for the first time.
- * Creates the Firestore admins/{uid} document that grants admin privileges.
- */
 object AdminSetup {
 
     private const val ADMIN_EMAIL = "admin@kompressor.az"
@@ -16,7 +12,7 @@ object AdminSetup {
         val auth = FirebaseAuth.getInstance()
         val db   = FirebaseFirestore.getInstance()
         val user = auth.currentUser ?: return
-        if (user.email != ADMIN_EMAIL) return   // safety: only the admin email can self-register
+        if (user.email != ADMIN_EMAIL) return
 
         val ref = db.collection("admins").document(user.uid)
         if (!ref.get().await().exists()) {

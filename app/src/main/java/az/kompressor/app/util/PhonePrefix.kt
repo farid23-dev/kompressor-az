@@ -6,11 +6,6 @@ import com.google.android.material.textfield.TextInputEditText
 
 private const val PREFIX = "+994 "
 
-/**
- * Attaches a TextWatcher to [field] that:
- *  - Always prepends "+994 " and prevents deletion of the prefix
- *  - Caps total length at prefix(5) + 9 digits = 14 chars
- */
 fun attachPhonePrefix(field: TextInputEditText) {
     if (field.text.isNullOrEmpty()) {
         field.setText(PREFIX)
@@ -29,12 +24,10 @@ fun attachPhonePrefix(field: TextInputEditText) {
 
             val raw = s.toString()
             when {
-                // User deleted into the prefix — restore it
                 !raw.startsWith(PREFIX) -> {
                     field.setText(PREFIX)
                     field.setSelection(PREFIX.length)
                 }
-                // Enforce max length: prefix + 9 digits
                 raw.length > PREFIX.length + 9 -> {
                     val trimmed = raw.substring(0, PREFIX.length + 9)
                     field.setText(trimmed)
@@ -46,15 +39,8 @@ fun attachPhonePrefix(field: TextInputEditText) {
     })
 }
 
-/**
- * Returns the clean phone number ready for saving:
- * - Strips the "+994 " prefix display space
- * - Removes a leading 0 after the country code (e.g. "+994 050..." → "+99450...")
- * - Returns "+994XXXXXXXXX" format
- */
 fun cleanPhoneNumber(raw: String): String {
     val stripped = raw.replace(" ", "").replace("-", "")
-    // Remove leading 0 after +994
     return if (stripped.startsWith("+9940")) {
         "+994" + stripped.removePrefix("+9940")
     } else stripped

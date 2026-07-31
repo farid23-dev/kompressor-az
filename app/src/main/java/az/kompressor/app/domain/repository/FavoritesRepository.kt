@@ -8,6 +8,5 @@ interface FavoritesRepository {
     fun isFavorite(carId: String): Flow<Boolean>
     suspend fun addFavorite(car: Car)
     suspend fun removeFavorite(carId: String)
-    /** Delete every locally cached favorite — must be called on sign-out. */
     suspend fun clearAll()
 }

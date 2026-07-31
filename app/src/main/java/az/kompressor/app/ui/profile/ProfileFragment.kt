@@ -1,9 +1,7 @@
 package az.kompressor.app.ui.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,22 +18,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentProfileBinding
     private val viewModel: ProfileViewModel by viewModels()
     private lateinit var myCarAdapter: MyCarAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentProfileBinding.bind(view)
 
         setupMyListings()
 
@@ -98,11 +89,10 @@ class ProfileFragment : Fragment() {
                         }
                     }
                     is Resource.Error -> {
-                        // Fallback: show email from Firebase Auth
                         binding.tvName.text = viewModel.getCurrentUserEmail()
                         binding.tvEmail.text = ""
                     }
-                    is Resource.Loading -> { /* wait */ }
+                    is Resource.Loading -> { }
                 }
             }
         }
@@ -164,6 +154,5 @@ class ProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 }

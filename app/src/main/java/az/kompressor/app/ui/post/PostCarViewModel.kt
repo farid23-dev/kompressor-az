@@ -27,15 +27,12 @@ class PostCarViewModel @Inject constructor(
     private val _postState = MutableStateFlow<Resource<Unit>?>(null)
     val postState: StateFlow<Resource<Unit>?> = _postState
 
-    // URIs picked from gallery — only the newly added ones
     private val _selectedImages = MutableStateFlow<List<Uri>>(emptyList())
     val selectedImages: StateFlow<List<Uri>> = _selectedImages
 
-    // Original car loaded in edit mode
     private val _editCar = MutableStateFlow<Car?>(null)
     val editCar: StateFlow<Car?> = _editCar
 
-    // Tracks which of the original image URLs the user has NOT removed
     private val _existingImageUrls = MutableStateFlow<List<String>>(emptyList())
     val existingImageUrls: StateFlow<List<String>> = _existingImageUrls
 
@@ -52,15 +49,15 @@ class PostCarViewModel @Inject constructor(
     }
 
     fun addImage(uri: Uri) {
-        _selectedImages.value = _selectedImages.value + uri
+        _selectedImages.value += uri
     }
 
     fun removeImage(uri: Uri) {
-        _selectedImages.value = _selectedImages.value - uri
+        _selectedImages.value -= uri
     }
 
     fun removeExistingImage(url: String) {
-        _existingImageUrls.value = _existingImageUrls.value - url
+        _existingImageUrls.value -= url
     }
 
     fun postCar(

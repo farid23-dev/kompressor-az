@@ -1,9 +1,7 @@
 package az.kompressor.app.ui.auth
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,21 +18,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
-    private var _binding: FragmentSignUpBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentSignUpBinding
     private val viewModel: AuthViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentSignUpBinding.bind(view)
 
         attachPhonePrefix(binding.etPhone)
 
@@ -77,10 +68,5 @@ class SignUpFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

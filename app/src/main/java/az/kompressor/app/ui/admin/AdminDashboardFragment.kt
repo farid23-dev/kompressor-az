@@ -1,15 +1,14 @@
 package az.kompressor.app.ui.admin
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentAdminDashboardBinding
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.util.Resource
@@ -23,34 +22,28 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 @AndroidEntryPoint
-class AdminDashboardFragment : Fragment() {
+class AdminDashboardFragment : Fragment(R.layout.fragment_admin_dashboard) {
 
-    private var _binding: FragmentAdminDashboardBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentAdminDashboardBinding
     private val viewModel: AdminDashboardViewModel by viewModels()
     private lateinit var adapter: AdminListingAdapter
 
     private var allCars: List<Car> = emptyList()
-    private var currentTab = 0  // 0=All 1=Pending 2=Approved 3=Rejected
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentAdminDashboardBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private var currentTab = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAdminDashboardBinding.bind(view)
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
-        // Guard: only real admins can stay on this screen
         viewLifecycleOwner.lifecycleScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid == null) { findNavController().navigateUp(); return@launch }
             val isAdmin = try {
                 FirebaseFirestore.getInstance()
                     .collection("admins").document(uid).get().await().exists()
-            } catch (e: Exception) { false }
+            } catch (_: Exception) { false }
             if (!isAdmin) {
                 binding.root.showSnackbar("Access denied")
                 findNavController().navigateUp()
@@ -65,7 +58,6 @@ class AdminDashboardFragment : Fragment() {
         binding.rvListings.adapter = adapter
         binding.rvListings.layoutManager = LinearLayoutManager(requireContext())
 
-        // Tabs
         listOf("All", "Pending", "Approved", "Rejected").forEach {
             binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it))
         }
@@ -120,6 +112,4 @@ class AdminDashboardFragment : Fragment() {
         binding.tvEmpty.isVisible    = filtered.isEmpty()
         binding.rvListings.isVisible = filtered.isNotEmpty()
     }
-
-    override fun onDestroyView() { super.onDestroyView(); _binding = null }
 }

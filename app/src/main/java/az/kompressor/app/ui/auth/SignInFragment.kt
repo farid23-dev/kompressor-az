@@ -1,9 +1,7 @@
 package az.kompressor.app.ui.auth
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,25 +13,18 @@ import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
 import az.kompressor.app.util.AdminSetup
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SignInFragment : Fragment() {
+class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
-    private var _binding: FragmentSignInBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentSignInBinding
     private val viewModel: AuthViewModel by viewModels()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentSignInBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentSignInBinding.bind(view)
 
         binding.btnSignIn.setOnClickListener {
             viewModel.signIn(
@@ -56,7 +47,6 @@ class SignInFragment : Fragment() {
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
                         binding.btnSignIn.isEnabled = true
-                        // Self-register as admin if this is the admin email
                         lifecycleScope.launch { AdminSetup.registerCurrentUserAsAdminIfNeeded() }
                         findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
                         viewModel.resetState()
@@ -74,10 +64,5 @@ class SignInFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

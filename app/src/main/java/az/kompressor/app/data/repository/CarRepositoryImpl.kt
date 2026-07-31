@@ -16,9 +16,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
+import androidx.core.graphics.scale
 
 class CarRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val firestore: FirebaseFirestore,
     private val storage: FirebaseStorage
 ) : CarRepository {
@@ -36,7 +37,6 @@ class CarRepositoryImpl @Inject constructor(
             val cars = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(CarDto::class.java)?.copy(id = doc.id)?.toDomain()
             }.filter { car ->
-                // Only show approved, non-expired listings in public feed
                 val expiry = if (car.expiresAt > 0) car.expiresAt else (car.createdAt + thirtyDays)
                 expiry > now && car.status == "approved"
             }
@@ -81,8 +81,6 @@ class CarRepositoryImpl @Inject constructor(
     override fun getCarsByUser(uid: String): Flow<Resource<List<Car>>> = flow {
         emit(Resource.Loading)
         try {
-            // No orderBy here: combining whereEqualTo + orderBy on different fields requires
-            // a composite Firestore index that may not exist. Sort client-side instead.
             val snapshot = carsCollection
                 .whereEqualTo("sellerUid", uid)
                 .get().await()
@@ -95,18 +93,12 @@ class CarRepositoryImpl @Inject constructor(
         }
     }
 
-    /**
-     * Upload one image URI → Firebase Storage → return download URL.
-     * Each step is isolated so error messages pinpoint the exact failure.
-     */
     private suspend fun uploadUri(uri: Uri, sellerUid: String): String {
-        // 1. Resolve UID
         val uid = sellerUid.ifBlank {
             com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
                 ?: throw Exception("UPLOAD_FAIL: not signed in")
         }
 
-        // 2. Read bytes synchronously via ContentResolver (scoped storage safe on API 29+)
         val bytes = try {
             context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
                 ?: throw Exception("UPLOAD_FAIL: ContentResolver returned null stream for $uri")
@@ -115,11 +107,9 @@ class CarRepositoryImpl @Inject constructor(
         }
         if (bytes.isEmpty()) throw Exception("UPLOAD_FAIL: image bytes are empty")
 
-        // 3. In-memory compression
         val compressed = compressBytes(bytes)
         android.util.Log.d("KompressorUpload", "Compressed ${bytes.size}B → ${compressed.size}B uid=$uid")
 
-        // 4. Upload bytes
         val path = "car_images/$uid/${UUID.randomUUID()}.jpg"
         val ref  = storage.reference.child(path)
         val meta = com.google.firebase.storage.StorageMetadata.Builder()
@@ -134,7 +124,6 @@ class CarRepositoryImpl @Inject constructor(
             throw Exception("UPLOAD_FAIL [putBytes]: ${e.message}")
         }
 
-        // 5. Get download URL
         return try {
             val url = ref.downloadUrl.await().toString()
             android.util.Log.d("KompressorUpload", "downloadUrl OK → $url")
@@ -152,12 +141,7 @@ class CarRepositoryImpl @Inject constructor(
         val maxDim = 1280
         val scaled = if (original.width > maxDim || original.height > maxDim) {
             val scale = maxDim.toFloat() / maxOf(original.width, original.height)
-            android.graphics.Bitmap.createScaledBitmap(
-                original,
-                (original.width * scale).toInt(),
-                (original.height * scale).toInt(),
-                true
-            ).also { original.recycle() }
+            original.scale((original.width * scale).toInt(), (original.height * scale).toInt()).also { original.recycle() }
         } else original
         val out = java.io.ByteArrayOutputStream()
         scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 82, out)
@@ -209,7 +193,6 @@ class CarRepositoryImpl @Inject constructor(
     override fun postCar(car: Car, imageUris: List<Uri>): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
         try {
-            // Compress each image before uploading (≤1280px / 82% JPEG → ~200KB avg)
             val imageUrls = imageUris.map { uri -> uploadUri(uri, car.sellerUid) }
             val now = System.currentTimeMillis()
             val carDto = CarDto(
@@ -220,9 +203,8 @@ class CarRepositoryImpl @Inject constructor(
                 imageUrls = imageUrls, sellerUid = car.sellerUid,
                 sellerName = car.sellerName,
                 createdAt = now,
-                expiresAt = now + 30L * 24 * 60 * 60 * 1000,  // auto-expire after 30 days
+                expiresAt = now + 30L * 24 * 60 * 60 * 1000,
                 status = run {
-                    // Admins skip the approval queue — post goes live immediately
                     val uid = car.sellerUid.ifBlank { com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: "" }
                     val isAdmin = try { firestore.collection("admins").document(uid).get().await().exists() } catch (_: Exception) { false }
                     if (isAdmin) "approved" else "pending"
@@ -230,7 +212,6 @@ class CarRepositoryImpl @Inject constructor(
             )
             val docRef = carsCollection.add(carDto).await()
 
-            // Notify all admins about the new pending listing (skip if admin posted — auto-approved)
             val postedStatus = carDto.status
             if (postedStatus == "pending") {
                 try {
@@ -249,7 +230,7 @@ class CarRepositoryImpl @Inject constructor(
                             .collection("items")
                             .add(notif).await()
                     }
-                } catch (_: Exception) { /* non-critical */ }
+                } catch (_: Exception) { }
             }
 
             emit(Resource.Success(Unit))
@@ -268,7 +249,6 @@ class CarRepositoryImpl @Inject constructor(
                 )
             ).await()
         } catch (_: Exception) {
-            // Silent — bump failure is non-critical
         }
     }
 
@@ -278,7 +258,6 @@ class CarRepositoryImpl @Inject constructor(
                 .update("viewCount", com.google.firebase.firestore.FieldValue.increment(1))
                 .await()
         } catch (_: Exception) {
-            // Silent — never block the UI for a view count write
         }
     }
 
@@ -291,7 +270,6 @@ class CarRepositoryImpl @Inject constructor(
             val cars = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(CarDto::class.java)?.copy(id = doc.id)?.toDomain()
             }.sortedWith(compareBy(
-                // Pending first, then approved, then rejected
                 { when (it.status) { "pending" -> 0; "approved" -> 1; else -> 2 } },
                 { -it.createdAt }
             ))
@@ -304,7 +282,6 @@ class CarRepositoryImpl @Inject constructor(
     override suspend fun updateCarStatus(carId: String, status: String, sellerUid: String, carTitle: String) {
         try {
             carsCollection.document(carId).update("status", status).await()
-            // Write in-app notification for the seller
             val notif = mapOf(
                 "carId"     to carId,
                 "carTitle"  to carTitle,

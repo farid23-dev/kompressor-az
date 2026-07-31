@@ -14,7 +14,7 @@ class PostCarUseCase @Inject constructor(
     operator fun invoke(car: Car, imageUris: List<Uri>): Flow<Resource<Unit>> {
         if (car.brand.isBlank()) return flow { emit(Resource.Error("Brand is required")) }
         if (car.model.isBlank()) return flow { emit(Resource.Error("Model is required")) }
-        if (car.year < 1900 || car.year > 2100) return flow { emit(Resource.Error("Enter a valid year")) }
+        if (car.year !in 1900..2100) return flow { emit(Resource.Error("Enter a valid year")) }
         if (car.price <= 0) return flow { emit(Resource.Error("Price must be greater than 0")) }
         if (car.mileage < 0) return flow { emit(Resource.Error("Enter a valid mileage")) }
         if (car.phone.isBlank()) return flow { emit(Resource.Error("Phone number is required")) }

@@ -1,5 +1,6 @@
 package az.kompressor.app.ui.profile
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -29,11 +30,11 @@ class MyCarAdapter(
     inner class MyCarViewHolder(private val binding: ItemMyCarBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("SetTextI18n")
         fun bind(car: Car) {
             binding.tvCarTitle.text = car.title
             binding.tvCarPrice.text = car.price.formatPrice()
 
-            // Analytics: "👁 42 views · 28 days left"
             val days = TimeAgo.daysLeft(car.createdAt, car.expiresAt)
             val daysLabel = when {
                 days <= 0 -> "⚠ Last day!"

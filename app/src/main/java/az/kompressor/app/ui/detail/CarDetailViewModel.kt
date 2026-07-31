@@ -8,6 +8,7 @@ import az.kompressor.app.domain.usecase.GetCarByIdUseCase
 import az.kompressor.app.domain.usecase.ToggleFavoriteUseCase
 import az.kompressor.app.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,10 +30,9 @@ class CarDetailViewModel @Inject constructor(
     private val _carState = MutableStateFlow<Resource<Car>>(Resource.Loading)
     val carState: StateFlow<Resource<Car>> = _carState
 
-    // Guard: only fire incrementViewCount once per ViewModel lifetime
     private var viewCountIncremented = false
 
-    // Reactively tracks favorite state for the currently loaded car
+    @OptIn(ExperimentalCoroutinesApi::class)
     val isFavorite: StateFlow<Boolean> = _carState
         .flatMapLatest { state ->
             if (state is Resource.Success) {
@@ -47,7 +47,6 @@ class CarDetailViewModel @Inject constructor(
         getCarByIdUseCase(carId)
             .onEach { resource ->
                 _carState.value = resource
-                // Fire-and-forget: increment counter exactly once per screen open
                 if (resource is Resource.Success && !viewCountIncremented) {
                     viewCountIncremented = true
                     viewModelScope.launch {

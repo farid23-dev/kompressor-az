@@ -21,7 +21,7 @@ data class CarDto(
     val viewCount: Long = 0L,
     val expiresAt: Long = 0L,
     val sellerName: String = "",
-    val status: String = "approved"  // "pending" | "approved" | "rejected"
+    val status: String = "approved"
 )
 
 fun CarDto.toDomain() = Car(

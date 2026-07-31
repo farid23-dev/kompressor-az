@@ -27,8 +27,6 @@ class FavoritesRepositoryImpl @Inject constructor(
     override suspend fun clearAll() =
         dao.deleteAll()
 
-    // ── Mappers ──────────────────────────────────────────────────────────────
-
     private fun FavoriteCarEntity.toCar() = Car(
         id          = carId,
         title       = title,
@@ -44,7 +42,7 @@ class FavoritesRepositoryImpl @Inject constructor(
         sellerUid   = sellerUid,
         sellerName  = sellerName,
         createdAt   = createdAt,
-        expiresAt   = expiresAt   // 0 → TimeAgo falls back to createdAt + 30 days
+        expiresAt   = expiresAt
     )
 
     private fun Car.toEntity() = FavoriteCarEntity(

@@ -20,7 +20,7 @@ class SettingsViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val carRepository: CarRepository,
     private val favoritesRepository: FavoritesRepository,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _isSignedOut = MutableStateFlow(false)
@@ -43,16 +43,11 @@ class SettingsViewModel @Inject constructor(
         AppCompatDelegate.setDefaultNightMode(mode)
     }
 
-    /**
-     * Clear local favorites DB first, then sign out of Firebase.
-     * Clearing first ensures the Room write completes before the scope is gone.
-     */
     fun signOut() {
         viewModelScope.launch {
             try {
                 favoritesRepository.clearAll()
             } catch (_: Exception) {
-                // Non-critical — proceed with sign-out even if clear fails
             }
             authRepository.signOut()
             _isSignedOut.value = true

@@ -80,7 +80,7 @@ class ProfileViewModel @Inject constructor(
             try {
                 authRepository.saveUserProfile(uid, name, surname, phone, getCurrentUserEmail())
                 _updateProfileState.value = Resource.Success(Unit)
-                loadUserProfile() // refresh displayed name
+                loadUserProfile()
             } catch (e: Exception) {
                 _updateProfileState.value = Resource.Error(e.message ?: "Update failed")
             }

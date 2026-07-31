@@ -23,7 +23,6 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             val firebaseUser = result.user ?: throw Exception("Authentication failed")
-            // Fetch full profile from Firestore
             val doc = usersCollection.document(firebaseUser.uid).get().await()
             val user = if (doc.exists()) {
                 User(
@@ -34,7 +33,6 @@ class AuthRepositoryImpl @Inject constructor(
                     phone = doc.getString("phone") ?: ""
                 )
             } else {
-                // Legacy account — no Firestore profile yet
                 User(uid = firebaseUser.uid, email = firebaseUser.email ?: "",
                     name = firebaseUser.displayName ?: "")
             }
@@ -53,14 +51,12 @@ class AuthRepositoryImpl @Inject constructor(
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             val firebaseUser = result.user ?: throw Exception("Registration failed")
 
-            // Set displayName in Firebase Auth for quick access
             firebaseUser.updateProfile(
                 UserProfileChangeRequest.Builder()
                     .setDisplayName("$name $surname".trim())
                     .build()
             ).await()
 
-            // Save full profile to Firestore
             saveUserProfile(firebaseUser.uid, name, surname, phone, email)
 
             emit(Resource.Success(User(
@@ -86,7 +82,6 @@ class AuthRepositoryImpl @Inject constructor(
                     phone = doc.getString("phone") ?: ""
                 )
             } else {
-                // Fallback to Firebase Auth display name
                 val fbUser = firebaseAuth.currentUser
                 User(uid = uid, email = fbUser?.email ?: "",
                     name = fbUser?.displayName ?: "")
@@ -115,7 +110,7 @@ class AuthRepositoryImpl @Inject constructor(
             email = fbUser.email ?: "",
             name = displayParts.getOrNull(0) ?: "",
             surname = displayParts.getOrNull(1) ?: "",
-            phone = ""   // phone fetched async from Firestore when needed
+            phone = ""
         )
     }
 

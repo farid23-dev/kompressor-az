@@ -1,11 +1,11 @@
 package az.kompressor.app.ui.profile
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import az.kompressor.app.R
 import az.kompressor.app.databinding.BottomSheetEditProfileBinding
 import az.kompressor.app.util.Resource
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -16,21 +16,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class EditProfileBottomSheet : BottomSheetDialogFragment() {
+class EditProfileBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_edit_profile) {
 
-    private var _binding: BottomSheetEditProfileBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: BottomSheetEditProfileBinding
     private val viewModel: ProfileViewModel by viewModels({ requireParentFragment() })
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = BottomSheetEditProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = BottomSheetEditProfileBinding.bind(view)
 
-        // Pre-fill current values
         val profile = (viewModel.userProfile.value as? Resource.Success)?.data
         attachPhonePrefix(binding.etPhone)
         binding.etFirstName.setText(profile?.name ?: "")
@@ -66,7 +61,7 @@ class EditProfileBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onDestroyView() { super.onDestroyView(); _binding = null }
+    override fun onDestroyView() { super.onDestroyView() }
 
     companion object {
         const val TAG = "EditProfileSheet"

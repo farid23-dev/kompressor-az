@@ -1,8 +1,8 @@
 package az.kompressor.app.ui.detail
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -19,14 +19,9 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
-/**
- * Full-screen image viewer — tap any image in CarDetailFragment to open.
- * Swipe left/right to browse all images. Tap × or press Back to dismiss.
- */
-class FullScreenImageDialogFragment : DialogFragment() {
+class FullScreenImageDialogFragment : DialogFragment(R.layout.dialog_fullscreen_image) {
 
-    private var _binding: DialogFullscreenImageBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: DialogFullscreenImageBinding
 
     companion object {
         private const val ARG_URLS = "urls"
@@ -43,7 +38,6 @@ class FullScreenImageDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Full-screen dialog style — black background, no title bar
         setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
     }
 
@@ -56,22 +50,15 @@ class FullScreenImageDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = DialogFullscreenImageBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = DialogFullscreenImageBinding.bind(view)
 
         val urls = arguments?.getStringArrayList(ARG_URLS) ?: return
         val startIndex = arguments?.getInt(ARG_START, 0) ?: 0
 
         binding.btnClose.setOnClickListener { dismiss() }
 
-        // Show page counter only when there are multiple images
         if (urls.size > 1) {
             binding.tvPageCounter.isVisible = true
             updateCounter(startIndex + 1, urls.size)
@@ -89,16 +76,10 @@ class FullScreenImageDialogFragment : DialogFragment() {
         )
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateCounter(current: Int, total: Int) {
         binding.tvPageCounter.text = "$current / $total"
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    // ── Inner adapter ─────────────────────────────────────────────────────────
 
     private inner class FullImageAdapter(
         private val urls: List<String>
