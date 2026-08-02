@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- A sleek, modern car silhouette -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M15,65 L85,65 C85,65 85,55 75,50 C65,45 50,45 50,45 C50,45 35,45 25,50 C15,55 15,65 15,65 Z" />
+
+    <!-- Roof and windshield -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M35,51 L65,51 L58,40 C58,40 55,35 50,35 C45,35 42,40 42,40 Z" />
+
+    <!-- Speed lines representing performance/compressor -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M10,72 L40,72" />
+    <path
+        android:strokeColor="@color/accent"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M20,78 L50,78" />
+
+    <!-- Wheels -->
+    <path
+        android:fillColor="@color/text_primary"
+        android:pathData="M28,65 A5,5 0 1,1 28,65.1 Z" />
+    <path
+        android:fillColor="@color/text_primary"
+        android:pathData="M72,65 A5,5 0 1,1 72,65.1 Z" />
+
+</vector>

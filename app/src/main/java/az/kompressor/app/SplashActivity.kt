@@ -31,6 +31,8 @@ class SplashActivity : AppCompatActivity() {
         controller.hide(WindowInsetsCompat.Type.systemBars())
         controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
+        animateSplash()
+
         lifecycleScope.launch {
             delay(1_500L.milliseconds)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
@@ -46,5 +48,27 @@ class SplashActivity : AppCompatActivity() {
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
         }
+    }
+
+    private fun animateSplash() {
+        binding.ivSplashCar.alpha = 0f
+        binding.ivSplashCar.scaleX = 0.5f
+        binding.ivSplashCar.scaleY = 0.5f
+        binding.ivSplashCar.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(1000)
+            .setInterpolator(android.view.animation.OvershootInterpolator())
+            .start()
+
+        binding.ivSplashLogo.alpha = 0f
+        binding.ivSplashLogo.translationY = 50f
+        binding.ivSplashLogo.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(800)
+            .setStartDelay(400)
+            .start()
     }
 }

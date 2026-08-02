@@ -11,6 +11,7 @@ import az.kompressor.app.util.Resource
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import az.kompressor.app.util.attachPhonePrefix
 import az.kompressor.app.util.cleanPhoneNumber
+import az.kompressor.app.util.ValidationUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -41,6 +42,11 @@ class EditProfileBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_e
                 binding.tilFirstName.error = "Required"; return@setOnClickListener
             }
             binding.tilFirstName.error = null
+
+            if (!ValidationUtils.isValidPhone(phone)) {
+                binding.tilPhone.error = "Invalid phone number"; return@setOnClickListener
+            }
+            binding.tilPhone.error = null
             binding.btnSave.isEnabled = false
             binding.btnSave.text = "Saving…"
 

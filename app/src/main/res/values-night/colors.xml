@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#121212</color>
-    <color name="surface">#1E1E1E</color>
-    <color name="text_primary">#EFEFEF</color>
-    <color name="text_secondary">#9E9E9E</color>
-    <color name="divider">#2C2C2C</color>
-    <!-- primary, error, accent stay the same in dark mode -->
+    <!-- Dark Palette -->
+    <color name="primary">#5A82FF</color>
+    <color name="primary_variant">#24325E</color>
+    <color name="primary_dark">#1A42D1</color>
+    <color name="accent">#FF8B5E</color>
+    <color name="accent_variant">#3D241E</color>
+    <color name="background">#0F1014</color>
+    <color name="surface">#1B1C22</color>
+    <color name="text_primary">#F5F5F7</color>
+    <color name="text_secondary">#9A9AA8</color>
+    <color name="error">#FF6B6B</color>
+    <color name="success">#00E676</color>
+    <color name="divider">#2A2B33</color>
 </resources>

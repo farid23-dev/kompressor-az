@@ -21,6 +21,7 @@ import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
 import az.kompressor.app.util.attachPhonePrefix
 import az.kompressor.app.util.cleanPhoneNumber
+import az.kompressor.app.util.ValidationUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -186,8 +187,8 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
         if (mileage == null || mileage < 0) {
             binding.tilMileage.error = "Enter valid mileage"; valid = false
         }
-        if (binding.etPhone.text.isNullOrBlank()) {
-            binding.tilPhone.error = "Phone number is required"; valid = false
+        if (!ValidationUtils.isValidPhone(binding.etPhone.text.toString())) {
+            binding.tilPhone.error = "Invalid phone number"; valid = false
         }
         if (binding.etCity.text.isNullOrBlank()) {
             binding.tilCity.error = "City is required"; valid = false

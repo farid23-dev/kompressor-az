@@ -55,9 +55,9 @@ class FilterBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_filter
         binding.etCity.setText(current.city)
 
         when (current.sortBy) {
-            "price_asc"  -> binding.rgSort.check(R.id.rbPriceAsc)
-            "price_desc" -> binding.rgSort.check(R.id.rbPriceDesc)
-            else         -> binding.rgSort.check(R.id.rbNewest)
+            "price_asc"  -> binding.rbPriceAsc.isChecked = true
+            "price_desc" -> binding.rbPriceDesc.isChecked = true
+            else         -> binding.rbNewest.isChecked = true
         }
     }
 
@@ -74,7 +74,7 @@ class FilterBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_filter
         }
         val city = binding.etCity.text?.toString()?.trim() ?: ""
 
-        val sortBy = when (binding.rgSort.checkedRadioButtonId) {
+        val sortBy = when (binding.rgSort.checkedChipId) {
             R.id.rbPriceAsc  -> "price_asc"
             R.id.rbPriceDesc -> "price_desc"
             else             -> "newest"

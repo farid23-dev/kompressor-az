@@ -56,11 +56,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun highlightActiveThemeButton(mode: Int) {
-        val active = 1.0f
-        val inactive = 0.45f
-        binding.btnThemeLight.alpha  = if (mode == AppCompatDelegate.MODE_NIGHT_NO)            active else inactive
-        binding.btnThemeDark.alpha   = if (mode == AppCompatDelegate.MODE_NIGHT_YES)           active else inactive
-        binding.btnThemeSystem.alpha = if (mode == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) active else inactive
+        binding.btnThemeLight.isSelected  = mode == AppCompatDelegate.MODE_NIGHT_NO
+        binding.btnThemeDark.isSelected   = mode == AppCompatDelegate.MODE_NIGHT_YES
+        binding.btnThemeSystem.isSelected = mode == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     }
 
     private fun setupSignOut() {

@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Adaptive icon foreground — Camaro PNG scaled to fill the safe zone.
-    The PNG (splash_car.png) is placed as a centred bitmap.
--->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <bitmap
-            android:src="@drawable/splash_car"
-            android:gravity="fill" />
-    </item>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:translateX="14" android:translateY="14">
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M15,65 L85,65 C85,65 85,55 75,50 C65,45 50,45 50,45 C50,45 35,45 25,50 C15,55 15,65 15,65 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M35,51 L65,51 L58,40 C58,40 55,35 50,35 C45,35 42,40 42,40 Z" />
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="2"
+            android:strokeLineCap="round"
+            android:pathData="M10,72 L40,72" />
+        <path
+            android:strokeColor="#FF7A45"
+            android:strokeWidth="2"
+            android:strokeLineCap="round"
+            android:pathData="M20,78 L50,78" />
+    </group>
+</vector>

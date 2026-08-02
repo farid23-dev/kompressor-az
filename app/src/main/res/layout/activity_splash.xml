@@ -4,34 +4,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_splash">
+    android:background="@color/primary">
 
-    <!-- Yellow car — fills most of the screen, vertically centered -->
-    <ImageView
-        android:id="@+id/ivSplashCar"
-        android:layout_width="0dp"
+    <!-- Central Logo Group -->
+    <LinearLayout
+        android:id="@+id/logoGroup"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/splash_car"
-        android:contentDescription="Kompressor car"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/ivSplashLogo"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.95"
-        app:layout_constraintVertical_bias="0.55" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Logo pinned to bottom -->
-    <ImageView
-        android:id="@+id/ivSplashLogo"
-        android:layout_width="200dp"
+        <ImageView
+            android:id="@+id/ivSplashCar"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:src="@drawable/ic_logo_modern"
+            app:tint="@color/white"
+            android:contentDescription="Logo" />
+
+        <TextView
+            android:id="@+id/ivSplashLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Kompressor.az"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/logo_kompressor"
-        android:contentDescription="Kompressor.az"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
         android:layout_marginBottom="48dp"
+        android:text="Premium Car Marketplace"
+        android:textColor="@color/white"
+        android:alpha="0.7"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
