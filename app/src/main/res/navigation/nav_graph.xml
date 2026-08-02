@@ -105,6 +105,12 @@
         <action
             android:id="@+id/action_profileFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_carDetailFragment"
+            app:destination="@id/carDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_adminDashboardFragment"
+            app:destination="@id/adminDashboardFragment" />
     </fragment>
 
     <fragment
@@ -138,7 +144,11 @@
         android:id="@+id/notificationsFragment"
         android:name="az.kompressor.app.ui.notifications.NotificationsFragment"
         android:label="Notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications">
+        <action
+            android:id="@+id/action_notificationsFragment_to_carDetailFragment"
+            app:destination="@id/carDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/contactFragment"

@@ -27,7 +27,6 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         binding = FragmentFavoritesBinding.bind(view)
         setupRecyclerView()
         observeFavorites()
-        binding.btnBack.setOnClickListener { findNavController().navigateUp() }
     }
 
     private fun setupRecyclerView() {

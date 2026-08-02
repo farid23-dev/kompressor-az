@@ -6,7 +6,23 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- Content area — stops at the top of the bottom nav -->
+    <!-- Offline Banner -->
+    <TextView
+        android:id="@+id/tvOfflineBanner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#E53935"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="Offline Mode • Changes will sync later"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -14,7 +30,7 @@
         android:layout_height="0dp"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvOfflineBanner"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

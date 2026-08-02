@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import az.kompressor.app.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import az.kompressor.app.databinding.FragmentPostCarBinding
 import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
@@ -79,6 +80,7 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
                 imageAdapter.submitList(uris)
                 val existingCount = viewModel.existingImageUrls.value.size
                 val total = existingCount + uris.size
+                binding.rvImages.isVisible = total > 0
                 binding.tvImageCount.text = if (total == 0) "No photos selected"
                     else "$total photo(s) selected${if (existingCount > 0) " ($existingCount existing)" else ""}"
             }
@@ -210,10 +212,22 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
                         binding.btnPost.isEnabled = true
-                        val msg = if (args.editCarId.isNotBlank()) "Listing updated!" else "Car posted successfully!"
-                        binding.root.showSnackbar(msg)
+                        
+                        val isEdit = args.editCarId.isNotBlank()
+                        if (isEdit) {
+                            binding.root.showSnackbar("Listing updated!")
+                            findNavController().navigateUp()
+                        } else {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Listing Submitted!")
+                                .setMessage("Your car has been submitted successfully. It will be visible to everyone after a quick review by our team (usually within 1-2 hours).")
+                                .setPositiveButton("Got it") { _, _ ->
+                                    findNavController().navigateUp()
+                                }
+                                .setCancelable(false)
+                                .show()
+                        }
                         viewModel.resetState()
-                        findNavController().navigateUp()
                     }
                     is Resource.Error -> {
                         binding.progressBar.isVisible = false

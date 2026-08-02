@@ -21,18 +21,17 @@
         android:contentDescription="Kompressor.az"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnNotification" />
+        app:layout_constraintEnd_toStartOf="@id/notifWrapper" />
 
-    <!-- Notification bell + badge wrapper -->
     <FrameLayout
         android:id="@+id/notifWrapper"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="20dp"
         android:elevation="2dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnProfile">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
             android:id="@+id/btnNotification"
@@ -59,19 +58,6 @@
 
     </FrameLayout>
 
-    <ImageButton
-        android:id="@+id/btnProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_circle_white"
-        android:src="@drawable/ic_nav_profile"
-        android:contentDescription="Profile"
-        android:padding="8dp"
-        android:elevation="2dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!--
         EXTENDED FILTER BUTTON — full-width outlined button

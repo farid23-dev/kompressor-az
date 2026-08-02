@@ -2,6 +2,8 @@ package az.kompressor.app.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import az.kompressor.app.util.ConnectivityObserver
+import az.kompressor.app.util.NetworkConnectivityObserver
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -35,4 +37,8 @@ object AppModule {
     @Provides @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
         context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+    @Provides @Singleton
+    fun provideConnectivityObserver(@ApplicationContext context: Context): ConnectivityObserver =
+        NetworkConnectivityObserver(context)
 }

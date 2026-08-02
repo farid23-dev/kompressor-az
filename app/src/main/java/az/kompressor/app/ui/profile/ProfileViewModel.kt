@@ -37,9 +37,22 @@ class ProfileViewModel @Inject constructor(
     private val _userProfile = MutableStateFlow<Resource<User>>(Resource.Loading)
     val userProfile: StateFlow<Resource<User>> = _userProfile
 
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin: StateFlow<Boolean> = _isAdmin
+
     init {
         loadMyListings()
         loadUserProfile()
+        checkAdminStatus()
+    }
+
+    private fun checkAdminStatus() {
+        viewModelScope.launch {
+            val uid = getCurrentUserUid()
+            if (uid.isNotEmpty()) {
+                _isAdmin.value = carRepository.isAdmin(uid)
+            }
+        }
     }
 
     fun getCurrentUserEmail(): String = authRepository.getCurrentUser()?.email ?: ""

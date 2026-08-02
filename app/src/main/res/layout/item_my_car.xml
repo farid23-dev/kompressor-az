@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="16dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp">
 
@@ -23,8 +23,24 @@
             android:background="@color/divider"
             android:contentDescription="Car thumbnail"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btnBump" />
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Status badge on top of thumbnail -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:text="PENDING"
+            android:background="#FF6B35"
+            app:layout_constraintTop_toTopOf="@id/ivCarThumb"
+            app:layout_constraintStart_toStartOf="@id/ivCarThumb" />
 
         <!-- Title -->
         <TextView

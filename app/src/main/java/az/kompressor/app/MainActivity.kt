@@ -11,10 +11,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.lifecycle.lifecycleScope
 import az.kompressor.app.databinding.ActivityMainBinding
 import az.kompressor.app.domain.repository.AuthRepository
+import az.kompressor.app.util.AdminSetup
+import az.kompressor.app.util.ConnectivityObserver
 import az.kompressor.app.util.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,14 +31,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var authRepository: AuthRepository
 
-    private val hiddenDestinations = setOf(
-        R.id.signInFragment,
-        R.id.signUpFragment,
-        R.id.carDetailFragment,
-        R.id.postCarFragment,
-        R.id.profileFragment,
-        R.id.settingsFragment
-    )
+    @Inject
+    lateinit var connectivityObserver: ConnectivityObserver
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -50,17 +49,20 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
+        observeConnectivity()
+
         binding.fabPost.setOnClickListener {
             navController.navigate(R.id.postCarFragment)
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val visible = destination.id !in hiddenDestinations
-            binding.bottomNavigationView.isVisible = visible
-            binding.fabPost.isVisible = visible
+            val isHome = destination.id == R.id.homeFragment
+            binding.bottomNavigationView.isVisible = destination.id !in setOf(R.id.signInFragment, R.id.signUpFragment)
+            binding.fabPost.isVisible = isHome
         }
 
-        if (authRepository.isUserLoggedIn()) {
+        if (savedInstanceState == null && authRepository.isUserLoggedIn()) {
+            lifecycleScope.launch { AdminSetup.registerCurrentUserAsAdminIfNeeded() }
             navController.navigate(
                 R.id.homeFragment, null,
                 NavOptions.Builder()
@@ -70,6 +72,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         handleDeepLink(intent)
+    }
+
+    private fun observeConnectivity() {
+        lifecycleScope.launch {
+            connectivityObserver.observe().collectLatest { status ->
+                binding.tvOfflineBanner.isVisible = status != ConnectivityObserver.Status.Available
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -110,6 +110,8 @@ class CarDetailFragment : Fragment(R.layout.fragment_car_detail) {
                         binding.tvCity.text = car.city
                         binding.tvAge.text = TimeAgo.format(car.createdAt)
 
+                        binding.tvPendingBanner.isVisible = car.status == "pending"
+
                         if (car.sellerName.isNotBlank()) {
                             binding.layoutSeller.isVisible = true
                             binding.tvSellerName.text = car.sellerName

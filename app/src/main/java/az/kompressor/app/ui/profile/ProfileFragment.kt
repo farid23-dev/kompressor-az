@@ -30,8 +30,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         setupMyListings()
 
-        binding.btnBack.setOnClickListener { findNavController().navigateUp() }
-
         binding.btnEditProfile.setOnClickListener {
             EditProfileBottomSheet().show(childFragmentManager, EditProfileBottomSheet.TAG)
         }
@@ -40,7 +38,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             findNavController().navigate(R.id.action_profileFragment_to_settingsFragment)
         }
 
+        binding.btnAdminDashboard.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_adminDashboardFragment)
+        }
+
         observeUserProfile()
+        observeAdminStatus()
         observeMyListings()
         observeDeleteState()
         observeSignOut()
@@ -64,6 +67,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             onBump = { car ->
                 viewModel.bumpCar(car.id)
                 binding.root.showSnackbar("\"${car.title}\" bumped to top for 30 days ✅")
+            },
+            onItemClick = { car ->
+                val action = ProfileFragmentDirections.actionProfileFragmentToCarDetailFragment(car.id)
+                findNavController().navigate(action)
             }
         )
         binding.rvMyListings.apply {
@@ -94,6 +101,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     }
                     is Resource.Loading -> { }
                 }
+            }
+        }
+    }
+
+    private fun observeAdminStatus() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isAdmin.collectLatest { isAdmin ->
+                binding.tvAdminLabel.isVisible = isAdmin
+                binding.btnAdminDashboard.isVisible = isAdmin
             }
         }
     }
@@ -152,7 +168,5 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
+
 }

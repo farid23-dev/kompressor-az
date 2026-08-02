@@ -43,19 +43,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             viewModel.clearFilter()
         }
 
-        binding.btnProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-        }
-
         binding.btnNotification.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_notificationsFragment)
-        }
-
-        binding.btnProfile.setOnLongClickListener {
-            if (viewModel.isAdmin.value) {
-                findNavController().navigate(R.id.action_homeFragment_to_adminDashboardFragment)
-                true
-            } else false
         }
 
         observeCars()

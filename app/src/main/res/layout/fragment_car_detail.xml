@@ -43,6 +43,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Pending Review Banner -->
+            <TextView
+                android:id="@+id/tvPendingBanner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#FF6B35"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="PENDING REVIEW: This listing is only visible to you"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/viewPagerImages"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <!-- Dot indicators -->
             <LinearLayout
                 android:id="@+id/dotsLayout"
@@ -51,7 +68,7 @@
                 android:layout_marginTop="8dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@id/viewPagerImages"
+                app:layout_constraintTop_toBottomOf="@id/tvPendingBanner"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

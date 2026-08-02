@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -36,20 +35,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
         binding.btnAbout.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_aboutFragment)
-        }
-        binding.btnAdminDashboard.setOnClickListener {
-            findNavController().navigate(R.id.action_settingsFragment_to_adminDashboardFragment)
-        }
-
-        observeAdminVisibility()
-    }
-
-    private fun observeAdminVisibility() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isAdmin.collectLatest { isAdmin ->
-                binding.tvAdminLabel.isVisible = isAdmin
-                binding.btnAdminDashboard.isVisible = isAdmin
-            }
         }
     }
 

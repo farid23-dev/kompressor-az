@@ -26,7 +26,15 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications) {
         binding = FragmentNotificationsBinding.bind(view)
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
-        adapter = NotificationAdapter(onDelete = { notif -> viewModel.deleteNotification(notif.id) })
+        adapter = NotificationAdapter(
+            onDelete = { notif -> viewModel.deleteNotification(notif.id) },
+            onItemClick = { notif ->
+                if (notif.carId.isNotBlank()) {
+                    val action = NotificationsFragmentDirections.actionNotificationsFragmentToCarDetailFragment(notif.carId)
+                    findNavController().navigate(action)
+                }
+            }
+        )
         binding.rvNotifications.adapter = adapter
         binding.rvNotifications.layoutManager = LinearLayoutManager(requireContext())
 

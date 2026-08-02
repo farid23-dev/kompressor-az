@@ -13,6 +13,7 @@ import az.kompressor.app.util.Resource
 import az.kompressor.app.util.showSnackbar
 import az.kompressor.app.util.attachPhonePrefix
 import az.kompressor.app.util.cleanPhoneNumber
+import az.kompressor.app.util.AdminSetup
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,6 +53,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
                         binding.btnSignUp.isEnabled = true
+                        lifecycleScope.launch { AdminSetup.registerCurrentUserAsAdminIfNeeded() }
                         findNavController().navigate(R.id.action_signUpFragment_to_homeFragment)
                         viewModel.resetState()
                     }
