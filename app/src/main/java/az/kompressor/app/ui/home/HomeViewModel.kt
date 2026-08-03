@@ -56,9 +56,6 @@ class HomeViewModel @Inject constructor(
     private val _unreadCount = MutableStateFlow(0)
     val unreadCount: StateFlow<Int> = _unreadCount
 
-    private val _unreadNotifCount = MutableStateFlow(0)
-    val unreadNotifCount: StateFlow<Int> = _unreadNotifCount
-
     private var allCars: List<Car> = emptyList()
 
     private var currentQuery: String = ""

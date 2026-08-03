@@ -3,7 +3,6 @@ package az.kompressor.app.data.repository
 import az.kompressor.app.domain.model.AppNotification
 import az.kompressor.app.domain.repository.NotificationRepository
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -18,20 +17,27 @@ class NotificationRepositoryImpl @Inject constructor(
         val ref = firestore.collection("notifications")
             .document(uid)
             .collection("items")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
 
-        val listener = ref.addSnapshotListener { snap, _ ->
-            val list = snap?.documents?.map { doc ->
-                AppNotification(
-                    id        = doc.id,
-                    carId     = doc.getString("carId") ?: "",
-                    carTitle  = doc.getString("carTitle") ?: "",
-                    status    = doc.getString("status") ?: "",
-                    message   = doc.getString("message") ?: "",
-                    timestamp = doc.getLong("timestamp") ?: 0L,
-                    read      = doc.getBoolean("read") ?: false
-                )
-            } ?: emptyList()
+        val listener = ref.addSnapshotListener { snap, error ->
+            if (error != null) {
+                trySend(emptyList())
+                return@addSnapshotListener
+            }
+            val list = snap?.documents?.mapNotNull { doc ->
+                try {
+                    AppNotification(
+                        id        = doc.id,
+                        carId     = doc.getString("carId") ?: "",
+                        carTitle  = doc.getString("carTitle") ?: "",
+                        status    = doc.getString("status") ?: "",
+                        message   = doc.getString("message") ?: "",
+                        timestamp = doc.getLong("timestamp") ?: 0L,
+                        read      = doc.getBoolean("read") ?: false
+                    )
+                } catch (_: Exception) {
+                    null
+                }
+            }?.sortedByDescending { it.timestamp } ?: emptyList()
             trySend(list)
         }
         awaitClose { listener.remove() }
@@ -39,11 +45,20 @@ class NotificationRepositoryImpl @Inject constructor(
 
     override suspend fun markAllRead(uid: String) {
         try {
-            val items = firestore.collection("notifications")
+            val snapshot = firestore.collection("notifications")
                 .document(uid).collection("items")
                 .whereEqualTo("read", false).get().await()
-            items.documents.forEach { it.reference.update("read", true).await() }
-        } catch (_: Exception) {}
+            
+            if (snapshot.isEmpty) return
+            
+            val batch = firestore.batch()
+            for (doc in snapshot.documents) {
+                batch.update(doc.reference, "read", true)
+            }
+            batch.commit().await()
+        } catch (e: Exception) {
+            android.util.Log.e("NotifRepo", "Error marking as read: ${e.message}")
+        }
     }
 
     override suspend fun deleteNotification(uid: String, notifId: String) {

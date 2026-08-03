@@ -86,7 +86,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvImages"
                 android:layout_width="0dp"
-                android:layout_height="90dp"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
                 android:clipToPadding="false"
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/btnAddPhoto"
@@ -100,6 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                app:layout_goneMarginTop="16dp"
                 android:hint="Brand (e.g. BMW)"
                 app:boxCornerRadiusTopStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"

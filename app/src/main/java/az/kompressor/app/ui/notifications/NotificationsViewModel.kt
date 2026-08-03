@@ -31,6 +31,7 @@ class NotificationsViewModel @Inject constructor(
                 .onEach { list ->
                     _notifications.value = list
                     _unreadCount.value = list.count { !it.read }
+                    android.util.Log.d("NotifVM", "Loaded ${list.size} notifications, ${_unreadCount.value} unread")
                 }
                 .launchIn(viewModelScope)
         }
