@@ -151,10 +151,8 @@ class CarDetailFragment : Fragment(R.layout.fragment_car_detail) {
 
     private fun observeAdminStatus() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isAdmin.collectLatest { isAdmin ->
-                val state = viewModel.carState.value
-                val isPending = state is Resource.Success && state.data.status == "pending"
-                binding.btnAdminApprove.isVisible = isAdmin && isPending
+            viewModel.showApproveButton.collectLatest { show ->
+                binding.btnAdminApprove.isVisible = show
             }
         }
     }

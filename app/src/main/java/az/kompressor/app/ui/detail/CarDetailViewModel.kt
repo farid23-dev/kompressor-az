@@ -13,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -58,6 +59,10 @@ class CarDetailViewModel @Inject constructor(
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val showApproveButton: StateFlow<Boolean> = combine(_isAdmin, _carState) { isAdmin, state ->
+        isAdmin && state is Resource.Success && state.data.status == "pending"
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     fun loadCar(carId: String) {
         getCarByIdUseCase(carId)

@@ -35,7 +35,8 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications) {
                         val bundle = bundleOf("carId" to notif.carId)
                         findNavController().navigate(R.id.action_notificationsFragment_to_carDetailFragment, bundle)
                     }
-                }
+                },
+                onApprove = { notif -> viewModel.approveCar(notif) }
             )
             binding.rvNotifications.adapter = adapter
             binding.rvNotifications.layoutManager = LinearLayoutManager(requireContext())
