@@ -15,49 +15,108 @@
     <string name="hint_password">Пароль</string>
     <string name="hint_confirm_password">Подтвердите пароль</string>
     <string name="hint_full_name">Имя и фамилия</string>
+    <string name="hint_name">Имя</string>
+    <string name="hint_surname">Фамилия</string>
+    <string name="hint_phone">Номер телефона</string>
 
     <!-- Home -->
+    <string name="nav_home">Главная</string>
+    <string name="nav_saved">Избранное</string>
+    <string name="nav_profile">Профиль</string>
+    <string name="tab_all">Все</string>
+    <string name="tab_pending">Ожидающие</string>
+    <string name="tab_approved">Одобренные</string>
+    <string name="tab_rejected">Отклоненные</string>
+    <string name="filter_button_label">Фильтровать авто</string>
+    <string name="filter_price_asc">↑ Цена</string>
+    <string name="filter_price_desc">↓ Цена</string>
+    <string name="notifications_title">Уведомления</string>
+    <string name="notifications_empty">Уведомлений пока нет</string>
+    <string name="notifications_empty_sub">Посмотрите объявления! 🚗</string>
     <string name="search_hint">Поиск по марке, модели, городу…</string>
     <string name="no_cars_found">Автомобили не найдены</string>
     <string name="no_cars_subtitle">Попробуйте изменить поиск\nили сбросить фильтр</string>
 
+    <!-- Profile -->
+    <string name="profile_title">Профиль</string>
+    <string name="btn_edit_profile">Редактировать профиль</string>
+    <string name="admin_label">АДМИН</string>
+    <string name="admin_dashboard_title">Панель админа</string>
+    <string name="settings_title">Настройки</string>
+    <string name="my_listings">Мои объявления</string>
+    <string name="no_listings">Объявлений пока нет</string>
+    <string name="no_listings_subtitle">Нажмите + чтобы разместить первый автомобиль</string>
+    <string name="btn_sign_out">Выйти</string>
+
+    <!-- Favorites -->
+    <string name="saved_cars">Избранное</string>
+    <string name="no_favorites">Сохранённых автомобилей нет</string>
+    <string name="no_favorites_subtitle">Нажмите ★ на любом объявлении\nчтобы сохранить его здесь</string>
+
+    <!-- Settings -->
+    <string name="settings_language">Язык</string>
+    <string name="settings_appearance">Внешний вид</string>
+    <string name="settings_info">Информация</string>
+    <string name="settings_account">Аккаунт</string>
+    <string name="settings_sign_out">Выйти</string>
+    <string name="settings_mode_light">Светлая</string>
+    <string name="settings_mode_dark">Темная</string>
+    <string name="settings_mode_system">Системная</string>
+    <string name="settings_light">Светлая</string>
+    <string name="settings_dark">Темная</string>
+    <string name="settings_system">Авто</string>
+    <string name="lang_en">English</string>
+    <string name="lang_az">Azərbaycan</string>
+    <string name="sign_out_confirm_title">Выход</string>
+    <string name="sign_out_confirm_msg">Вы уверены, что хотите выйти?</string>
+
+    <string name="admin_access_denied">Доступ запрещен</string>
+    <string name="pending_count_format">%1$d ожидающих</string>
+    <string name="approved_msg_format">✅ Одобрено: %1$s</string>
+    <string name="rejected_msg_format">❌ Отклонено: %1$s</string>
+
     <!-- Detail -->
-    <string name="btn_call">📞 Позвонить</string>
-    <string name="btn_whatsapp">💬 WhatsApp</string>
-    <string name="btn_share">↑</string>
+    <string name="seller_label">Продавец</string>
+    <string name="btn_call">Позвонить</string>
+    <string name="btn_whatsapp">WhatsApp</string>
+    <string name="btn_share">Поделиться</string>
+    <string name="btn_approve_listing">Одобрить объявление</string>
     <string name="label_year">Год</string>
     <string name="label_mileage">Пробег</string>
     <string name="label_fuel">Тип топлива</string>
     <string name="label_transmission">Коробка передач</string>
     <string name="label_city">Город</string>
     <string name="label_description">Описание</string>
+    <string name="car_detail_title">Детали авто</string>
+    <string name="share_car_format">Посмотрите это авто на Kompressor.az: %1$s — %2$s</string>
+    <string name="share_via">Поделиться через</string>
 
     <!-- Post -->
     <string name="post_title">Разместить объявление</string>
     <string name="edit_title">Редактировать объявление</string>
-    <string name="btn_post">Разместить объявление</string>
+    <string name="btn_post_listing">Разместить</string>
     <string name="btn_save_changes">Сохранить изменения</string>
-    <string name="btn_add_photo">Добавить фото</string>
+    <string name="no_photos_selected">Фотографии не выбраны</string>
+    <string name="photo_count_selected">Выбрано фото: %1$d</string>
+    <string name="existing_photos_count">%1$d существующих фото</string>
+    <string name="error_brand_required">Укажите марку</string>
+    <string name="error_model_required">Укажите модель</string>
+    <string name="error_invalid_year">Введите корректный год</string>
+    <string name="error_invalid_price">Введите корректную цену</string>
+    <string name="error_invalid_mileage">Введите корректный пробег</string>
+    <string name="error_invalid_phone">Некорректный номер телефона</string>
+    <string name="error_city_required">Укажите город</string>
+    <string name="error_no_photos">Добавьте хотя бы одно фото</string>
+    <string name="listing_updated_msg">Объявление обновлено!</string>
+    <string name="listing_submitted_title">Объявление отправлено!</string>
+    <string name="listing_submitted_msg">Ваше объявление успешно отправлено. Оно станет видимым после быстрой проверки.</string>
     <string name="hint_brand">Марка (напр. BMW)</string>
     <string name="hint_model">Модель (напр. 5 Series)</string>
-    <string name="hint_year">Год выпуска</string>
+    <string name="hint_year">Год</string>
     <string name="hint_price">Цена (AZN)</string>
     <string name="hint_mileage">Пробег (км)</string>
-    <string name="hint_phone">Номер телефона</string>
     <string name="hint_city">Город</string>
-    <string name="hint_description">Дополнительная информация (необязательно)</string>
-
-    <!-- Profile -->
-    <string name="profile_title">Профиль</string>
-    <string name="btn_sign_out">Выйти</string>
-    <string name="my_listings">Мои объявления</string>
-    <string name="no_listings">Объявлений пока нет</string>
-    <string name="no_listings_subtitle">Нажмите + чтобы разместить первый автомобиль</string>
-
-    <!-- Favorites -->
-    <string name="saved_cars">Избранное</string>
-    <string name="no_favorites">Сохранённых автомобилей нет</string>
-    <string name="no_favorites_subtitle">Нажмите ★ на любом объявлении\nчтобы сохранить его здесь</string>
+    <string name="hint_description">Описание (необязательно)</string>
 
     <!-- Filter -->
     <string name="filter_title">Фильтр и сортировка</string>
@@ -65,16 +124,80 @@
     <string name="filter_transmission">Коробка передач</string>
     <string name="filter_city">Город</string>
     <string name="filter_sort">Сортировка</string>
+    <string name="filter_hint_city">напр. Баку</string>
+    <string name="filter_any">Любой</string>
     <string name="sort_newest">Сначала новые</string>
     <string name="sort_price_asc">Цена: по возрастанию</string>
     <string name="sort_price_desc">Цена: по убыванию</string>
     <string name="btn_apply">Применить</string>
-    <string name="btn_clear">Очистить</string>
+    <string name="btn_clear">Сбросить</string>
 
     <!-- General -->
     <string name="btn_back">Назад</string>
+    <string name="btn_bump">Поднять</string>
+    <string name="btn_edit">Редактировать</string>
+    <string name="btn_delete">Удалить</string>
     <string name="delete">Удалить</string>
     <string name="cancel">Отмена</string>
     <string name="delete_listing_title">Удалить объявление</string>
-    <string name="just_now">Только что</string>
+    <string name="delete_listing_confirm_msg">Удалить \"%1$s\" из ваших объявлений?</string>
+    <string name="bumped_success_format">\"%1$s\" поднято в топ на 30 дней ✅</string>
+    <string name="back_exit_msg">Нажмите еще раз для выхода</string>
+    <string name="notif_approved_format">✅ Ваше объявление \"%1$s\" было одобрено!</string>
+    <string name="notif_rejected_format">❌ Ваше объявление \"%1$s\" было отклонено.</string>
+    <string name="notif_new_listing_format">🆕 Новое объявление отправлено: \"%1$s\"</string>
+    <string name="notif_generic_format">Уведомление о \"%1$s\"</string>
+    <string name="saving_msg">Сохранение…</string>
+    <string name="field_required">Обязательно</string>
+    <string name="last_day">⚠ Последний день!</string>
+    <string name="days_left_1">⚠ Остался 1 день</string>
+    <string name="days_left_5_format">⚠ Осталось %1$d дней</string>
+    <string name="days_left_format">Осталось %1$d дней</string>
+    <string name="stats_format">👁 Просмотры: %1$d · %2$s</string>
+    <string name="page_counter_format">%1$d / %2$d</string>
+
+    <string name="time_just_now">Только что</string>
+    <string name="time_minutes_ago">%1$d мин. назад</string>
+    <string name="time_hours_ago">%1$d ч. назад</string>
+    <string name="time_yesterday">Вчера</string>
+    <string name="time_days_ago">%1$d дн. назад</string>
+    <string name="time_1_week_ago">1 неделю назад</string>
+    <string name="time_weeks_ago">%1$d нед. назад</string>
+    <string name="time_1_month_ago">1 месяц назад</string>
+    <string name="time_months_ago">%1$d мес. назад</string>
+    <string name="time_years_ago">%1$d г. назад</string>
+
+    <!-- About -->
+    <string name="about_title">О приложении</string>
+    <string name="about_app_label">О ПРИЛОЖЕНИИ</string>
+    <string name="about_app_desc">Kompressor.az — это современная площадка для продажи автомобилей в Азербайджане. Платформа позволяет пользователям легко искать, фильтровать и размещать объявления.</string>
+    <string name="developer_label">РАЗРАБОТЧИК</string>
+    <string name="dev_name">Фарид Исмайлов</string>
+    <string name="dev_bio">Это приложение было разработано в качестве выпускного проекта в Matrix Academy.</string>
+    <string name="footer_text">© 2026 Kompressor.az · Сделано в Азербайджане 🇦🇿</string>
+
+    <!-- Contact -->
+    <string name="contact_title">Свяжитесь с нами</string>
+    <string name="contact_intro">Мы здесь, чтобы помочь! Если у вас есть вопросы, отзывы или вам нужна поддержка, свяжитесь с нами через любой канал ниже.</string>
+    <string name="our_channels">НАШИ КАНАЛЫ</string>
+    <string name="label_phone">Телефон</string>
+    <string name="label_email">Эл. почта</string>
+    <string name="btn_call_now">Позвонить</string>
+    <string name="btn_send_email">Отправить</string>
+    <string name="offline_banner_text">Офлайн-режим • Изменения будут синхронизированы позже</string>
+    <string name="premium_marketplace_subtitle">Премиум авторынок</string>
+    <string name="go_back">Назад</string>
+    <string name="version_format">Версия %1$s</string>
+    <string name="no_listings_here">Здесь пока нет объявлений</string>
+    <string name="pending_review_banner">НА ПРОВЕРКЕ: Это объявление видите только вы</string>
+    <string name="photos_label">Фотографии</string>
+    <string name="add_photos_label">+ Добавить фото</string>
+    <string name="fuel_type_label">Тип топлива</string>
+    <string name="transmission_label">Коробка передач</string>
+    <string name="approve_label">Одобрить</string>
+    <string name="reject_label">Отклонить</string>
+    <string name="status_pending">ОЖИДАЕТ</string>
+    <string name="status_approved">ОДОБРЕНО</string>
+    <string name="status_rejected">ОТКЛОНЕНО</string>
+    <string name="listing_deleted">Объявление удалено</string>
 </resources>
