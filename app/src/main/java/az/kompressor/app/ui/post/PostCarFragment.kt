@@ -219,19 +219,24 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
                         binding.progressBar.isVisible = false
                         binding.btnPost.isEnabled = true
                         
-                        val isEdit = args.editCarId.isNotBlank()
-                        if (isEdit) {
-                            binding.root.showSnackbar(getString(R.string.listing_updated_msg))
+                        if (viewModel.isAdmin.value) {
+                            // Admin posts/updates directly without any messages
                             findNavController().navigateUp()
                         } else {
-                            MaterialAlertDialogBuilder(requireContext())
-                                .setTitle(getString(R.string.listing_submitted_title))
-                                .setMessage(getString(R.string.listing_submitted_msg))
-                                .setPositiveButton(android.R.string.ok) { _, _ ->
-                                    findNavController().navigateUp()
-                                }
-                                .setCancelable(false)
-                                .show()
+                            val isEdit = args.editCarId.isNotBlank()
+                            if (isEdit) {
+                                binding.root.showSnackbar(getString(R.string.listing_updated_msg))
+                                findNavController().navigateUp()
+                            } else {
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle(getString(R.string.listing_submitted_title))
+                                    .setMessage(getString(R.string.listing_submitted_msg))
+                                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                                        findNavController().navigateUp()
+                                    }
+                                    .setCancelable(false)
+                                    .show()
+                            }
                         }
                         viewModel.resetState()
                     }

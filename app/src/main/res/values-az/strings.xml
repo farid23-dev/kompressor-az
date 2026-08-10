@@ -43,8 +43,8 @@
     <string name="rejected_msg_format">❌ İmtina edildi: %1$s</string>
 
     <!-- Detail -->
-    <string name="btn_call">📞 Zəng et</string>
-    <string name="btn_whatsapp">💬 WhatsApp</string>
+    <string name="btn_call">Zəng et</string>
+    <string name="btn_whatsapp">WhatsApp</string>
     <string name="btn_share">Paylaş</string>
     <string name="label_year">İl</string>
     <string name="label_mileage">Yürüş</string>

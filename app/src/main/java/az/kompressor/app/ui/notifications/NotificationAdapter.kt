@@ -29,8 +29,7 @@ class NotificationAdapter(
             b.tvMessage.text = when (n.status) {
                 "approved"    -> context.getString(R.string.notif_approved_format, n.carTitle)
                 "rejected"    -> context.getString(R.string.notif_rejected_format, n.carTitle)
-                "new_listing" -> if (n.message.isNotBlank()) "🆕 ${n.message}"
-                                 else context.getString(R.string.notif_new_listing_format, n.carTitle)
+                "new_listing" -> n.message.ifBlank { context.getString(R.string.notif_new_listing_format, n.carTitle) }
                 else          -> n.message.ifBlank { context.getString(R.string.notif_generic_format, n.carTitle) }
             }
             b.tvTime.text         = TimeAgo.format(context, n.timestamp)

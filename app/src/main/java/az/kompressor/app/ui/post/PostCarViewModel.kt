@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.domain.repository.AuthRepository
+import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.usecase.GetCarByIdUseCase
 import az.kompressor.app.domain.usecase.PostCarUseCase
 import az.kompressor.app.domain.usecase.UpdateCarUseCase
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,11 +23,26 @@ class PostCarViewModel @Inject constructor(
     private val postCarUseCase: PostCarUseCase,
     private val updateCarUseCase: UpdateCarUseCase,
     private val getCarByIdUseCase: GetCarByIdUseCase,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val carRepository: CarRepository
 ) : ViewModel() {
 
     private val _postState = MutableStateFlow<Resource<Unit>?>(null)
     val postState: StateFlow<Resource<Unit>?> = _postState
+
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin: StateFlow<Boolean> = _isAdmin
+
+    init {
+        checkAdminStatus()
+    }
+
+    private fun checkAdminStatus() {
+        val uid = authRepository.getCurrentUser()?.uid ?: return
+        viewModelScope.launch {
+            _isAdmin.value = carRepository.isAdmin(uid)
+        }
+    }
 
     private val _selectedImages = MutableStateFlow<List<Uri>>(emptyList())
     val selectedImages: StateFlow<List<Uri>> = _selectedImages
