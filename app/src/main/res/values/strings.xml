@@ -110,6 +110,13 @@
     <string name="listing_updated_msg">Listing updated!</string>
     <string name="listing_submitted_title">Listing Submitted!</string>
     <string name="listing_submitted_msg">Your car has been submitted successfully. It will be visible to everyone after a quick review.</string>
+    <string name="hint_brand">Brand (e.g. BMW)</string>
+    <string name="hint_model">Model (e.g. 5 Series)</string>
+    <string name="hint_year">Year</string>
+    <string name="hint_price">Price (AZN)</string>
+    <string name="hint_mileage">Mileage (km)</string>
+    <string name="hint_city">City</string>
+    <string name="hint_description">Description (optional)</string>
 
     <!-- Filter -->
     <string name="filter_title">Filter &amp; Sort</string>
