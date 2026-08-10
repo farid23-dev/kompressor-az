@@ -3,6 +3,7 @@ package az.kompressor.app.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import az.kompressor.app.domain.model.Car
+import az.kompressor.app.domain.repository.AuthRepository
 import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.usecase.GetCarByIdUseCase
 import az.kompressor.app.domain.usecase.ToggleFavoriteUseCase
@@ -24,13 +25,28 @@ import javax.inject.Inject
 class CarDetailViewModel @Inject constructor(
     private val getCarByIdUseCase: GetCarByIdUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
-    private val carRepository: CarRepository
+    private val carRepository: CarRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _carState = MutableStateFlow<Resource<Car>>(Resource.Loading)
     val carState: StateFlow<Resource<Car>> = _carState
 
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin: StateFlow<Boolean> = _isAdmin
+
     private var viewCountIncremented = false
+
+    init {
+        checkAdminStatus()
+    }
+
+    private fun checkAdminStatus() {
+        viewModelScope.launch {
+            val uid = authRepository.getCurrentUser()?.uid ?: return@launch
+            _isAdmin.value = carRepository.isAdmin(uid)
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isFavorite: StateFlow<Boolean> = _carState
@@ -66,6 +82,20 @@ class CarDetailViewModel @Inject constructor(
             } else {
                 toggleFavoriteUseCase.add(state.data)
             }
+        }
+    }
+
+    fun approveCar() {
+        val state = _carState.value
+        if (state !is Resource.Success) return
+        viewModelScope.launch {
+            carRepository.updateCarStatus(
+                carId = state.data.id,
+                status = "approved",
+                sellerUid = state.data.sellerUid,
+                carTitle = state.data.title
+            )
+            loadCar(state.data.id)
         }
     }
 }

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import az.kompressor.app.R
 import az.kompressor.app.databinding.ItemMyCarBinding
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.util.TimeAgo
@@ -35,25 +36,26 @@ class MyCarAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(car: Car) {
+            val context = binding.root.context
             binding.tvCarTitle.text = car.title
             binding.tvCarPrice.text = car.price.formatPrice()
 
             val (label, color) = when (car.status) {
-                "approved" -> "APPROVED" to "#34A853".toColorInt()
-                "rejected" -> "REJECTED" to "#EA4335".toColorInt()
-                else       -> "PENDING"  to "#FF6B35".toColorInt()
+                "approved" -> context.getString(R.string.status_approved) to "#34A853".toColorInt()
+                "rejected" -> context.getString(R.string.status_rejected) to "#EA4335".toColorInt()
+                else       -> context.getString(R.string.status_pending)  to "#FF6B35".toColorInt()
             }
             binding.tvStatus.text = label
             binding.tvStatus.setBackgroundColor(color)
 
             val days = TimeAgo.daysLeft(car.createdAt, car.expiresAt)
             val daysLabel = when {
-                days <= 0 -> "⚠ Last day!"
-                days == 1 -> "⚠ 1 day left"
-                days <= 5 -> "⚠ $days days left"
-                else      -> "$days days left"
+                days <= 0 -> context.getString(R.string.last_day)
+                days == 1 -> context.getString(R.string.days_left_1)
+                days <= 5 -> context.getString(R.string.days_left_5_format, days)
+                else      -> context.getString(R.string.days_left_format, days)
             }
-            binding.tvStats.text = "👁 ${car.viewCount} views · $daysLabel"
+            binding.tvStats.text = context.getString(R.string.stats_format, car.viewCount, daysLabel)
 
             Glide.with(binding.ivCarThumb.context)
                 .load(car.imageUrls.firstOrNull())

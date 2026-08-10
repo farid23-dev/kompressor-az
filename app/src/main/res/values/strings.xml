@@ -20,7 +20,16 @@
     <string name="hint_phone">Phone Number</string>
 
     <!-- Home -->
+    <string name="nav_home">Home</string>
+    <string name="nav_saved">Saved</string>
+    <string name="nav_profile">Profile</string>
+    <string name="tab_all">All</string>
+    <string name="tab_pending">Pending</string>
+    <string name="tab_approved">Approved</string>
+    <string name="tab_rejected">Rejected</string>
     <string name="filter_button_label">Filter the cars</string>
+    <string name="filter_price_asc">↑ Price</string>
+    <string name="filter_price_desc">↓ Price</string>
     <string name="notifications_title">Notifications</string>
     <string name="notifications_empty">No notifications yet</string>
     <string name="notifications_empty_sub">Go browse some cars! 🚗</string>
@@ -30,6 +39,9 @@
 
     <!-- Profile -->
     <string name="profile_title">Profile</string>
+    <string name="btn_edit_profile">Edit Profile</string>
+    <string name="admin_label">ADMIN</string>
+    <string name="admin_dashboard_title">Admin Dashboard</string>
     <string name="settings_title">Settings</string>
     <string name="my_listings">My Listings</string>
     <string name="no_listings">No listings yet</string>
@@ -44,6 +56,7 @@
     <!-- Settings -->
     <string name="settings_language">Language</string>
     <string name="settings_appearance">Appearance</string>
+    <string name="settings_info">Information</string>
     <string name="settings_account">Account</string>
     <string name="settings_sign_out">Sign Out</string>
     <string name="settings_mode_light">Light</string>
@@ -51,16 +64,52 @@
     <string name="settings_mode_system">System</string>
     <string name="settings_light">Light</string>
     <string name="settings_dark">Dark</string>
-    <string name="settings_system">System</string>
+    <string name="settings_system">Auto</string>
     <string name="lang_en">English</string>
     <string name="lang_az">Azərbaycan</string>
     <string name="sign_out_confirm_title">Sign Out</string>
     <string name="sign_out_confirm_msg">Are you sure you want to sign out?</string>
 
+    <string name="admin_access_denied">Access denied</string>
+    <string name="pending_count_format">%1$d pending</string>
+    <string name="approved_msg_format">✅ Approved: %1$s</string>
+    <string name="rejected_msg_format">❌ Rejected: %1$s</string>
+
     <!-- Detail -->
     <string name="seller_label">Listed by</string>
     <string name="btn_call">Call</string>
     <string name="btn_whatsapp">WhatsApp</string>
+    <string name="btn_share">Share</string>
+    <string name="btn_approve_listing">Approve Listing</string>
+    <string name="label_year">Year</string>
+    <string name="label_mileage">Mileage</string>
+    <string name="label_fuel">Fuel Type</string>
+    <string name="label_transmission">Transmission</string>
+    <string name="label_city">City</string>
+    <string name="label_description">Description</string>
+    <string name="car_detail_title">Car Detail</string>
+    <string name="share_car_format">Check out this car on Kompressor.az: %1$s — %2$s</string>
+    <string name="share_via">Share via</string>
+
+    <!-- Post -->
+    <string name="post_title">Post a Car</string>
+    <string name="edit_title">Edit Listing</string>
+    <string name="btn_post_listing">Post Car</string>
+    <string name="btn_save_changes">Save Changes</string>
+    <string name="no_photos_selected">No photos selected</string>
+    <string name="photo_count_selected">%1$d photo(s) selected</string>
+    <string name="existing_photos_count">%1$d existing photo(s)</string>
+    <string name="error_brand_required">Brand is required</string>
+    <string name="error_model_required">Model is required</string>
+    <string name="error_invalid_year">Enter a valid year</string>
+    <string name="error_invalid_price">Enter a valid price</string>
+    <string name="error_invalid_mileage">Enter valid mileage</string>
+    <string name="error_invalid_phone">Invalid phone number</string>
+    <string name="error_city_required">City is required</string>
+    <string name="error_no_photos">Please add at least one photo</string>
+    <string name="listing_updated_msg">Listing updated!</string>
+    <string name="listing_submitted_title">Listing Submitted!</string>
+    <string name="listing_submitted_msg">Your car has been submitted successfully. It will be visible to everyone after a quick review.</string>
 
     <!-- Filter -->
     <string name="filter_title">Filter &amp; Sort</string>
@@ -78,8 +127,70 @@
 
     <!-- General -->
     <string name="btn_back">Back</string>
+    <string name="btn_bump">Bump</string>
+    <string name="btn_edit">Edit</string>
+    <string name="btn_delete">Delete</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="delete_listing_title">Delete listing</string>
-    <string name="just_now">Just now</string>
+    <string name="delete_listing_confirm_msg">Remove \"%1$s\" from your listings?</string>
+    <string name="bumped_success_format">\"%1$s\" bumped to top for 30 days ✅</string>
+    <string name="back_exit_msg">Press back again to exit</string>
+    <string name="notif_approved_format">✅ Your listing \"%1$s\" was approved!</string>
+    <string name="notif_rejected_format">❌ Your listing \"%1$s\" was rejected.</string>
+    <string name="notif_new_listing_format">🆕 New listing submitted: \"%1$s\"</string>
+    <string name="notif_generic_format">Notification about \"%1$s\"</string>
+    <string name="saving_msg">Saving…</string>
+    <string name="field_required">Required</string>
+    <string name="last_day">⚠ Last day!</string>
+    <string name="days_left_1">⚠ 1 day left</string>
+    <string name="days_left_5_format">⚠ %1$d days left</string>
+    <string name="days_left_format">%1$d days left</string>
+    <string name="stats_format">👁 %1$d views · %2$s</string>
+    <string name="page_counter_format">%1$d / %2$d</string>
+
+    <string name="time_just_now">Just now</string>
+    <string name="time_minutes_ago">%1$d m ago</string>
+    <string name="time_hours_ago">%1$d h ago</string>
+    <string name="time_yesterday">Yesterday</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_1_week_ago">1 week ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_1_month_ago">1 month ago</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_years_ago">%1$d y ago</string>
+
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_app_label">ABOUT THE APP</string>
+    <string name="about_app_desc">Kompressor.az is a modern car marketplace built for Azerbaijan. The platform allows users to browse, search, and filter vehicle listings with ease.</string>
+    <string name="developer_label">DEVELOPER</string>
+    <string name="dev_name">Farid Ismayilov</string>
+    <string name="dev_bio">This application was developed as a final graduation project at Matrix Academy.</string>
+    <string name="footer_text">© 2026 Kompressor.az · Made in Azerbaijan 🇦🇿</string>
+
+    <!-- Contact -->
+    <string name="contact_title">Contact Us</string>
+    <string name="contact_intro">We are here to help! If you have any questions, feedback, or need support, feel free to reach out to us.</string>
+    <string name="our_channels">OUR CHANNELS</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_email">Email</string>
+    <string name="btn_call_now">Call</string>
+    <string name="btn_send_email">Send</string>
+    <string name="offline_banner_text">Offline Mode • Changes will sync later</string>
+    <string name="premium_marketplace_subtitle">Premium Car Marketplace</string>
+    <string name="go_back">Go Back</string>
+    <string name="version_format">Version %1$s</string>
+    <string name="no_listings_here">No listings here</string>
+    <string name="pending_review_banner">PENDING REVIEW: This listing is only visible to you</string>
+    <string name="photos_label">Photos</string>
+    <string name="add_photos_label">+ Add Photos</string>
+    <string name="fuel_type_label">Fuel Type</string>
+    <string name="transmission_label">Transmission</string>
+    <string name="approve_label">Approve</string>
+    <string name="reject_label">Reject</string>
+    <string name="status_pending">PENDING</string>
+    <string name="status_approved">APPROVED</string>
+    <string name="status_rejected">REJECTED</string>
+    <string name="listing_deleted">Listing deleted</string>
 </resources>

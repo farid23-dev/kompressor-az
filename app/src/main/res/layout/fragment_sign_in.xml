@@ -7,6 +7,18 @@
     android:background="@color/background"
     android:padding="24dp">
 
+    <ImageButton
+        android:id="@+id/btnSettings"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_settings"
+        android:contentDescription="@string/settings_title"
+        android:padding="12dp"
+        app:tint="@color/primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="100dp"

@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Settings"
+                android:text="@string/settings_title"
                 android:textColor="@color/text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -46,6 +46,90 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- ── LANGUAGE ────────────────────────────────────────── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/settings_language"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1" />
+
+        <!-- Language card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_modern_card"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:elevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:id="@+id/btnLangEn"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_theme_option"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🇺🇸"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/lang_en"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnLangAz"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_theme_option"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🇦🇿"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/lang_az"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
         <!-- ── APPEARANCE ─────────────────────────────────────── -->
         <TextView
             android:layout_width="match_parent"
@@ -53,7 +137,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
-            android:text="APPEARANCE"
+            android:text="@string/settings_appearance"
             android:textColor="@color/text_secondary"
             android:textSize="11sp"
             android:textAllCaps="true"
@@ -91,14 +175,14 @@
                         android:layout_height="wrap_content"
                         android:text="☀"
                         android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Light"
-                        android:textColor="@color/text_primary"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/settings_light"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -117,14 +201,14 @@
                         android:layout_height="wrap_content"
                         android:text="🌙"
                         android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Dark"
-                        android:textColor="@color/text_primary"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/settings_dark"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -143,14 +227,14 @@
                         android:layout_height="wrap_content"
                         android:text="⚙"
                         android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Auto"
-                        android:textColor="@color/text_primary"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/settings_system"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -163,7 +247,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="28dp"
             android:layout_marginBottom="8dp"
-            android:text="INFO"
+            android:text="@string/settings_info"
             android:textColor="@color/text_secondary"
             android:textSize="11sp"
             android:textAllCaps="true"
@@ -203,7 +287,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
-                    android:text="Contact Us"
+                    android:text="@string/contact_title"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
 
@@ -247,7 +331,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
-                    android:text="About App"
+                    android:text="@string/about_title"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
 
@@ -264,12 +348,13 @@
 
         <!-- ── ACCOUNT ────────────────────────────────────────── -->
         <TextView
+            android:id="@+id/tvAccountLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="28dp"
             android:layout_marginBottom="8dp"
-            android:text="ACCOUNT"
+            android:text="@string/settings_account"
             android:textColor="@color/text_secondary"
             android:textSize="11sp"
             android:textAllCaps="true"
@@ -277,6 +362,7 @@
 
         <!-- Sign out card row -->
         <LinearLayout
+            android:id="@+id/cardAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -309,7 +395,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
-                    android:text="Sign Out"
+                    android:text="@string/btn_sign_out"
                     android:textColor="@color/error"
                     android:textSize="15sp"
                     android:textStyle="bold" />

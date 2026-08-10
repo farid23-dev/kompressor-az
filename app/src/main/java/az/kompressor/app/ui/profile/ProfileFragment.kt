@@ -58,15 +58,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             },
             onDelete = { car ->
                 AlertDialog.Builder(requireContext())
-                    .setTitle("Delete listing")
-                    .setMessage("Remove \"${car.title}\" from your listings?")
-                    .setPositiveButton("Delete") { _, _ -> viewModel.deleteCar(car.id) }
-                    .setNegativeButton("Cancel", null)
+                    .setTitle(getString(R.string.delete_listing_title))
+                    .setMessage(getString(R.string.delete_listing_confirm_msg, car.title))
+                    .setPositiveButton(getString(R.string.delete)) { _, _ -> viewModel.deleteCar(car.id) }
+                    .setNegativeButton(getString(R.string.cancel), null)
                     .show()
             },
             onBump = { car ->
                 viewModel.bumpCar(car.id)
-                binding.root.showSnackbar("\"${car.title}\" bumped to top for 30 days ✅")
+                binding.root.showSnackbar(getString(R.string.bumped_success_format, car.title))
             },
             onItemClick = { car ->
                 val action = ProfileFragmentDirections.actionProfileFragmentToCarDetailFragment(car.id)
@@ -144,7 +144,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewModel.deleteState.collectLatest { state ->
                 when (state) {
                     is Resource.Success -> {
-                        binding.root.showSnackbar("Listing deleted")
+                        binding.root.showSnackbar(getString(R.string.listing_deleted))
                         viewModel.resetDeleteState()
                         viewModel.loadMyListings()
                     }

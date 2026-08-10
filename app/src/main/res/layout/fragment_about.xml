@@ -1,6 +1,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
@@ -32,7 +33,7 @@
         android:id="@+id/tvHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="About"
+        android:text="@string/about_title"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -84,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="Kompressor.az"
+                        android:text="@string/app_name"
                         android:textColor="@color/primary"
                         android:textSize="28sp"
                         android:textStyle="bold" />
@@ -94,7 +95,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Version 1.0.0"
+                        android:text="@string/version_format"
+                        tools:text="Version 1.0.0"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
@@ -109,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="Kompressor.az is a modern car marketplace built for Azerbaijan. The platform allows users to browse, search, and filter vehicle listings with ease."
+                        android:text="@string/about_app_desc"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:lineSpacingMultiplier="1.5"
@@ -136,7 +138,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DEVELOPER"
+                        android:text="@string/developer_label"
                         android:textColor="@color/primary"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -162,7 +164,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:text="Fərid İsmayılov"
+                            android:text="@string/dev_name"
                             android:textColor="@color/text_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -174,7 +176,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="This application was developed as a final graduation project at Matrix Academy."
+                        android:text="@string/dev_bio"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:lineSpacingMultiplier="1.4" />
@@ -187,7 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="24dp"
-                android:text="© 2026 Kompressor.az · Made in Azerbaijan 🇦🇿"
+                android:text="@string/footer_text"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:gravity="center" />

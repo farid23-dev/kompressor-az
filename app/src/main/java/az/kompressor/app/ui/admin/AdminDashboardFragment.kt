@@ -3,6 +3,7 @@ package az.kompressor.app.ui.admin
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -45,7 +46,7 @@ class AdminDashboardFragment : Fragment(R.layout.fragment_admin_dashboard) {
                     .collection("admins").document(uid).get().await().exists()
             } catch (_: Exception) { false }
             if (!isAdmin) {
-                binding.root.showSnackbar("Access denied")
+                binding.root.showSnackbar(getString(R.string.admin_access_denied))
                 findNavController().navigateUp()
                 return@launch
             }
@@ -53,13 +54,22 @@ class AdminDashboardFragment : Fragment(R.layout.fragment_admin_dashboard) {
 
         adapter = AdminListingAdapter(
             onApprove = { car -> viewModel.approve(car) },
-            onReject  = { car -> viewModel.reject(car) }
+            onReject  = { car -> viewModel.reject(car) },
+            onItemClick = { car ->
+                val bundle = bundleOf("carId" to car.id)
+                findNavController().navigate(R.id.action_adminDashboardFragment_to_carDetailFragment, bundle)
+            }
         )
         binding.rvListings.adapter = adapter
         binding.rvListings.layoutManager = LinearLayoutManager(requireContext())
 
-        listOf("All", "Pending", "Approved", "Rejected").forEach {
-            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it))
+        listOf(
+            R.string.tab_all,
+            R.string.tab_pending,
+            R.string.tab_approved,
+            R.string.tab_rejected
+        ).forEach { resId ->
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(getString(resId)))
         }
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) { currentTab = tab.position; filterAndShow() }
@@ -81,7 +91,7 @@ class AdminDashboardFragment : Fragment(R.layout.fragment_admin_dashboard) {
                         filterAndShow()
                         val pending = allCars.count { it.status == "pending" }
                         binding.tvPendingCount.isVisible = pending > 0
-                        binding.tvPendingCount.text = "$pending pending"
+                        binding.tvPendingCount.text = getString(R.string.pending_count_format, pending)
                     }
                     is Resource.Error -> binding.root.showSnackbar(state.message)
                     else -> {}
@@ -94,7 +104,18 @@ class AdminDashboardFragment : Fragment(R.layout.fragment_admin_dashboard) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.actionState.collectLatest { msg ->
                 if (msg != null) {
-                    binding.root.showSnackbar(msg)
+                    val finalMsg = when {
+                        msg.startsWith("SUCCESS_APPROVED:") -> {
+                            val title = msg.removePrefix("SUCCESS_APPROVED:")
+                            getString(R.string.approved_msg_format, title)
+                        }
+                        msg.startsWith("SUCCESS_REJECTED:") -> {
+                            val title = msg.removePrefix("SUCCESS_REJECTED:")
+                            getString(R.string.rejected_msg_format, title)
+                        }
+                        else -> msg
+                    }
+                    binding.root.showSnackbar(finalMsg)
                     viewModel.clearAction()
                 }
             }

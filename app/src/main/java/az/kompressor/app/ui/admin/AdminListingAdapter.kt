@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import az.kompressor.app.R
 import az.kompressor.app.databinding.ItemAdminListingBinding
 import az.kompressor.app.domain.model.Car
 import az.kompressor.app.util.formatPrice
@@ -16,7 +17,8 @@ import androidx.core.graphics.toColorInt
 
 class AdminListingAdapter(
     private val onApprove: (Car) -> Unit,
-    private val onReject:  (Car) -> Unit
+    private val onReject:  (Car) -> Unit,
+    private val onItemClick: (Car) -> Unit
 ) : ListAdapter<Car, AdminListingAdapter.ViewHolder>(Diff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -30,13 +32,14 @@ class AdminListingAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(car: Car) {
+            val context = b.root.context
             b.tvTitle.text = car.title
             b.tvMeta.text  = "${car.sellerName} · ${car.price.formatPrice()}"
 
             val (label, color) = when (car.status) {
-                "approved" -> "APPROVED" to "#34A853".toColorInt()
-                "rejected" -> "REJECTED" to "#EA4335".toColorInt()
-                else       -> "PENDING"  to "#FF6B35".toColorInt()
+                "approved" -> context.getString(R.string.status_approved) to "#34A853".toColorInt()
+                "rejected" -> context.getString(R.string.status_rejected) to "#EA4335".toColorInt()
+                else       -> context.getString(R.string.status_pending)  to "#FF6B35".toColorInt()
             }
             b.tvStatus.text = label
             b.tvStatus.setBackgroundColor(color)
@@ -51,6 +54,7 @@ class AdminListingAdapter(
 
             b.btnApprove.setOnClickListener { onApprove(car) }
             b.btnReject.setOnClickListener  { onReject(car)  }
+            b.root.setOnClickListener { onItemClick(car) }
         }
     }
 

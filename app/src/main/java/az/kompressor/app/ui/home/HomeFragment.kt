@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import az.kompressor.app.R
 import az.kompressor.app.databinding.FragmentHomeBinding
@@ -49,20 +50,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         observeCars()
         observeFilter()
+        observeFavorites()
         observeAdminState()
         observeNotifBadge()
         setupBackPress()
     }
 
     private fun setupRecyclerView() {
-        carAdapter = CarAdapter { car, sharedImageView ->
-            val action = HomeFragmentDirections.actionHomeFragmentToCarDetailFragment(car.id)
-            val extras = FragmentNavigatorExtras(sharedImageView to "car_image_${car.id}")
-            findNavController().navigate(action, extras)
-        }
+        carAdapter = CarAdapter(
+            onItemClick = { car, sharedImageView ->
+                val action = HomeFragmentDirections.actionHomeFragmentToCarDetailFragment(car.id)
+                val extras = FragmentNavigatorExtras(sharedImageView to "car_image_${car.id}")
+                findNavController().navigate(action, extras)
+            },
+            onFavoriteClick = { car ->
+                viewModel.toggleFavorite(car)
+            }
+        )
         binding.rvCars.apply {
             adapter = carAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(requireContext(), 2)
         }
     }
 
@@ -74,7 +81,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.filterState.collectLatest { filter ->
                 binding.chipActiveFilter.isVisible = filter.isActive
-                if (filter.isActive) binding.chipActiveFilter.text = filter.label()
+                if (filter.isActive) binding.chipActiveFilter.text = filter.label(requireContext())
+            }
+        }
+    }
+
+    private fun observeFavorites() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.favoriteIds.collectLatest { ids ->
+                carAdapter.setFavorites(ids)
             }
         }
     }
@@ -135,7 +150,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 requireActivity().finish()
             } else {
                 backPressedOnce = true
-                Toast.makeText(requireContext(), "Press back again to exit", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.back_exit_msg), Toast.LENGTH_SHORT).show()
                 Handler(Looper.getMainLooper()).postDelayed({ backPressedOnce = false }, 2000)
             }
         }

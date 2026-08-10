@@ -39,16 +39,16 @@ class EditProfileBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_e
             val phone   = cleanPhoneNumber(binding.etPhone.text?.toString()?.trim() ?: "")
 
             if (name.isEmpty()) {
-                binding.tilFirstName.error = "Required"; return@setOnClickListener
+                binding.tilFirstName.error = getString(R.string.field_required); return@setOnClickListener
             }
             binding.tilFirstName.error = null
 
             if (!ValidationUtils.isValidPhone(phone)) {
-                binding.tilPhone.error = "Invalid phone number"; return@setOnClickListener
+                binding.tilPhone.error = getString(R.string.error_invalid_phone); return@setOnClickListener
             }
             binding.tilPhone.error = null
             binding.btnSave.isEnabled = false
-            binding.btnSave.text = "Saving…"
+            binding.btnSave.text = getString(R.string.saving_msg)
 
             viewModel.updateProfile(name, surname, phone)
         }
@@ -59,7 +59,7 @@ class EditProfileBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_e
                     is Resource.Success -> { dismiss() }
                     is Resource.Error   -> {
                         binding.btnSave.isEnabled = true
-                        binding.btnSave.text = "Save Changes"
+                        binding.btnSave.text = getString(R.string.btn_save_changes)
                     }
                     else -> {}
                 }

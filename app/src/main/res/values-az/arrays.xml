@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fuel_types">
+        <item>Benzin</item>
+        <item>Dizel</item>
+        <item>Hibrid</item>
+        <item>Elektro</item>
+        <item>Qaz</item>
+    </string-array>
+
+    <string-array name="transmission_types">
+        <item>Avtomat</item>
+        <item>Mexanika</item>
+        <item>Robotlaşdırılmış</item>
+    </string-array>
+</resources>

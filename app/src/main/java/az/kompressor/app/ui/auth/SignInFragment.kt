@@ -26,6 +26,10 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSignInBinding.bind(view)
 
+        binding.btnSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_signInFragment_to_settingsFragment)
+        }
+
         binding.btnSignIn.setOnClickListener {
             viewModel.signIn(
                 binding.etEmail.text.toString(),

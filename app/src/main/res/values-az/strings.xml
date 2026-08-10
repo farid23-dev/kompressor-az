@@ -20,7 +20,16 @@
     <string name="hint_phone">Telefon nömrəsi</string>
 
     <!-- Home -->
+    <string name="nav_home">Əsas</string>
+    <string name="nav_saved">Yadda qalanlar</string>
+    <string name="nav_profile">Profil</string>
+    <string name="tab_all">Hamısı</string>
+    <string name="tab_pending">Gözləyən</string>
+    <string name="tab_approved">Təsdiqlənmiş</string>
+    <string name="tab_rejected">İmtina edilmiş</string>
     <string name="filter_button_label">Avtomobilləri filtrələ</string>
+    <string name="filter_price_asc">↑ Qiymət</string>
+    <string name="filter_price_desc">↓ Qiymət</string>
     <string name="notifications_title">Bildirişlər</string>
     <string name="notifications_empty">Hələ bildiriş yoxdur</string>
     <string name="notifications_empty_sub">Avtomobillərə baxın! 🚗</string>
@@ -28,24 +37,46 @@
     <string name="no_cars_found">Avtomobil tapılmadı</string>
     <string name="no_cars_subtitle">Axtarışı dəyişdirin\nvə ya filteri silin</string>
 
+    <string name="admin_access_denied">Giriş qadağandır</string>
+    <string name="pending_count_format">%1$d gözləyən</string>
+    <string name="approved_msg_format">✅ Təsdiqləndi: %1$s</string>
+    <string name="rejected_msg_format">❌ İmtina edildi: %1$s</string>
+
     <!-- Detail -->
     <string name="btn_call">📞 Zəng et</string>
     <string name="btn_whatsapp">💬 WhatsApp</string>
-    <string name="btn_share">↑</string>
+    <string name="btn_share">Paylaş</string>
     <string name="label_year">İl</string>
     <string name="label_mileage">Yürüş</string>
     <string name="label_fuel">Yanacaq növü</string>
     <string name="label_transmission">Sürətlər qutusu</string>
     <string name="label_city">Şəhər</string>
     <string name="label_description">Təsvir</string>
+    <string name="car_detail_title">Avtomobil məlumatı</string>
     <string name="seller_label">Elan sahibi</string>
+    <string name="btn_approve_listing">Elanı təsdiqlə</string>
+    <string name="share_car_format">Kompressor.az-da bu avtomobilə baxın: %1$s — %2$s</string>
+    <string name="share_via">Paylaş</string>
 
     <!-- Post -->
-    <string name="post_title">Elan yerlə</string>
+    <string name="post_title">Elan yerləşdir</string>
     <string name="edit_title">Elanı redaktə et</string>
-    <string name="btn_post">Elan yerləşdir</string>
+    <string name="btn_post_listing">Elan yerləşdir</string>
     <string name="btn_save_changes">Dəyişiklikləri yadda saxla</string>
-    <string name="btn_add_photo">Foto əlavə et</string>
+    <string name="no_photos_selected">Şəkil seçilməyib</string>
+    <string name="photo_count_selected">%1$d şəkil seçildi</string>
+    <string name="existing_photos_count">%1$d mövcud şəkil</string>
+    <string name="error_brand_required">Marka mütləqdir</string>
+    <string name="error_model_required">Model mütləqdir</string>
+    <string name="error_invalid_year">Düzgün il daxil edin</string>
+    <string name="error_invalid_price">Düzgün qiymət daxil edin</string>
+    <string name="error_invalid_mileage">Düzgün yürüş daxil edin</string>
+    <string name="error_invalid_phone">Düzgün telefon nömrəsi daxil edin</string>
+    <string name="error_city_required">Şəhər mütləqdir</string>
+    <string name="error_no_photos">Zəhmət olmasa ən azı bir şəkil əlavə edin</string>
+    <string name="listing_updated_msg">Elan yeniləndi!</string>
+    <string name="listing_submitted_title">Elan göndərildi!</string>
+    <string name="listing_submitted_msg">Avtomobiliniz uğurla göndərildi. Qısa yoxlamadan sonra hər kəsə görünəcək.</string>
     <string name="hint_brand">Marka (məs. BMW)</string>
     <string name="hint_model">Model (məs. 5 Series)</string>
     <string name="hint_year">İl</string>
@@ -56,6 +87,9 @@
 
     <!-- Profile -->
     <string name="profile_title">Profil</string>
+    <string name="btn_edit_profile">Profili redaktə et</string>
+    <string name="admin_label">ADMİN</string>
+    <string name="admin_dashboard_title">Admin Paneli</string>
     <string name="settings_title">Parametrlər</string>
     <string name="btn_sign_out">Çıxış</string>
     <string name="my_listings">Mənim elanlarım</string>
@@ -70,6 +104,7 @@
     <!-- Settings -->
     <string name="settings_language">Dil</string>
     <string name="settings_appearance">Görünüş</string>
+    <string name="settings_info">Məlumat</string>
     <string name="settings_account">Hesab</string>
     <string name="settings_sign_out">Çıxış</string>
     <string name="settings_light">İşıqlı</string>
@@ -99,8 +134,70 @@
 
     <!-- General -->
     <string name="btn_back">Geri</string>
+    <string name="btn_bump">Qaldır</string>
+    <string name="btn_edit">Düzəliş et</string>
+    <string name="btn_delete">Sil</string>
     <string name="delete">Sil</string>
     <string name="cancel">Ləğv et</string>
     <string name="delete_listing_title">Elanı sil</string>
-    <string name="just_now">İndicə</string>
+    <string name="delete_listing_confirm_msg">\"%1$s\" elanını silmək istədiyinizə əminsiniz?</string>
+    <string name="bumped_success_format">\"%1$s\" elanı 30 günlük ön plana çıxarıldı ✅</string>
+    <string name="back_exit_msg">Çıxmaq üçün geri düyməsini yenidən basın</string>
+    <string name="notif_approved_format">✅ \"%1$s\" elanınız təsdiqləndi!</string>
+    <string name="notif_rejected_format">❌ \"%1$s\" elanınız rədd edildi.</string>
+    <string name="notif_new_listing_format">🆕 Yeni elan göndərildi: \"%1$s\"</string>
+    <string name="notif_generic_format">\"%1$s\" haqqında bildiriş</string>
+    <string name="saving_msg">Yadda saxlanılır…</string>
+    <string name="field_required">Mütləqdir</string>
+    <string name="last_day">⚠ Son gün!</string>
+    <string name="days_left_1">⚠ 1 gün qalıb</string>
+    <string name="days_left_5_format">⚠ %1$d gün qalıb</string>
+    <string name="days_left_format">%1$d gün qalıb</string>
+    <string name="stats_format">👁 %1$d baxış · %2$s</string>
+    <string name="page_counter_format">%1$d / %2$d</string>
+
+    <string name="time_just_now">İndicə</string>
+    <string name="time_minutes_ago">%1$d dəq əvvəl</string>
+    <string name="time_hours_ago">%1$d saat əvvəl</string>
+    <string name="time_yesterday">Dünən</string>
+    <string name="time_days_ago">%1$d gün əvvəl</string>
+    <string name="time_1_week_ago">1 həftə əvvəl</string>
+    <string name="time_weeks_ago">%1$d həftə əvvəl</string>
+    <string name="time_1_month_ago">1 ay əvvəl</string>
+    <string name="time_months_ago">%1$d ay əvvəl</string>
+    <string name="time_years_ago">%1$d il əvvəl</string>
+
+    <!-- About -->
+    <string name="about_title">Haqqımızda</string>
+    <string name="about_app_label">TƏTBİQ HAQQINDA</string>
+    <string name="about_app_desc">Kompressor.az Azərbaycan üçün hazırlanmış müasir avtomobil satış platformasıdır. Tətbiq istifadəçilərə elanları asanlıqla axtarmaq, süzgəcdən keçirmək və yerləşdirmək imkanı verir.</string>
+    <string name="developer_label">PROQRAMLAŞDIRICI</string>
+    <string name="dev_name">Fərid İsmayılov</string>
+    <string name="dev_bio">Bu tətbiq Matrix Academy-də proqramlaşdırma kursunun yekun layihəsi olaraq hazırlanmışdır.</string>
+    <string name="footer_text">© 2026 Kompressor.az · Azərbaycanda hazırlanıb 🇦🇿</string>
+
+    <!-- Contact -->
+    <string name="contact_title">Bizimlə əlaqə</string>
+    <string name="contact_intro">Biz kömək etməyə hazırıq! Suallarınız, rəyləriniz və ya dəstəyə ehtiyacınız varsa, aşağıdakı kanallar vasitəsilə bizimlə əlaqə saxlaya bilərsiniz.</string>
+    <string name="our_channels">KANALLARIMIZ</string>
+    <string name="label_phone">Telefon</string>
+    <string name="label_email">E-poçt</string>
+    <string name="btn_call_now">Zəng et</string>
+    <string name="btn_send_email">Göndər</string>
+    <string name="offline_banner_text">Oflayn rejim • Dəyişikliklər sonra sinxronlaşdırılacaq</string>
+    <string name="premium_marketplace_subtitle">Premium Avtomobil Satışı</string>
+    <string name="go_back">Geri qayıt</string>
+    <string name="version_format">Versiya %1$s</string>
+    <string name="no_listings_here">Burada elan yoxdur</string>
+    <string name="pending_review_banner">YOXLANILIR: Bu elanı yalnız siz görürsünüz</string>
+    <string name="photos_label">Şəkillər</string>
+    <string name="add_photos_label">+ Şəkil əlavə et</string>
+    <string name="fuel_type_label">Yanacaq növü</string>
+    <string name="transmission_label">Sürətlər qutusu</string>
+    <string name="approve_label">Təsdiqlə</string>
+    <string name="reject_label">İmtina et</string>
+    <string name="status_pending">GÖZLƏYİR</string>
+    <string name="status_approved">TƏSDİQLƏNİB</string>
+    <string name="status_rejected">İMTİNA EDİLİB</string>
+    <string name="listing_deleted">Elan silindi</string>
 </resources>

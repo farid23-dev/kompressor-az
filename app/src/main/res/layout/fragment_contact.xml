@@ -32,7 +32,7 @@
         android:id="@+id/tvHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Contact Us"
+        android:text="@string/contact_title"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -84,7 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="We are here to help! If you have any questions, feedback, or need support, feel free to reach out to us."
+                        android:text="@string/contact_intro"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:lineSpacingMultiplier="1.5"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:layout_marginStart="8dp"
-                android:text="OUR CHANNELS"
+                android:text="@string/our_channels"
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold"
@@ -140,7 +140,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Phone"
+                            android:text="@string/label_phone"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                         <TextView
@@ -158,7 +158,7 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Call"
+                        android:text="@string/btn_call_now"
                         android:textColor="@color/primary"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -198,7 +198,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Email"
+                            android:text="@string/label_email"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                         <TextView
@@ -216,7 +216,7 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Send"
+                        android:text="@string/btn_send_email"
                         android:textColor="@color/primary"
                         android:textStyle="bold" />
                 </LinearLayout>

@@ -14,7 +14,7 @@
         android:background="#E53935"
         android:gravity="center"
         android:padding="4dp"
-        android:text="Offline Mode • Changes will sync later"
+        android:text="@string/offline_banner_text"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         android:textStyle="bold"

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="az.kompressor.app.ui.auth.SignInFragment"
-        android:label="Sign In"
+        android:label="@string/sign_in_title"
         tools:layout="@layout/fragment_sign_in">
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
@@ -18,24 +18,30 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/signInFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_signInFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/signUpFragment"
         android:name="az.kompressor.app.ui.auth.SignUpFragment"
-        android:label="Sign Up"
+        android:label="@string/sign_up_title"
         tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_signUpFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_signUpFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="az.kompressor.app.ui.home.HomeFragment"
-        android:label="Home"
+        android:label="@string/nav_home"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_carDetailFragment"
@@ -60,7 +66,7 @@
     <fragment
         android:id="@+id/carDetailFragment"
         android:name="az.kompressor.app.ui.detail.CarDetailFragment"
-        android:label="Car Detail"
+        android:label="@string/car_detail_title"
         tools:layout="@layout/fragment_car_detail">
         <argument
             android:name="carId"
@@ -70,7 +76,7 @@
     <fragment
         android:id="@+id/postCarFragment"
         android:name="az.kompressor.app.ui.post.PostCarFragment"
-        android:label="Post a Car"
+        android:label="@string/post_title"
         tools:layout="@layout/fragment_post_car">
         <!-- Empty string = new listing; non-empty = edit mode -->
         <argument
@@ -82,7 +88,7 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="az.kompressor.app.ui.favorites.FavoritesFragment"
-        android:label="Saved Cars"
+        android:label="@string/saved_cars"
         tools:layout="@layout/fragment_favorites">
         <action
             android:id="@+id/action_favoritesFragment_to_carDetailFragment"
@@ -92,7 +98,7 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="az.kompressor.app.ui.profile.ProfileFragment"
-        android:label="Profile"
+        android:label="@string/profile_title"
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_signInFragment"
@@ -116,7 +122,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="az.kompressor.app.ui.settings.SettingsFragment"
-        android:label="Settings"
+        android:label="@string/settings_title"
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_signInFragment"
@@ -137,13 +143,17 @@
     <fragment
         android:id="@+id/adminDashboardFragment"
         android:name="az.kompressor.app.ui.admin.AdminDashboardFragment"
-        android:label="Admin Dashboard"
-        tools:layout="@layout/fragment_admin_dashboard" />
+        android:label="@string/admin_dashboard_title"
+        tools:layout="@layout/fragment_admin_dashboard">
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_carDetailFragment"
+            app:destination="@id/carDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="az.kompressor.app.ui.notifications.NotificationsFragment"
-        android:label="Notifications"
+        android:label="@string/notifications_title"
         tools:layout="@layout/fragment_notifications">
         <action
             android:id="@+id/action_notificationsFragment_to_carDetailFragment"
@@ -153,13 +163,13 @@
     <fragment
         android:id="@+id/contactFragment"
         android:name="az.kompressor.app.ui.info.ContactFragment"
-        android:label="Contact Us"
+        android:label="@string/contact_title"
         tools:layout="@layout/fragment_contact" />
 
     <fragment
         android:id="@+id/aboutFragment"
         android:name="az.kompressor.app.ui.info.AboutFragment"
-        android:label="About"
+        android:label="@string/about_title"
         tools:layout="@layout/fragment_about" />
 
 </navigation>

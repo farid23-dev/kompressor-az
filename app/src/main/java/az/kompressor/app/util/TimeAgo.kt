@@ -1,5 +1,8 @@
 package az.kompressor.app.util
 
+import android.content.Context
+import az.kompressor.app.R
+
 object TimeAgo {
 
     private const val THIRTY_DAYS_MS = 30L * 24 * 60 * 60 * 1000
@@ -10,7 +13,7 @@ object TimeAgo {
         return (diff / (24 * 60 * 60 * 1000)).coerceAtLeast(0).toInt()
     }
 
-    fun format(timestamp: Long): String {
+    fun format(context: Context, timestamp: Long): String {
         if (timestamp <= 0L) return ""
         val diff = System.currentTimeMillis() - timestamp
         val seconds = diff / 1000
@@ -21,16 +24,16 @@ object TimeAgo {
         val months = days / 30
 
         return when {
-            seconds < 60      -> "Just now"
-            minutes < 60      -> "${minutes}m ago"
-            hours < 24        -> "${hours}h ago"
-            days == 1L        -> "Yesterday"
-            days < 7          -> "${days} days ago"
-            weeks == 1L       -> "1 week ago"
-            weeks < 5         -> "${weeks} weeks ago"
-            months == 1L      -> "1 month ago"
-            months < 12       -> "${months} months ago"
-            else              -> "${months / 12}y ago"
+            seconds < 60      -> context.getString(R.string.time_just_now)
+            minutes < 60      -> context.getString(R.string.time_minutes_ago, minutes)
+            hours < 24        -> context.getString(R.string.time_hours_ago, hours)
+            days == 1L        -> context.getString(R.string.time_yesterday)
+            days < 7          -> context.getString(R.string.time_days_ago, days)
+            weeks == 1L       -> context.getString(R.string.time_1_week_ago)
+            weeks < 5         -> context.getString(R.string.time_weeks_ago, weeks)
+            months == 1L      -> context.getString(R.string.time_1_month_ago)
+            months < 12       -> context.getString(R.string.time_months_ago, months)
+            else              -> context.getString(R.string.time_years_ago, months / 12)
         }
     }
 }

@@ -24,11 +24,29 @@ class SettingsViewModel @Inject constructor(
     private val _isSignedOut = MutableStateFlow(false)
     val isSignedOut: StateFlow<Boolean> = _isSignedOut
 
+    private val _languageChanged = MutableStateFlow(false)
+    val languageChanged: StateFlow<Boolean> = _languageChanged
+
+    fun isUserLoggedIn(): Boolean = authRepository.isUserLoggedIn()
+
     fun getCurrentTheme(): Int = LocaleHelper.getDarkMode(context)
 
     fun setTheme(mode: Int) {
         LocaleHelper.saveDarkMode(context, mode)
         AppCompatDelegate.setDefaultNightMode(mode)
+    }
+
+    fun getCurrentLanguage(): String = LocaleHelper.getLanguage(context)
+
+    fun setLanguage(lang: String) {
+        if (getCurrentLanguage() != lang) {
+            LocaleHelper.saveLanguage(context, lang)
+            _languageChanged.value = true
+        }
+    }
+
+    fun resetLanguageChange() {
+        _languageChanged.value = false
     }
 
     fun signOut() {

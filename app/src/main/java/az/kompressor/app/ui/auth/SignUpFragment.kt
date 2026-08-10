@@ -30,6 +30,10 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
         attachPhonePrefix(binding.etPhone)
 
+        binding.btnSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_signUpFragment_to_settingsFragment)
+        }
+
         binding.btnSignUp.setOnClickListener {
             viewModel.signUp(
                 name            = binding.etName.text.toString().trim(),

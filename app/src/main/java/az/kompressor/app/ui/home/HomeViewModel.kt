@@ -8,7 +8,10 @@ import az.kompressor.app.domain.repository.CarRepository
 import az.kompressor.app.domain.repository.NotificationRepository
 import az.kompressor.app.domain.usecase.GetCarsUseCase
 import az.kompressor.app.domain.usecase.SearchCarsUseCase
+import az.kompressor.app.domain.usecase.GetFavoritesUseCase
+import az.kompressor.app.domain.usecase.ToggleFavoriteUseCase
 import az.kompressor.app.util.Resource
+import az.kompressor.app.R
 import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,14 +31,14 @@ data class FilterState(
     val isActive: Boolean
         get() = fuelType.isNotBlank() || transmission.isNotBlank() || city.isNotBlank() || sortBy != "newest"
 
-    fun label(): String {
+    fun label(context: Context): String {
         val parts = mutableListOf<String>()
         if (fuelType.isNotBlank()) parts.add(fuelType)
         if (transmission.isNotBlank()) parts.add(transmission)
         if (city.isNotBlank()) parts.add(city)
         when (sortBy) {
-            "price_asc" -> parts.add("↑ Price")
-            "price_desc" -> parts.add("↓ Price")
+            "price_asc" -> parts.add(context.getString(R.string.filter_price_asc))
+            "price_desc" -> parts.add(context.getString(R.string.filter_price_desc))
         }
         return parts.joinToString(" · ")
     }
@@ -47,7 +50,9 @@ class HomeViewModel @Inject constructor(
     private val getCarsUseCase: GetCarsUseCase,
     private val carRepository: CarRepository,
     private val authRepository: AuthRepository,
-    private val notificationRepository: NotificationRepository
+    private val notificationRepository: NotificationRepository,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
 ) : ViewModel() {
 
     private val _isAdmin = MutableStateFlow(false)
@@ -66,6 +71,9 @@ class HomeViewModel @Inject constructor(
     private val _filterState = MutableStateFlow(FilterState())
     val filterState: StateFlow<FilterState> = _filterState
 
+    private val _favoriteIds = MutableStateFlow<Set<String>>(emptySet())
+    val favoriteIds: StateFlow<Set<String>> = _favoriteIds
+
     init {
         viewModelScope.launch {
             val uid = authRepository.getCurrentUser()?.uid
@@ -76,6 +84,23 @@ class HomeViewModel @Inject constructor(
                     .launchIn(viewModelScope)
             }
             loadCars()
+            observeFavorites()
+        }
+    }
+
+    private fun observeFavorites() {
+        getFavoritesUseCase().onEach { list ->
+            _favoriteIds.value = list.map { it.id }.toSet()
+        }.launchIn(viewModelScope)
+    }
+
+    fun toggleFavorite(car: Car) {
+        viewModelScope.launch {
+            if (_favoriteIds.value.contains(car.id)) {
+                toggleFavoriteUseCase.remove(car.id)
+            } else {
+                toggleFavoriteUseCase.add(car)
+            }
         }
     }
 

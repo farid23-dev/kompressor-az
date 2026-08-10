@@ -56,9 +56,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val isHome = destination.id == R.id.homeFragment
-            binding.bottomNavigationView.isVisible = destination.id !in setOf(R.id.signInFragment, R.id.signUpFragment)
-            binding.fabPost.isVisible = isHome
+            val isLoggedIn = authRepository.isUserLoggedIn()
+            val isMainTab  = destination.id in setOf(R.id.homeFragment, R.id.favoritesFragment, R.id.profileFragment)
+
+            binding.bottomNavigationView.isVisible = isLoggedIn && isMainTab
+            binding.fabPost.isVisible = isLoggedIn && destination.id == R.id.homeFragment
         }
 
         if (savedInstanceState == null && authRepository.isUserLoggedIn()) {

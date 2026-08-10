@@ -4,12 +4,12 @@
     <item
         android:id="@id/homeFragment"
         android:icon="@drawable/ic_nav_home"
-        android:title="Home" />
+        android:title="@string/nav_home" />
 
     <item
         android:id="@id/favoritesFragment"
         android:icon="@drawable/ic_nav_favorites"
-        android:title="Saved" />
+        android:title="@string/nav_saved" />
 
     <item
         android:id="@id/profileFragment"

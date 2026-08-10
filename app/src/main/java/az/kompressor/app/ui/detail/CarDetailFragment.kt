@@ -47,9 +47,11 @@ class CarDetailFragment : Fragment(R.layout.fragment_car_detail) {
         binding.viewPagerImages.transitionName = "car_image_${args.carId}"
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
         binding.btnFavorite.setOnClickListener { viewModel.toggleFavorite() }
+        binding.btnAdminApprove.setOnClickListener { viewModel.approveCar() }
         viewModel.loadCar(args.carId)
         observeCarState()
         observeFavoriteState()
+        observeAdminStatus()
     }
 
     override fun onStart() {
@@ -108,7 +110,7 @@ class CarDetailFragment : Fragment(R.layout.fragment_car_detail) {
                         binding.tvFuelType.text = car.fuelType
                         binding.tvTransmission.text = car.transmission
                         binding.tvCity.text = car.city
-                        binding.tvAge.text = TimeAgo.format(car.createdAt)
+                        binding.tvAge.text = TimeAgo.format(requireContext(), car.createdAt)
 
                         binding.tvPendingBanner.isVisible = car.status == "pending"
 
@@ -147,10 +149,21 @@ class CarDetailFragment : Fragment(R.layout.fragment_car_detail) {
         }
     }
 
+    private fun observeAdminStatus() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isAdmin.collectLatest { isAdmin ->
+                val state = viewModel.carState.value
+                val isPending = state is Resource.Success && state.data.status == "pending"
+                binding.btnAdminApprove.isVisible = isAdmin && isPending
+            }
+        }
+    }
+
     private fun setupContactButtons(title: String, price: Long, phone: String) {
         binding.btnWhatsapp.setOnClickListener {
             val clean = phone.filter { it.isDigit() || it == '+' }
-            val msg = Uri.encode("Hi, I'm interested in your listing: $title — ${price.formatPrice()}")
+            val priceStr = price.formatPrice()
+            val msg = Uri.encode("Hi, I'm interested in your listing: $title — $priceStr")
             val uri = if (clean.isNotEmpty())
                 Uri.parse("https://wa.me/$clean?text=$msg")
             else
@@ -164,12 +177,13 @@ class CarDetailFragment : Fragment(R.layout.fragment_car_detail) {
             }
         }
         binding.btnShare.setOnClickListener {
+            val priceStr = price.formatPrice()
+            val shareText = getString(R.string.share_car_format, title, priceStr)
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT,
-                    "Check out this car on Kompressor.az: $title — ${price.formatPrice()}")
+                putExtra(Intent.EXTRA_TEXT, shareText)
             }
-            startActivity(Intent.createChooser(intent, "Share via"))
+            startActivity(Intent.createChooser(intent, getString(R.string.share_via)))
         }
     }
 

@@ -38,8 +38,8 @@ class AdminDashboardViewModel @Inject constructor(
     private fun updateStatus(car: Car, status: String) {
         viewModelScope.launch {
             carRepository.updateCarStatus(car.id, status, car.sellerUid, car.title)
-            _actionState.value = if (status == "approved") "✅ Approved: ${car.title}"
-                                 else "❌ Rejected: ${car.title}"
+            _actionState.value = if (status == "approved") "SUCCESS_APPROVED:${car.title}"
+                                 else "SUCCESS_REJECTED:${car.title}"
             loadAll()
         }
     }

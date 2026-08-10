@@ -82,8 +82,13 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
                 val existingCount = viewModel.existingImageUrls.value.size
                 val total = existingCount + uris.size
                 binding.rvImages.isVisible = total > 0
-                binding.tvImageCount.text = if (total == 0) "No photos selected"
-                    else "$total photo(s) selected${if (existingCount > 0) " ($existingCount existing)" else ""}"
+                binding.tvImageCount.text = if (total == 0) getString(R.string.no_photos_selected)
+                else {
+                    val selectedText = getString(R.string.photo_count_selected, total)
+                    if (existingCount > 0) {
+                        "$selectedText ${getString(R.string.existing_photos_count, existingCount)}"
+                    } else selectedText
+                }
             }
         }
     }
@@ -139,8 +144,8 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.editCar.collectLatest { car ->
                 car ?: return@collectLatest
-                binding.tvHeader.text = "Edit Listing"
-                binding.btnPost.text = "Save Changes"
+                binding.tvHeader.text = getString(R.string.edit_title)
+                binding.btnPost.text = getString(R.string.btn_save_changes)
 
                 binding.etBrand.setText(car.brand)
                 binding.etModel.setText(car.model)
@@ -161,7 +166,7 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
 
                 val existingCount = car.imageUrls.size
                 if (existingCount > 0) {
-                    binding.tvImageCount.text = "$existingCount existing photo(s)"
+                    binding.tvImageCount.text = getString(R.string.existing_photos_count, existingCount)
                 }
             }
         }
@@ -170,33 +175,33 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
     private fun validateForm(): Boolean {
         var valid = true
         if (binding.etBrand.text.isNullOrBlank()) {
-            binding.tilBrand.error = "Brand is required"; valid = false
+            binding.tilBrand.error = getString(R.string.error_brand_required); valid = false
         }
         if (binding.etModel.text.isNullOrBlank()) {
-            binding.tilModel.error = "Model is required"; valid = false
+            binding.tilModel.error = getString(R.string.error_model_required); valid = false
         }
         val year = binding.etYear.text.toString().toIntOrNull()
         if (year == null || year < 1900 || year > 2100) {
-            binding.tilYear.error = "Enter a valid year"; valid = false
+            binding.tilYear.error = getString(R.string.error_invalid_year); valid = false
         }
         val price = binding.etPrice.text.toString().toLongOrNull()
         if (price == null || price <= 0) {
-            binding.tilPrice.error = "Enter a valid price"; valid = false
+            binding.tilPrice.error = getString(R.string.error_invalid_price); valid = false
         }
         val mileage = binding.etMileage.text.toString().toIntOrNull()
         if (mileage == null || mileage < 0) {
-            binding.tilMileage.error = "Enter valid mileage"; valid = false
+            binding.tilMileage.error = getString(R.string.error_invalid_mileage); valid = false
         }
         if (!ValidationUtils.isValidPhone(binding.etPhone.text.toString())) {
-            binding.tilPhone.error = "Invalid phone number"; valid = false
+            binding.tilPhone.error = getString(R.string.error_invalid_phone); valid = false
         }
         if (binding.etCity.text.isNullOrBlank()) {
-            binding.tilCity.error = "City is required"; valid = false
+            binding.tilCity.error = getString(R.string.error_city_required); valid = false
         }
         val hasNewImages      = viewModel.selectedImages.value.isNotEmpty()
         val hasExistingImages = viewModel.existingImageUrls.value.isNotEmpty()
         if (!hasNewImages && !hasExistingImages) {
-            binding.root.showSnackbar("Please add at least one photo")
+            binding.root.showSnackbar(getString(R.string.error_no_photos))
             valid = false
         }
         return valid
@@ -216,13 +221,13 @@ class PostCarFragment : Fragment(R.layout.fragment_post_car) {
                         
                         val isEdit = args.editCarId.isNotBlank()
                         if (isEdit) {
-                            binding.root.showSnackbar("Listing updated!")
+                            binding.root.showSnackbar(getString(R.string.listing_updated_msg))
                             findNavController().navigateUp()
                         } else {
                             MaterialAlertDialogBuilder(requireContext())
-                                .setTitle("Listing Submitted!")
-                                .setMessage("Your car has been submitted successfully. It will be visible to everyone after a quick review by our team (usually within 1-2 hours).")
-                                .setPositiveButton("Got it") { _, _ ->
+                                .setTitle(getString(R.string.listing_submitted_title))
+                                .setMessage(getString(R.string.listing_submitted_msg))
+                                .setPositiveButton(android.R.string.ok) { _, _ ->
                                     findNavController().navigateUp()
                                 }
                                 .setCancelable(false)

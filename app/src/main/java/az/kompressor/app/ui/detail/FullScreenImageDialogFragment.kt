@@ -78,7 +78,7 @@ class FullScreenImageDialogFragment : DialogFragment(R.layout.dialog_fullscreen_
 
     @SuppressLint("SetTextI18n")
     private fun updateCounter(current: Int, total: Int) {
-        binding.tvPageCounter.text = "$current / $total"
+        binding.tvPageCounter.text = getString(R.string.page_counter_format, current, total)
     }
 
     private inner class FullImageAdapter(

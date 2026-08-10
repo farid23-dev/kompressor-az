@@ -19,8 +19,16 @@ import com.bumptech.glide.Glide
 import androidx.core.graphics.toColorInt
 
 class CarAdapter(
-    private val onItemClick: (Car, View) -> Unit
+    private val onItemClick: (Car, View) -> Unit,
+    private val onFavoriteClick: (Car) -> Unit
 ) : ListAdapter<Car, CarAdapter.CarViewHolder>(DiffCallback()) {
+
+    private var favoriteIds: Set<String> = emptySet()
+
+    fun setFavorites(ids: Set<String>) {
+        favoriteIds = ids
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarViewHolder {
         val binding = ItemCarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -40,21 +48,17 @@ class CarAdapter(
 
             binding.tvTitle.text = car.title
             binding.tvPrice.text = car.price.formatPrice()
-            binding.tvDetails.text = "${car.year} · ${car.mileage.formatMileage()} · ${car.fuelType}"
-            binding.tvCity.text = "📍 ${car.city}"
-            binding.tvTransmission.text = car.transmission
+            binding.tvDetails.text = "${car.year} · ${car.mileage.formatMileage()}"
+            binding.tvCity.text = car.city
 
-            binding.tvAge.text = TimeAgo.format(car.createdAt)
+            binding.tvAge.text = TimeAgo.format(binding.root.context, car.createdAt)
 
-            val days = TimeAgo.daysLeft(car.createdAt, car.expiresAt)
-            binding.tvDaysLeft.text = when {
-                days <= 0 -> "Last day"
-                days == 1 -> "1 day left"
-                else      -> "$days days left"
-            }
-            val warningColor = if (days <= 5) "#D32F2F".toColorInt()
-                else ContextCompat.getColor(binding.tvDaysLeft.context, R.color.text_secondary)
-            binding.tvDaysLeft.setTextColor(warningColor)
+            val isFavorite = favoriteIds.contains(car.id)
+            binding.btnQuickFavorite.setImageResource(
+                if (isFavorite) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline
+            )
+
+            binding.btnQuickFavorite.setOnClickListener { onFavoriteClick(car) }
 
             Glide.with(binding.ivCarImage.context)
                 .load(car.imageUrls.firstOrNull())

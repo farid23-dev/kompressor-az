@@ -30,7 +30,7 @@ class ContactFragment : Fragment(R.layout.fragment_contact) {
                 data = "mailto:ismayilovf@outlook.com".toUri()
                 putExtra(Intent.EXTRA_SUBJECT, "Kompressor.az - Support")
             }
-            startActivity(Intent.createChooser(intent, "Send Email"))
+            startActivity(Intent.createChooser(intent, getString(R.string.btn_send_email)))
         }
     }
 
